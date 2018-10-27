@@ -5,6 +5,7 @@ itsdangerous==1.1.0
 Jinja2==2.10
 MarkupSafe==1.0
 pycodestyle==2.4.0
+PyJWT==1.6.4
 simplejson==3.16.0
 SQLAlchemy==1.2.12
 Werkzeug==0.14.1
