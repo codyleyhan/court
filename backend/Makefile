@@ -1,6 +1,4 @@
-
-
-init: install-deps create
+init: install-deps migrate
 	
 start:
 	gunicorn wsgi:app
@@ -8,5 +6,5 @@ start:
 install-deps:
 	pip install -r requirements.txt
 
-create:
+migrate:
 	python migrate.py

@@ -25,9 +25,9 @@ class Message(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   is_active = db.Column(db.Boolean, default=True)
   user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-  user = db.relationship("User")
+  user = db.relationship('User')
   thread_id = db.Column(db.Integer, db.ForeignKey('threads.id'), nullable=False)
-  thread = db.relationship("Thread")
+  thread = db.relationship('Thread')
 
   created_at = db.Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
   updated_at = db.Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)

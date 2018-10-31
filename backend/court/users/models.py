@@ -9,7 +9,7 @@ class User(db.Model):
   id = db.Column(db.String(128), primary_key=True)
   email = db.Column(db.String(128), unique=True, nullable=False)
   profile = db.relationship('Profile', backref='user', lazy=True, uselist=False)
-  threads = db.relationship("Thread", secondary=thread_users, 
+  threads = db.relationship('Thread', secondary=thread_users, 
     back_populates="users")
 
   created_at = db.Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)

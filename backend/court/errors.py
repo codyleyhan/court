@@ -11,6 +11,6 @@ class ValidationError(Exception):
 
   def to_dict(self):
     return {
-      status: self.status_code
-      message: self.message
+      'status': self.status_code,
+      'message': self.message
     }
