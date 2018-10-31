@@ -1,11 +1,17 @@
+certifi==2018.10.15
+chardet==3.0.4
 Click==7.0
 Flask==1.0.2
 Flask-SQLAlchemy==2.3.2
+gunicorn==19.9.0
+idna==2.7
 itsdangerous==1.1.0
 Jinja2==2.10
 MarkupSafe==1.0
 pycodestyle==2.4.0
 PyJWT==1.6.4
+requests==2.20.0
 simplejson==3.16.0
 SQLAlchemy==1.2.12
+urllib3==1.24
 Werkzeug==0.14.1
