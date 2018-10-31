@@ -3,6 +3,7 @@
 class Config(object):
   DEBUG = False
   TESTING = False
+  SQLALCHEMY_TRACK_MODIFICATIONS = False
   SQLALCHEMY_DATABASE_URI = 'sqlite:///court.db'
   SECRET_KEY = 'USlx4cGNe7/axhJ3VbtdwFYKRYgsEH5VCV2n4dvhiFg='
 
