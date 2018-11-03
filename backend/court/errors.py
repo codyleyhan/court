@@ -1,7 +1,7 @@
 from http import HTTPStatus
 
-class ValidationError(Exception):
-  status_code = HTTPStatus.BAD_REQUEST
+class APIError(Exception):
+  status_code = HTTPStatus.INTERNAL_SERVER_ERROR
 
   def __init__(self, message, status_code=None):
     Exception.__init__(self)
@@ -14,3 +14,15 @@ class ValidationError(Exception):
       'status': self.status_code,
       'message': self.message
     }
+
+class ValidationError(APIError):
+  status_code = HTTPStatus.BAD_REQUEST
+
+  def __init__(self, message, status_code=BAD_REQUEST):
+    APIError.__init__(self, message, status_code)
+
+class AuthorizationError(APIError):
+  status_code = HTTPStatus.BAD_REQUEST
+
+  def __init__(self, message, status_code=BAD_REQUEST):
+    APIError.__init__(self, message, status_code)

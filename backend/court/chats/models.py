@@ -14,16 +14,19 @@ class Thread(db.Model):
   is_active = db.Column(db.Boolean, default=True)
   users = db.relationship('User', secondary=thread_users, lazy='subquery',
         back_populates='threads')
+  messages = db.relationship('Message', backref='thread', lazy=True)
 
   created_at = db.Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
   updated_at = db.Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
+
+  def __repr__(self):
+    return '<Thread %d %r %d>' % (self.id, self.is_active, self.updated_at)
 
 
 class Message(db.Model):
   __tablename__ = 'messages'
 
   id = db.Column(db.Integer, primary_key=True)
-  is_active = db.Column(db.Boolean, default=True)
   user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
   user = db.relationship('User')
   thread_id = db.Column(db.Integer, db.ForeignKey('threads.id'), nullable=False)
@@ -31,3 +34,6 @@ class Message(db.Model):
 
   created_at = db.Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
   updated_at = db.Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
+
+  def __repr__(self):
+    return '<Message %r %r %r %r>' % (self.id, self.user_id, self.thread_id, self.updated_at)
