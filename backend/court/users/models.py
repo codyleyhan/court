@@ -15,6 +15,14 @@ class User(db.Model):
   created_at = db.Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
   updated_at = db.Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
 
+  def _asdict(self):
+    return {
+      'id': self.id,
+      'email': self.email,
+      'created_at': self.created_at,
+      'updated_at': self.updated_at
+    }
+
 class Profile(db.Model):
   __tablename__ = 'profiles'
   
@@ -26,3 +34,14 @@ class Profile(db.Model):
 
   created_at = db.Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
   updated_at = db.Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
+
+  def _asdict(self):
+    return {
+      'id': self.id,
+      'first_name': self.first_name,
+      'last_name': self.last_name,
+      'profile_picture': self.profile_picture,
+      'user_id': self.user_id,
+      'created_at': self.created_at,
+      'updated_at': self.updated_at
+    }

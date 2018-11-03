@@ -1,13 +1,8 @@
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
-
+from court.app import create_app
 from court.database import db
 
-app = Flask(__name__)
-app.config.from_object('court.config.DevelopmentConfig')
-db.init_app(app)
+app = create_app()
 
-from court.chats.models import *
-from court.users.models import *
+if __name__ == '__main__':
+  db.create_all(app=app)
 
-db.create_all(app=app)

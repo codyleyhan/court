@@ -22,6 +22,15 @@ class Thread(db.Model):
   def __repr__(self):
     return '<Thread %d %r %d>' % (self.id, self.is_active, self.updated_at)
 
+  def _asdict(self):
+    return {
+      'id': self.id,
+      'is_active': self.is_active,
+      'users': self.users,
+      'created_at': self.created_at,
+      'updated_at': self.updated_at
+    }
+
 
 class Message(db.Model):
   __tablename__ = 'messages'
@@ -30,10 +39,18 @@ class Message(db.Model):
   user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
   user = db.relationship('User')
   thread_id = db.Column(db.Integer, db.ForeignKey('threads.id'), nullable=False)
-  thread = db.relationship('Thread')
 
   created_at = db.Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
   updated_at = db.Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
 
   def __repr__(self):
     return '<Message %r %r %r %r>' % (self.id, self.user_id, self.thread_id, self.updated_at)
+  
+  def _asdict(self):
+    return {
+      'id': self.id,
+      'user_id': self.user_id,
+      'thread_id': self.thread_id,
+      'created_at': self.created_at,
+      'updated_at': self.updated_at
+    }
