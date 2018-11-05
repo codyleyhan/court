@@ -12,6 +12,7 @@ import { WebBrowser } from 'expo';
 
 import { MonoText } from '../components/StyledText';
 import { InboxItem } from '../components/InboxComponents';
+import Header from '../components/Header';
 
 export default class InboxScreen extends React.Component {
   static navigationOptions = {
@@ -22,12 +23,7 @@ export default class InboxScreen extends React.Component {
     return (
       <View style={styles.container}>
         // Header bar
-        <View style={styles.welcomeContainer}>
-          <Image
-            source={require('../assets/images/court-logo-black.png')}
-            style={styles.welcomeImage}
-          />
-        </View>
+        <Header text="Chats" />
 
         // List of messages
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
@@ -36,6 +32,10 @@ export default class InboxScreen extends React.Component {
           <InboxItem imgUrl="https://heightline.com/wp-content/uploads/Justin-Roberts-640x427.jpg" name="Justin Roberts" lastMessage="Yo bro I have huge balls" lastTime="4:02 PM" percent="67"/>
           <InboxItem name="Anonymous Panda" lastMessage="I Love to office so much it's so cool" lastTime="2:15 PM" percent="40"/>
           <InboxItem name="Anonymous Cock" lastMessage="This app is amazing, what are you doing?" lastTime="10:07 AM" percent="15"/>
+
+          // Add a message for new matches
+          <Text style={{marginTop: 15, textAlign: 'center', color: 'grey'}}>Looking for more chats?</Text>
+          <Text style={{textAlign: 'center', color: 'grey'}}>{"They'll show up here when you have a match."}</Text>
         </ScrollView>
 
         <View style={styles.tabBarInfoContainer}>
@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   contentContainer: {
-    paddingTop: 30,
+    paddingTop: 20,
   },
   welcomeContainer: {
     alignItems: 'center',
