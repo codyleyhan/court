@@ -2,6 +2,8 @@ import React from 'react';
 import { Platform } from 'react-native';
 import { createStackNavigator, createBottomTabNavigator } from 'react-navigation';
 
+import Colors from '../constants/Colors';
+
 import TabBarIcon from '../components/TabBarIcon';
 import InboxScreen from '../screens/InboxScreen';
 import LinksScreen from '../screens/LinksScreen';
@@ -12,15 +14,14 @@ const HomeStack = createStackNavigator({
 });
 
 HomeStack.navigationOptions = {
-  tabBarLabel: 'Home',
+  tabBarOptions: {
+    activeTintColor: Colors.teal,
+  },
+  tabBarLabel: 'Chats',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={
-        Platform.OS === 'ios'
-          ? `ios-information-circle${focused ? '' : '-outline'}`
-          : 'md-information-circle'
-      }
+      name='md-chatbubbles'
     />
   ),
 };
@@ -30,6 +31,9 @@ const LinksStack = createStackNavigator({
 });
 
 LinksStack.navigationOptions = {
+  tabBarOptions: {
+    activeTintColor: Colors.teal,
+  },
   tabBarLabel: 'Links',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
@@ -44,11 +48,14 @@ const SettingsStack = createStackNavigator({
 });
 
 SettingsStack.navigationOptions = {
-  tabBarLabel: 'Settings',
+  tabBarOptions: {
+    activeTintColor: Colors.teal,
+  },
+  tabBarLabel: 'Profile',
   tabBarIcon: ({ focused }) => (
     <TabBarIcon
       focused={focused}
-      name={Platform.OS === 'ios' ? `ios-options${focused ? '' : '-outline'}` : 'md-options'}
+      name='md-person'
     />
   ),
 };
