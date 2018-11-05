@@ -11,8 +11,9 @@ import {
 import { WebBrowser } from 'expo';
 
 import { MonoText } from '../components/StyledText';
+import { InboxItem } from '../components/InboxComponents';
 
-export default class HomeScreen extends React.Component {
+export default class InboxScreen extends React.Component {
   static navigationOptions = {
     header: null,
   };
@@ -20,22 +21,21 @@ export default class HomeScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-          <View style={styles.welcomeContainer}>
-            <Image
-              source={require('../assets/images/court-logo-black.png')}
-              style={styles.welcomeImage}
-            />
-          </View>
+        // Header bar
+        <View style={styles.welcomeContainer}>
+          <Image
+            source={require('../assets/images/court-logo-black.png')}
+            style={styles.welcomeImage}
+          />
+        </View>
 
-          <View>
-            <Text style={styles.getStartedText}>
-              This is Court's initial homeScreen. This screen should show all chats.
-            </Text>
-            <Text style={styles.getStartedText}>
-              TODO(river): refactor this model to move to InboxScren
-            </Text>
-          </View>
+        // List of messages
+        <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+          // Temp list for example messages
+          // TODO(river): populate from an API call
+          <InboxItem imgUrl="https://heightline.com/wp-content/uploads/Justin-Roberts-640x427.jpg" name="Justin Roberts" lastMessage="Yo bro I have huge balls" lastTime="4:02 PM" percent="67"/>
+          <InboxItem name="Anonymous Panda" lastMessage="I Love to office so much it's so cool" lastTime="2:15 PM" percent="40"/>
+          <InboxItem name="Anonymous Cock" lastMessage="This app is amazing, what are you doing?" lastTime="10:07 AM" percent="15"/>
         </ScrollView>
 
         <View style={styles.tabBarInfoContainer}>
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginHorizontal: 50,
   },
-  homeScreenFilename: {
+  InboxScreenFilename: {
     marginVertical: 7,
   },
   codeHighlightText: {
