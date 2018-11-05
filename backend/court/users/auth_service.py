@@ -21,7 +21,7 @@ class AuthService:
       user_id = g.get(USER_ID_CONTEXT_KEY)
       user = self.user_store.query.get(user_id)
       setattr(g, USER_CONTEXT_KEY, user)
-      
+
       return user
     return None
 
@@ -38,8 +38,8 @@ class AuthService:
     user = {
       'id': '123',
       'email': 'test@test.com',
-      first_name: 'test',
-      last_name: 'ing'
+      'first_name': 'test',
+      'last_name': 'ing'
     }
 
     token_data = {
