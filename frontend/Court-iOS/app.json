@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "Court-iOS",
-    "description": "A very interesting project.",
-    "slug": "Court-iOS",
+    "name": "Court",
+    "description": "A different kind of dating.",
+    "slug": "Court",
     "privacy": "public",
     "sdkVersion": "30.0.0",
     "platforms": ["ios", "android"],
@@ -12,7 +12,7 @@
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#21ACA5"
     },
     "updates": {
       "fallbackToCacheTimeout": 0

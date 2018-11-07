@@ -1,6 +1,5 @@
 import React from 'react';
 
-import Mask from 'react-native-mask';
 import { Image, StyleSheet, Text, View } from 'react-native';
 import Colors from '../constants/Colors';
 
@@ -27,6 +26,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderBottomColor: '#21ACA5',
     borderBottomWidth: 2,
+    backgroundColor: '#fff',
   },
   headerTitle: {
     color: '#21ACA5',

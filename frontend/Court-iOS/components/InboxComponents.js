@@ -1,25 +1,32 @@
 import React from 'react';
-import { Platform, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import Avatar from '../components/Avatar';
 
 export class InboxItem extends React.Component {
+  onPressChat() {
+    // This is where we should handle navigation to the chat screen
+
+  }
+
   render() {
     const { imgUrl, name, lastMessage, lastTime, percent} = this.props;
     return (
-      <View style={styles.InboxCard}>
-        <View style={styles.avatarWrapper}>
-          <Avatar width={65} src={imgUrl}/>
+      <TouchableOpacity activeOpacity={0.5} onPress={this.onPressChat}>
+        <View style={styles.InboxCard}>
+          <View style={styles.avatarWrapper}>
+            <Avatar width={65} src={imgUrl}/>
+          </View>
+          <View style={styles.inboxTextWrapper}>
+            <Text style={styles.nameStyle} numberOfLines={1}>{name}</Text>
+            <Text style={styles.messageStyle} numberOfLines={1}>{lastMessage}</Text>
+            <Text style={styles.timeStyle}>{lastTime}</Text>
+          </View>
+          <View >
+            <Text style={styles.percentStyle}>{percent}%</Text>
+          </View>
         </View>
-        <View style={styles.inboxTextWrapper}>
-          <Text style={styles.nameStyle} numberOfLines={1}>{name}</Text>
-          <Text style={styles.messageStyle} numberOfLines={1}>{lastMessage}</Text>
-          <Text style={styles.timeStyle}>{lastTime}</Text>
-        </View>
-        <View >
-          <Text style={styles.percentStyle}>{percent}%</Text>
-        </View>
-      </View>
+      </TouchableOpacity>
     );
   }
 }

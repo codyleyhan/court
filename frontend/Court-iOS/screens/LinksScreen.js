@@ -1,8 +1,10 @@
 import React from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
+import { Button, ScrollView, StyleSheet } from 'react-native';
+import { withNavigation } from 'react-navigation';
 import { ExpoLinksView } from '@expo/samples';
 
-export default class LinksScreen extends React.Component {
+
+class LinksScreen extends React.Component {
   static navigationOptions = {
     title: 'Links',
   };
@@ -13,6 +15,8 @@ export default class LinksScreen extends React.Component {
         {/* Go ahead and delete ExpoLinksView and replace it with your
            * content, we just wanted to provide you with some helpful links */}
         <ExpoLinksView />
+        <Button onPress={() => this.props.navigation.navigate('Auth')} title="Logout" />
+
       </ScrollView>
     );
   }
@@ -25,3 +29,5 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
 });
+
+export default withNavigation(LinksScreen);
