@@ -1,13 +1,16 @@
 import jwt
+import json
 from flask import g
+import requests
 
 from court.database import db
-from court.errors import ValidationError
+from court.errors import AuthorizationError, ValidationError
 from court.users.models import User, Profile
 
 
 USER_ID_CONTEXT_KEY = 'court:user_id'
 USER_CONTEXT_KEY = 'court:user'
+
 
 class AuthService:
   def __init__(self, secret, user_store=User):
@@ -34,22 +37,22 @@ class AuthService:
     if access_token.strip() == '':
       raise ValidationError()
 
-    # make requests to facebook graph API to get user info
-    user = {
-      'id': '123',
-      'email': 'test@test.com',
-      'first_name': 'test',
-      'last_name': 'ing'
-    }
+    base_url = 'https://graph.facebook.com/me?fields=id,name,email,picture&access_token={}'
+    r = requests.get(base_url.format(access_token))
+    if r.status_code != 200:
+      raise AuthorizationError()
+
+    # TODO(anthonymirand): store user in User/Profile database
+    user = json.loads(r.text)
 
     token_data = {
-      'id': user.id,
+      'id': user['id'],
       'is_admin': False
     }
 
-    setattr(g, USER_ID_CONTEXT_KEY, user.id)
+    setattr(g, USER_ID_CONTEXT_KEY, user['id'])
 
     token = jwt.encode(token_data, self.secret, algorithm='HS256')
 
-    return token
+    return token, user
 

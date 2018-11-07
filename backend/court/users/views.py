@@ -1,6 +1,8 @@
 from flask import jsonify, request
 from flask.views import MethodView
 
+from court.errors import AuthorizationError, ValidationError
+
 
 class UserAPI(MethodView):
   def __init__(self, auth_service):
@@ -13,11 +15,24 @@ class UserAPI(MethodView):
         })
     else:
         # expose a single user
-        pass
+        return jsonify({
+          'user': user_id
+        })
 
-  def post(self):
+  def post(self, access_token):
     # create a new user
-    pass
+    try:
+      token, user = self.auth_service.login(access_token)
+      return jsonify({
+        'success': True,
+        'token': token,
+        'user': user
+      })
+    except (AuthorizationError, ValidationError) as e:
+      return jsonify({
+        'success': False,
+        'error': e.message
+      })
 
   def delete(self, user_id):
     # delete a single user
