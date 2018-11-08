@@ -47,13 +47,20 @@ class AuthService:
     token = jwt.encode(token_data, self.secret, algorithm='HS256')
 
     return token, user
+
+  def validate_token(self, token):
+    try:
+      data = jwt.decode(token, self.secret)
+      g.user_id = data['id']
+    except:
+      raise AuthorizationError()
   
   def get_current_user(self):
-    if g.user is not None:
+    if 'user' in g:
       return g.user
     
     user_id = self.get_current_user_id()
-    if user_id is not None:
+    if 'user_id' in g:
       user = self.user_store.query.get(g.user_id)
       g.user = user
       return user
@@ -61,10 +68,7 @@ class AuthService:
     return None
 
   def get_current_user_id(self):
-    if g.user_id is not None:
-      return g.user_id
-    elif request.headers.get('Authorization') is not None:
-      g.user_id = request.headers.get('Authorization')
+    if 'user_id' in g:
       return g.user_id
 
     return None

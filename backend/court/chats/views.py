@@ -2,7 +2,6 @@ from flask import jsonify, request, g
 from flask.views import MethodView
 
 from court.chats.thread_service import ThreadService
-from court.users.auth_middleware import login_required
 from court.users.auth_service import AuthService
 from court.errors import AuthorizationError
 
@@ -12,7 +11,6 @@ class MessageAPI(MethodView):
     self.thread_service = thread_service
     self.auth_service = auth_service
 
-  @login_required
   def get(self, thread_id):
     auth_service = self.auth_service
     user_id = auth_service.get_current_user_id()
@@ -37,8 +35,8 @@ class ThreadAPI(MethodView):
   def __init__(self, auth_service):
     self.auth_service = auth_service
 
-  @login_required
   def get(self):
+    print(self.auth_service.get_current_user_id())
     user = self.auth_service.get_current_user()
 
     return jsonify(threads=user.threads)
