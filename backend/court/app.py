@@ -1,5 +1,5 @@
 from http import HTTPStatus
-from flask import Flask, g
+from flask import Flask, g, jsonify
 
 from court.chats.thread_service import ThreadService
 from court.chats.views import MessageAPI, ThreadAPI
@@ -43,3 +43,9 @@ def add_routes(app):
   app.add_url_rule('/api/threads', view_func=thread_view, methods=['GET'])
   app.add_url_rule('/api/threads/<int:thread_id>/messages', view_func=thread_message_view,
     methods=['GET'])
+
+  @app.route('/')
+  def health_check():
+    return jsonify({
+      "health": "ok"
+    })
