@@ -8,18 +8,11 @@ class UserAPI(MethodView):
   def __init__(self, auth_service):
     self.auth_service = auth_service
 
-  def get(self, user_id):
-    if user_id is None:
-        return jsonify({
-          'users': [1, 2, 3, 4]
-        })
-    else:
-        # expose a single user
-        return jsonify({
-          'user': user_id
-        })
-
-  def post(self, access_token):
+  def post(self):
+    access_token = request.json['access_token']
+    if access_token is None:
+      raise AuthorizationError()
+    print(access_token)
     # create a new user
     try:
       token, user = self.auth_service.login(access_token)
@@ -33,11 +26,3 @@ class UserAPI(MethodView):
         'success': False,
         'error': e.message
       })
-
-  def delete(self, user_id):
-    # delete a single user
-    pass
-
-  def put(self, user_id):
-    # update a single user
-    pass
