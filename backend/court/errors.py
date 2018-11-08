@@ -12,7 +12,7 @@ class APIError(Exception):
 
   def to_dict(self):
     return {
-      'status': self.status_code,
+      'success': False,
       'message': self.message
     }
 
@@ -33,17 +33,20 @@ class ErrorHandler:
   @staticmethod
   def handle_error_with_message(e):
     return jsonify({
+      'success': False,
       'error': e.message
     })
   
   @staticmethod
   def handle_not_found(e):
     return jsonify({
+      'success': False,
       'error': "Page not found"
     })
   
   @staticmethod
   def handle_internal_server(e):
     return jsonify({
+      'success': False,
       'error': "There was a problem on our end"
     })
