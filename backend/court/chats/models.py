@@ -7,7 +7,7 @@ thread_users is the table that represents the many to many relationship between
 threads and users.
 """
 thread_users = db.Table('thread_users',
-  db.Column('user_id', db.Integer, db.ForeignKey('users.id'), primary_key=True),
+  db.Column('user_id', db.BigInteger, db.ForeignKey('users.id'), primary_key=True),
   db.Column('thread_id', db.Integer, db.ForeignKey('threads.id'), primary_key=True),
 )
 
@@ -51,7 +51,7 @@ class Message(db.Model):
     self.body = body
 
   id = db.Column(db.Integer, primary_key=True)
-  user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+  user_id = db.Column(db.BigInteger, db.ForeignKey('users.id'), nullable=False)
   user = db.relationship('User')
   thread_id = db.Column(db.Integer, db.ForeignKey('threads.id'), nullable=False)
   body = db.Column(db.Text, nullable=False)

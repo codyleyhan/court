@@ -30,7 +30,7 @@ class Profile(db.Model):
   first_name = db.Column(db.String(128), nullable=False)
   last_name = db.Column(db.String(128), nullable=False)
   profile_picture = db.Column(db.String(512))
-  user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+  user_id = db.Column(db.BigInteger, db.ForeignKey('users.id'), nullable=False)
 
   # TODO: Add interests to Profile
   _interests = db.Column(db.String) # nullable=False
