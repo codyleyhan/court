@@ -2,6 +2,7 @@ import jwt
 import json
 from flask import g, request
 import requests
+from functools import wraps
 
 from court.database import db
 from court.errors import AuthorizationError, ValidationError
@@ -72,5 +73,13 @@ class AuthService:
       return g.user_id
 
     return None
+
+  def login_required(self, f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user_id' not in g:
+            raise AuthorizationError()
+        return f(*args, **kwargs)
+    return decorated_function
 
 

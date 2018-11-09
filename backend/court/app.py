@@ -1,13 +1,15 @@
 from http import HTTPStatus
 from flask import Flask, g, jsonify, request
+from flask_socketio import SocketIO
 
 from court.chats.thread_service import ThreadService
 from court.chats.views import MessageAPI, ThreadAPI
 from court.config import DevelopmentConfig
 from court.database import db
+from court.sockets import socketio
 from court.errors import *
 from court.users.auth_service import AuthService
-from court.users.views import UserAPI, login_required
+from court.users.views import UserAPI
 
 def create_app(config=DevelopmentConfig):
   app = Flask(__name__)
@@ -16,6 +18,8 @@ def create_app(config=DevelopmentConfig):
   db.init_app(app)
   add_error_handlers(app)
   add_routes(app)
+
+  socketio.init_app(app)
 
   return app
 
@@ -40,8 +44,8 @@ def add_routes(app):
   app.add_url_rule('/api/users/', view_func=user_view, methods=['POST'])
 
   thread_service = ThreadService()
-  thread_view = login_required(ThreadAPI.as_view('thread_api', auth_service))
-  thread_message_view = login_required(MessageAPI.as_view('message_api', thread_service, auth_service))
+  thread_view = auth_service.login_required(ThreadAPI.as_view('thread_api', auth_service))
+  thread_message_view = auth_service.login_required(MessageAPI.as_view('message_api', thread_service, auth_service))
   app.add_url_rule('/api/threads', view_func=thread_view, methods=['GET'])
   app.add_url_rule('/api/threads/<int:thread_id>/messages', view_func=thread_message_view,
     methods=['GET'])
