@@ -16,6 +16,7 @@ def create_app(config=DevelopmentConfig):
   db.init_app(app)
   add_error_handlers(app)
   add_routes(app)
+  db.create_all(app=app)
 
   return app
 
