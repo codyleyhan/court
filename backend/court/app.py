@@ -2,6 +2,7 @@ from http import HTTPStatus
 from flask import Flask, g, jsonify, request
 from flask_socketio import SocketIO
 
+from court.chats.sockets import ThreadSockets
 from court.chats.thread_service import ThreadService
 from court.chats.views import MessageAPI, ThreadAPI
 from court.config import DevelopmentConfig
@@ -17,9 +18,8 @@ def create_app(config=DevelopmentConfig):
 
   db.init_app(app)
   add_error_handlers(app)
-  add_routes(app)
-
   socketio.init_app(app)
+  add_routes(app, socketio)
 
   return app
 
@@ -30,7 +30,7 @@ def add_error_handlers(app):
   app.register_error_handler(AuthorizationError, ErrorHandler.handle_error_with_message)
   app.register_error_handler(NotFoundError, ErrorHandler.handle_error_with_message)
 
-def add_routes(app):
+def add_routes(app, socketio):
   auth_service = AuthService(app.config['SECRET_KEY'])
 
   @app.before_request
@@ -38,8 +38,8 @@ def add_routes(app):
     if request.headers.get('Authorization') is not None:
       token = request.headers.get('Authorization')
       auth_service.validate_token(token)
-
-
+  
+  
   user_view = UserAPI.as_view('user_api', auth_service)
   app.add_url_rule('/api/users', view_func=user_view, methods=['POST'])
 
@@ -49,6 +49,9 @@ def add_routes(app):
   app.add_url_rule('/api/threads', view_func=thread_view, methods=['GET'])
   app.add_url_rule('/api/threads/<int:thread_id>/messages', view_func=thread_message_view,
     methods=['GET'])
+
+  # register socket
+  socketio.on_namespace(ThreadSockets(None, auth_service, thread_service))
 
   @app.route('/')
   def health_check():
