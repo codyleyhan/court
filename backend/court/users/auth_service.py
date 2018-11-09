@@ -19,11 +19,13 @@ class AuthService:
     if access_token.strip() == '':
       raise ValidationError()
 
-    base_url = 'https://graph.facebook.com/me?fields=id,first_name,last_name,email,picture&access_token={}'
-    r = requests.get(base_url.format(access_token))
+    base_url = 'https://graph.facebook.com/me?fields={}&access_token={}'
+    fields = [ 'id', 'first_name', 'last_name', 'email',
+               'picture.height(300).width(300)' ]
+    r = requests.get(base_url.format(','.join(fields), access_token))
     if r.status_code != 200:
       raise AuthorizationError()
-    
+
     facebook_user_data = json.loads(r.text)
 
     user = self.user_store.query.filter(User.id == facebook_user_data['id']).one_or_none()
@@ -36,7 +38,6 @@ class AuthService:
       self.db.session.commit()
 
     # TODO(anthonymirand): store user profile in database
-
     token_data = {
       'id': user.id,
       'is_admin': False
@@ -54,11 +55,11 @@ class AuthService:
       g.user_id = data['id']
     except:
       raise AuthorizationError()
-  
+
   def get_current_user(self):
     if 'user' in g:
       return g.user
-    
+
     user_id = self.get_current_user_id()
     if 'user_id' in g:
       user = self.user_store.query.get(g.user_id)

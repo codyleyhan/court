@@ -32,8 +32,7 @@ class Profile(db.Model):
   profile_picture = db.Column(db.String(512))
   user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
-  # TODO: Add interests to Profile
-  _interests = db.Column(db.String) # nullable=False
+  _interests = db.Column(db.String, nullable=False)
   @property
   def interests(self):
     return json.loads(self._interests)[0]
