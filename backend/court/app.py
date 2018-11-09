@@ -41,7 +41,7 @@ def add_routes(app):
 
 
   user_view = UserAPI.as_view('user_api', auth_service)
-  app.add_url_rule('/api/users/', view_func=user_view, methods=['POST'])
+  app.add_url_rule('/api/users', view_func=user_view, methods=['POST'])
 
   thread_service = ThreadService()
   thread_view = auth_service.login_required(ThreadAPI.as_view('thread_api', auth_service))

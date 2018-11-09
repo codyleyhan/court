@@ -1,4 +1,6 @@
-from flask_socketio import Namespace, emit
+from flask_socketio import Namespace, disconnect, join_room, emit
+
+# TODO (codyleyhan): figure out how we are going to send information notifications
 
 class ThreadSockets(Namespace):
   """
@@ -6,14 +8,24 @@ class ThreadSockets(Namespace):
   providing users realtime messaging between each and notifications.
   """
 
+  def __init__(self, namespace, auth_service, thread_service):
+    super(ThreadSockets, self).__init__(namespace=namespace)
+    self.auth_service = auth_service
+    self.thread_service = thread_service
 
-  def on_connect(self, json):
+
+  def on_connect(self):
     """
     Occurs when a user first connects to the server and will be authenticated.
 
     :param json: contains json data from the user
     """
-    pass
+    user_id = self.auth_service.get_current_user_id()
+    if user_id is None:
+      disconnect()
+      return
+
+    print(user_id, ' connected')
   
   def on_message(self, json):
     """
@@ -22,6 +34,21 @@ class ThreadSockets(Namespace):
 
     :param json: contains json data from the user
     """
+    user_id = self.auth_service.get_current_user_id()
+    if 'thread' not in json or 'message' not in json:
+      raise Exception()
+    thread_id = json['thread']
+    thread = self.thread_service.get_thread(user_id, thread_id)
+
+    message_body = json['message']
+    message = Message(user_id, thread_id, message_body)
+
+    self.thread_service.add_message(message)
+
+    print(str(user_id) + ' sent message ' + body)
+
+    emit('new_message', message, room=thread_id)
+
     pass
   
 
@@ -32,4 +59,11 @@ class ThreadSockets(Namespace):
 
     :param json: contains json data from the user
     """
-    pass
+    user_id = self.auth_service.get_current_user_id()
+    if 'thread' not in json:
+      raise Exception()
+    thread_id = json['thread']
+    thread = self.thread_service.get_thread(user_id, thread_id)
+    print(user_id, ' is joining thread ', thread_id)
+    join_room(thread_id)
+    
