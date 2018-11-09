@@ -9,7 +9,7 @@ env = os.getenv('ENV')
 config = ProductionConfig if env == 'production' else DevelopmentConfig
 
 
-app = create_app(config)
+app = create_app(config=config)
 
 if __name__ == '__main__':
   socketio = SocketIO(app)
