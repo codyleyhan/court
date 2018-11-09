@@ -35,13 +35,12 @@ class MessageAPI(MethodView):
     after_id = -1
     before_id = -1
 
-    if request.json is not None:
-      if 'first' in request.json:
-        first = request.json['first']
-      if 'after_id' in request.json:
-        after_id = request.json['after_id']
-      elif 'before_id' in request.json:
-        before_id = request.json['before_id']
+    if 'first' in request.args:
+      first = request.args.get('first')
+    if 'after_id' in request.args:
+      after_id = request.get('after_id')
+    elif 'before_id' in request.args:
+      before_id = request.get('before_id')
 
     messages = self.thread_service.get_messages(user_id, thread_id, first, after_id, before_id)
 
