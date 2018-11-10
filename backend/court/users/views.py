@@ -1,7 +1,5 @@
-from flask import jsonify, g, request
+from flask import jsonify, request
 from flask.views import MethodView
-from functools import wraps
-
 
 from court.errors import AuthorizationError, ValidationError
 
@@ -28,11 +26,3 @@ class UserAPI(MethodView):
         'success': False,
         'error': e.message
       })
-
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if 'user_id' not in g:
-            raise AuthorizationError()
-        return f(*args, **kwargs)
-    return decorated_function
