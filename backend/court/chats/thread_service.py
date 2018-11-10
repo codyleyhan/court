@@ -68,6 +68,7 @@ class ThreadService:
     :param thread: Thread object that is being checked
     :return: true if the user is authorized to see the thread
     """
+    print(user_id)
     for user in thread.users:
       if user_id == user.id:
         return True

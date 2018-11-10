@@ -39,7 +39,7 @@ class AuthService:
     # TODO(anthonymirand): store user profile in database
 
     token_data = {
-      'id': user.id,
+      'id': int(user.id),
       'is_admin': False
     }
 

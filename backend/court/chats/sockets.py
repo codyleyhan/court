@@ -52,7 +52,7 @@ class ThreadSockets(Namespace):
 
     self.logger.info("%s is trying to add a message to the thread %d", user_id, thread_id)
 
-    message_body = json['message']
+    message_body = json['body']
     message = Message(user_id, thread_id, message_body)
 
     self.thread_service.add_message(message)
