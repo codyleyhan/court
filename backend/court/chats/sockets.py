@@ -1,4 +1,7 @@
 from flask_socketio import Namespace, disconnect, join_room, emit
+from flask import request, g
+
+from court.chats.models import Message
 
 # TODO (codyleyhan): figure out how we are going to send information notifications
 
@@ -8,24 +11,29 @@ class ThreadSockets(Namespace):
   providing users realtime messaging between each and notifications.
   """
 
-  def __init__(self, namespace, auth_service, thread_service):
+  def __init__(self, namespace, auth_service, thread_service, logger):
     super(ThreadSockets, self).__init__(namespace=namespace)
     self.auth_service = auth_service
     self.thread_service = thread_service
+    self.logger = logger
 
-
+  def get_user_from_request(self):
+    self.auth_service.validate_token(request.args.get('token'))
+  
   def on_connect(self):
     """
     Occurs when a user first connects to the server and will be authenticated.
 
     :param json: contains json data from the user
     """
+    self.logger.info("a new user is trying to connect")
+    self.get_user_from_request()
     user_id = self.auth_service.get_current_user_id()
-    if user_id is None:
-      disconnect()
-      return
-
-    print(user_id, ' connected')
+    self.logger.info("%s connected has connected", user_id)
+    
+    emit('connected', {
+      "body": "you are connected"
+    })
   
   def on_message(self, json):
     """
@@ -34,22 +42,24 @@ class ThreadSockets(Namespace):
 
     :param json: contains json data from the user
     """
+    self.get_user_from_request()
     user_id = self.auth_service.get_current_user_id()
-    if 'thread' not in json or 'message' not in json:
+    if 'thread' not in json or 'body' not in json:
+      self.logger.error("%s sent a message without the right data", user_id)
       raise Exception()
     thread_id = json['thread']
     thread = self.thread_service.get_thread(user_id, thread_id)
+
+    self.logger.info("%s is trying to add a message to the thread %d", user_id, thread_id)
 
     message_body = json['message']
     message = Message(user_id, thread_id, message_body)
 
     self.thread_service.add_message(message)
 
-    print(str(user_id) + ' sent message ' + body)
+    self.logger.info("%s added a message to the thread %d", user_id, thread_id)
 
-    emit('new_message', message, room=thread_id)
-
-    pass
+    emit('new_message', message,room=thread_id, broadcast=True, json=True)
   
 
   def on_join(self, json):
@@ -59,11 +69,14 @@ class ThreadSockets(Namespace):
 
     :param json: contains json data from the user
     """
+    self.get_user_from_request()
     user_id = self.auth_service.get_current_user_id()
     if 'thread' not in json:
+      self.logger.error("%s did not pass a thread to join", user_id)
       raise Exception()
     thread_id = json['thread']
     thread = self.thread_service.get_thread(user_id, thread_id)
-    print(user_id, ' is joining thread ', thread_id)
+
+    self.logger.info("connecting user %s to thread %d", user_id, thread_id)
     join_room(thread_id)
     

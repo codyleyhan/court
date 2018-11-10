@@ -1,5 +1,5 @@
 from http import HTTPStatus
-from flask import Flask, g, jsonify, request
+from flask import Flask, g, jsonify, request,json
 from flask_socketio import SocketIO
 
 from court.chats.sockets import ThreadSockets
@@ -18,7 +18,7 @@ def create_app(config=DevelopmentConfig):
 
   db.init_app(app)
   add_error_handlers(app)
-  socketio.init_app(app)
+  socketio.init_app(app, json=json)
   add_routes(app, socketio)
 
   return app
@@ -51,7 +51,7 @@ def add_routes(app, socketio):
     methods=['GET'])
 
   # register socket
-  socketio.on_namespace(ThreadSockets(None, auth_service, thread_service))
+  socketio.on_namespace(ThreadSockets(None, auth_service, thread_service, app.logger))
 
   @app.route('/')
   def health_check():
