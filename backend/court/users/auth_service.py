@@ -44,17 +44,17 @@ class AuthService:
       'is_admin': False
     }
 
-    g.user_id = user.id
+    g.user_id = int(user.id)
 
-    token = jwt.encode(token_data, self.secret, algorithm='HS256')
+    token = jwt.encode(token_data, self.secret, algorithms=['HS256'])
 
     return token, user
 
   def validate_token(self, token):
     try:
-      data = jwt.decode(token, self.secret)
+      data = jwt.decode(token, self.secret, algorithms=['HS256'])
       g.user_id = data['id']
-    except:
+    except Exception as e:
       raise AuthorizationError()
 
   def get_current_user(self):
@@ -62,8 +62,8 @@ class AuthService:
       return g.user
 
     user_id = self.get_current_user_id()
-    if 'user_id' in g:
-      user = self.user_store.query.get(g.user_id)
+    if user_id is not None:
+      user = self.user_store.query.get(user_id)
       g.user = user
       return user
 
