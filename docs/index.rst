@@ -18,14 +18,6 @@ App
     :inherited-members:
     :show-inheritance:
 
-Config
-=================================
-
-.. automodule:: court.config
-    :members:
-    :inherited-members:
-    :show-inheritance:
-
 Chats
 =================================
 
