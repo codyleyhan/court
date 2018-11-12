@@ -9,5 +9,3 @@ install-deps:
 migrate:
 	python migrate.py
 
-docs:
-	sphinx-build -b html . _build
