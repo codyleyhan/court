@@ -4,6 +4,9 @@ from court.database import db
 from court.chats.models import thread_users
 
 class User(db.Model):
+  """
+  User is the model to map the database to an Object.
+  """
   __tablename__ = 'users'
 
   id = db.Column(db.BigInteger, primary_key=True)
@@ -24,6 +27,9 @@ class User(db.Model):
     }
 
 class Profile(db.Model):
+  """
+  Profile maps a db User row to an Object.
+  """
   __tablename__ = 'profiles'
 
   id = db.Column(db.Integer, primary_key=True)

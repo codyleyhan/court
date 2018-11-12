@@ -38,7 +38,6 @@ class Thread(db.Model):
       'updated_at': self.updated_at
     }
 
-
 class Message(db.Model):
   """
   Message maps a db message row to an Object
@@ -61,7 +60,7 @@ class Message(db.Model):
 
   def __repr__(self):
     return '<Message %r %r %r %r>' % (self.id, self.user_id, self.thread_id, self.updated_at)
-  
+
   def _asdict(self):
     return {
       'id': self.id,

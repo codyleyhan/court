@@ -17,7 +17,6 @@ class ThreadService:
     :param message_store: ORM object to create/query messages
     :param thread_store: ORM object to create/query chat threads
     """
-
     self.message_store = message_store
     self.thread_store = thread_store
     self.db = db_conn
@@ -35,10 +34,10 @@ class ThreadService:
       raise RuntimeError()
 
     thread = Thread()
-    
+
     thread.users.append(user_1)
     thread.users.append(user_2)
-    
+
     self.db.session.add(thread)
     self.db.session.commit()
 
@@ -46,7 +45,7 @@ class ThreadService:
 
   def get_thread(self, current_user_id, thread_id):
     """
-    Queries for a thread with the passed id.  Will also check authorization of 
+    Queries for a thread with the passed id.  Will also check authorization of
     user.
 
     :param current_user_id: the id the user requesting the thread information
@@ -99,9 +98,9 @@ class ThreadService:
       query = query.filter(Message.id < before_id)
 
     messages = query.order_by(Message.id.desc()).limit(first).all()
-    
+
     return messages
-  
+
   def add_message(self, message):
     """
     Adds a message to a thread.

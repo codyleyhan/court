@@ -1,0 +1,781 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Welcome to Court’s documentation! &mdash; Court  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="#" class="icon icon-home"> Court
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"><ul>
+<li><a class="reference internal" href="#">Welcome to Court’s documentation!</a></li>
+<li><a class="reference internal" href="#module-court.app">App</a></li>
+<li><a class="reference internal" href="#module-court.config">Config</a></li>
+<li><a class="reference internal" href="#module-court.chats.models">Chats</a></li>
+<li><a class="reference internal" href="#module-court.users.auth_service">Users</a></li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+</div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">Court</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="#">Docs</a> &raquo;</li>
+        
+      <li>Welcome to Court’s documentation!</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="welcome-to-court-s-documentation">
+<h1>Welcome to Court’s documentation!<a class="headerlink" href="#welcome-to-court-s-documentation" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+<div class="section" id="module-court.app">
+<span id="app"></span><h1>App<a class="headerlink" href="#module-court.app" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="court.app.add_error_handlers">
+<code class="descclassname">court.app.</code><code class="descname">add_error_handlers</code><span class="sig-paren">(</span><em>app</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/app.html#add_error_handlers"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.app.add_error_handlers" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds error handling endpoints to Flask.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>app</strong> – The configured Flask backend application to add endpoints to.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="court.app.add_routes">
+<code class="descclassname">court.app.</code><code class="descname">add_routes</code><span class="sig-paren">(</span><em>app</em>, <em>socketio</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/app.html#add_routes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.app.add_routes" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds callable endpoints to Flask.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>app</strong> – The configured Flask backend application to add endpoints to.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="court.app.create_app">
+<code class="descclassname">court.app.</code><code class="descname">create_app</code><span class="sig-paren">(</span><em>config=&lt;class 'court.config.DevelopmentConfig'&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/app.html#create_app"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.app.create_app" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates Court Flask application and initializes all necessary databases.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>config</strong> – The configuration object to be used in Court backend creation.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Created/initialized Flask application.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-court.config">
+<span id="config"></span><h1>Config<a class="headerlink" href="#module-court.config" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="court.config.Config">
+<em class="property">class </em><code class="descclassname">court.config.</code><code class="descname">Config</code><a class="reference internal" href="_modules/court/config.html#Config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.config.Config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Defines the base Configuration object used to create a Flask instance.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="court.config.DevelopmentConfig">
+<em class="property">class </em><code class="descclassname">court.config.</code><code class="descname">DevelopmentConfig</code><a class="reference internal" href="_modules/court/config.html#DevelopmentConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.config.DevelopmentConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#court.config.Config" title="court.config.Config"><code class="xref py py-class docutils literal notranslate"><span class="pre">court.config.Config</span></code></a></p>
+<p>Configuration for the development Court Flask instance.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="court.config.ProductionConfig">
+<em class="property">class </em><code class="descclassname">court.config.</code><code class="descname">ProductionConfig</code><a class="reference internal" href="_modules/court/config.html#ProductionConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.config.ProductionConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#court.config.Config" title="court.config.Config"><code class="xref py py-class docutils literal notranslate"><span class="pre">court.config.Config</span></code></a></p>
+<p>Configuration for the production Court Flask instance.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="court.config.TestingConfig">
+<em class="property">class </em><code class="descclassname">court.config.</code><code class="descname">TestingConfig</code><a class="reference internal" href="_modules/court/config.html#TestingConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.config.TestingConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#court.config.Config" title="court.config.Config"><code class="xref py py-class docutils literal notranslate"><span class="pre">court.config.Config</span></code></a></p>
+<p>Configuration for the testing Court Flask instance.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-court.chats.models">
+<span id="chats"></span><h1>Chats<a class="headerlink" href="#module-court.chats.models" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="court.chats.models.Message">
+<em class="property">class </em><code class="descclassname">court.chats.models.</code><code class="descname">Message</code><span class="sig-paren">(</span><em>user_id</em>, <em>thread_id</em>, <em>body</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/chats/models.html#Message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.chats.models.Message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Model</span></code></p>
+<p>Message maps a db message row to an Object</p>
+<dl class="attribute">
+<dt id="court.chats.models.Message.query_class">
+<code class="descname">query_class</code><a class="headerlink" href="#court.chats.models.Message.query_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_sqlalchemy.BaseQuery</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="court.chats.models.Thread">
+<em class="property">class </em><code class="descclassname">court.chats.models.</code><code class="descname">Thread</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/chats/models.html#Thread"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.chats.models.Thread" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Model</span></code></p>
+<p>Thread is the model to map the database to an object.</p>
+<dl class="attribute">
+<dt id="court.chats.models.Thread.query_class">
+<code class="descname">query_class</code><a class="headerlink" href="#court.chats.models.Thread.query_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_sqlalchemy.BaseQuery</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-court.chats.sockets"></span><dl class="class">
+<dt id="court.chats.sockets.ThreadSockets">
+<em class="property">class </em><code class="descclassname">court.chats.sockets.</code><code class="descname">ThreadSockets</code><span class="sig-paren">(</span><em>namespace</em>, <em>auth_service</em>, <em>thread_service</em>, <em>logger</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/chats/sockets.html#ThreadSockets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.chats.sockets.ThreadSockets" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_socketio.namespace.Namespace</span></code></p>
+<p>ThreadSockets is the object that handles the realtime chat aspect of court
+providing users realtime messaging between each and notifications.</p>
+<dl class="method">
+<dt id="court.chats.sockets.ThreadSockets.close_room">
+<code class="descname">close_room</code><span class="sig-paren">(</span><em>room</em>, <em>namespace=None</em><span class="sig-paren">)</span><a class="headerlink" href="#court.chats.sockets.ThreadSockets.close_room" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close a room.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="court.chats.sockets.ThreadSockets.disconnect">
+<code class="descname">disconnect</code><span class="sig-paren">(</span><em>sid</em>, <em>namespace=None</em><span class="sig-paren">)</span><a class="headerlink" href="#court.chats.sockets.ThreadSockets.disconnect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Disconnect a client.</p>
+<p>The only difference with the <code class="xref py py-func docutils literal notranslate"><span class="pre">socketio.Server.disconnect()</span></code> method
+is that when the <code class="docutils literal notranslate"><span class="pre">namespace</span></code> argument is not given the namespace
+associated with the class is used.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="court.chats.sockets.ThreadSockets.emit">
+<code class="descname">emit</code><span class="sig-paren">(</span><em>event</em>, <em>data=None</em>, <em>room=None</em>, <em>include_self=True</em>, <em>namespace=None</em>, <em>callback=None</em><span class="sig-paren">)</span><a class="headerlink" href="#court.chats.sockets.ThreadSockets.emit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Emit a custom event to one or more connected clients.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="court.chats.sockets.ThreadSockets.enter_room">
+<code class="descname">enter_room</code><span class="sig-paren">(</span><em>sid</em>, <em>room</em>, <em>namespace=None</em><span class="sig-paren">)</span><a class="headerlink" href="#court.chats.sockets.ThreadSockets.enter_room" title="Permalink to this definition">¶</a></dt>
+<dd><p>Enter a room.</p>
+<p>The only difference with the <code class="xref py py-func docutils literal notranslate"><span class="pre">socketio.Server.enter_room()</span></code> method
+is that when the <code class="docutils literal notranslate"><span class="pre">namespace</span></code> argument is not given the namespace
+associated with the class is used.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="court.chats.sockets.ThreadSockets.leave_room">
+<code class="descname">leave_room</code><span class="sig-paren">(</span><em>sid</em>, <em>room</em>, <em>namespace=None</em><span class="sig-paren">)</span><a class="headerlink" href="#court.chats.sockets.ThreadSockets.leave_room" title="Permalink to this definition">¶</a></dt>
+<dd><p>Leave a room.</p>
+<p>The only difference with the <code class="xref py py-func docutils literal notranslate"><span class="pre">socketio.Server.leave_room()</span></code> method
+is that when the <code class="docutils literal notranslate"><span class="pre">namespace</span></code> argument is not given the namespace
+associated with the class is used.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="court.chats.sockets.ThreadSockets.on_connect">
+<code class="descname">on_connect</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/chats/sockets.html#ThreadSockets.on_connect"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.chats.sockets.ThreadSockets.on_connect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Occurs when a user first connects to the server and will be authenticated.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>json</strong> – contains json data from the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="court.chats.sockets.ThreadSockets.on_join">
+<code class="descname">on_join</code><span class="sig-paren">(</span><em>json</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/chats/sockets.html#ThreadSockets.on_join"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.chats.sockets.ThreadSockets.on_join" title="Permalink to this definition">¶</a></dt>
+<dd><p>Occurs when a user subscribes to a realtime chat thread.  The user will have
+to pass authorization checks in order to subscribe to the realtime messages.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>json</strong> – contains json data from the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="court.chats.sockets.ThreadSockets.on_message">
+<code class="descname">on_message</code><span class="sig-paren">(</span><em>json</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/chats/sockets.html#ThreadSockets.on_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.chats.sockets.ThreadSockets.on_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Occurs when an already joined user sends a message on a thread.  Message will
+be saved and then emitted to the everyone in the room including the sender.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>json</strong> – contains json data from the user</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="court.chats.sockets.ThreadSockets.rooms">
+<code class="descname">rooms</code><span class="sig-paren">(</span><em>sid</em>, <em>namespace=None</em><span class="sig-paren">)</span><a class="headerlink" href="#court.chats.sockets.ThreadSockets.rooms" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the rooms a client is in.</p>
+<p>The only difference with the <code class="xref py py-func docutils literal notranslate"><span class="pre">socketio.Server.rooms()</span></code> method is
+that when the <code class="docutils literal notranslate"><span class="pre">namespace</span></code> argument is not given the namespace
+associated with the class is used.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="court.chats.sockets.ThreadSockets.send">
+<code class="descname">send</code><span class="sig-paren">(</span><em>data</em>, <em>room=None</em>, <em>include_self=True</em>, <em>namespace=None</em>, <em>callback=None</em><span class="sig-paren">)</span><a class="headerlink" href="#court.chats.sockets.ThreadSockets.send" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send a message to one or more connected clients.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="court.chats.sockets.ThreadSockets.trigger_event">
+<code class="descname">trigger_event</code><span class="sig-paren">(</span><em>event</em>, <em>*args</em><span class="sig-paren">)</span><a class="headerlink" href="#court.chats.sockets.ThreadSockets.trigger_event" title="Permalink to this definition">¶</a></dt>
+<dd><p>Dispatch an event to the proper handler method.</p>
+<p>In the most common usage, this method is not overloaded by subclasses,
+as it performs the routing of events to methods. However, this
+method can be overriden if special dispatching rules are needed, or if
+having a single method that catches all events is desired.</p>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-court.chats.thread_service"></span><dl class="class">
+<dt id="court.chats.thread_service.ThreadService">
+<em class="property">class </em><code class="descclassname">court.chats.thread_service.</code><code class="descname">ThreadService</code><span class="sig-paren">(</span><em>db_conn=&lt;SQLAlchemy engine=None&gt;</em>, <em>message_store=&lt;class 'court.chats.models.Message'&gt;</em>, <em>thread_store=&lt;class 'court.chats.models.Thread'&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/chats/thread_service.html#ThreadService"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.chats.thread_service.ThreadService" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Handles all business logic for creating and managing user’s chat threads.</p>
+<dl class="method">
+<dt id="court.chats.thread_service.ThreadService.add_message">
+<code class="descname">add_message</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/chats/thread_service.html#ThreadService.add_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.chats.thread_service.ThreadService.add_message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a message to a thread.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>message</strong> – a message object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">message with id added</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="court.chats.thread_service.ThreadService.create_thread">
+<code class="descname">create_thread</code><span class="sig-paren">(</span><em>user_1</em>, <em>user_2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/chats/thread_service.html#ThreadService.create_thread"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.chats.thread_service.ThreadService.create_thread" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates and persists a new chat thread between the users passed.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>user_1</strong> – is a User object</li>
+<li><strong>user_2</strong> – is a User object</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">returns a Thread object with the two users associated</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="court.chats.thread_service.ThreadService.get_messages">
+<code class="descname">get_messages</code><span class="sig-paren">(</span><em>current_user_id</em>, <em>thread_id</em>, <em>first=50</em>, <em>after_id=-1</em>, <em>before_id=-1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/chats/thread_service.html#ThreadService.get_messages"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.chats.thread_service.ThreadService.get_messages" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fetches paginated thread messages in descending order.  If both after_id and
+before_id are passed then only after_id will be used.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>current_user_id</strong> – the user requesting the messages</li>
+<li><strong>thread_id</strong> – the id of the thread the messages are being requested</li>
+<li><strong>first</strong> – the number of messages to return upto</li>
+<li><strong>after_id</strong> – if passed returns all messages with id greater than after_id</li>
+<li><strong>before_id</strong> – if passed returns all messages with id less than before_id</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">list of thread messages</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="court.chats.thread_service.ThreadService.get_thread">
+<code class="descname">get_thread</code><span class="sig-paren">(</span><em>current_user_id</em>, <em>thread_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/chats/thread_service.html#ThreadService.get_thread"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.chats.thread_service.ThreadService.get_thread" title="Permalink to this definition">¶</a></dt>
+<dd><p>Queries for a thread with the passed id.  Will also check authorization of
+user.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>current_user_id</strong> – the id the user requesting the thread information</li>
+<li><strong>thread_id</strong> – the id of the thread being requested</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a Thread object associated with the thread_id</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="court.chats.thread_service.ThreadService.user_is_in_thread">
+<code class="descname">user_is_in_thread</code><span class="sig-paren">(</span><em>user_id</em>, <em>thread</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/chats/thread_service.html#ThreadService.user_is_in_thread"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.chats.thread_service.ThreadService.user_is_in_thread" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks if a user is authorized to be in a thread.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>user_id</strong> – the user id being checked</li>
+<li><strong>thread</strong> – Thread object that is being checked</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">true if the user is authorized to see the thread</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-court.chats.views"></span><dl class="class">
+<dt id="court.chats.views.MessageAPI">
+<em class="property">class </em><code class="descclassname">court.chats.views.</code><code class="descname">MessageAPI</code><span class="sig-paren">(</span><em>thread_service</em>, <em>auth_service</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/chats/views.html#MessageAPI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.chats.views.MessageAPI" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask.views.MethodView</span></code></p>
+<p>Provides the view layer API for messages</p>
+<dl class="classmethod">
+<dt id="court.chats.views.MessageAPI.as_view">
+<em class="property">classmethod </em><code class="descname">as_view</code><span class="sig-paren">(</span><em>name</em>, <em>*class_args</em>, <em>**class_kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#court.chats.views.MessageAPI.as_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts the class into an actual view function that can be used
+with the routing system.  Internally this generates a function on the
+fly which will instantiate the <code class="xref py py-class docutils literal notranslate"><span class="pre">View</span></code> on each request and call
+the <a class="reference internal" href="#court.chats.views.MessageAPI.dispatch_request" title="court.chats.views.MessageAPI.dispatch_request"><code class="xref py py-meth docutils literal notranslate"><span class="pre">dispatch_request()</span></code></a> method on it.</p>
+<p>The arguments passed to <a class="reference internal" href="#court.chats.views.MessageAPI.as_view" title="court.chats.views.MessageAPI.as_view"><code class="xref py py-meth docutils literal notranslate"><span class="pre">as_view()</span></code></a> are forwarded to the
+constructor of the class.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="court.chats.views.MessageAPI.dispatch_request">
+<code class="descname">dispatch_request</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#court.chats.views.MessageAPI.dispatch_request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subclasses have to override this method to implement the
+actual view function code.  This method is called with all
+the arguments from the URL rule.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="court.chats.views.MessageAPI.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>thread_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/chats/views.html#MessageAPI.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.chats.views.MessageAPI.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Processes a HTTP GET request for the message REST API.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>thread_id</strong> – the id of the thread requested</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">a Flask HTTP response with a list of thread messages</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="court.chats.views.ThreadAPI">
+<em class="property">class </em><code class="descclassname">court.chats.views.</code><code class="descname">ThreadAPI</code><span class="sig-paren">(</span><em>auth_service</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/chats/views.html#ThreadAPI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.chats.views.ThreadAPI" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask.views.MethodView</span></code></p>
+<p>Provides the view layer API for threads</p>
+<dl class="classmethod">
+<dt id="court.chats.views.ThreadAPI.as_view">
+<em class="property">classmethod </em><code class="descname">as_view</code><span class="sig-paren">(</span><em>name</em>, <em>*class_args</em>, <em>**class_kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#court.chats.views.ThreadAPI.as_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts the class into an actual view function that can be used
+with the routing system.  Internally this generates a function on the
+fly which will instantiate the <code class="xref py py-class docutils literal notranslate"><span class="pre">View</span></code> on each request and call
+the <a class="reference internal" href="#court.chats.views.ThreadAPI.dispatch_request" title="court.chats.views.ThreadAPI.dispatch_request"><code class="xref py py-meth docutils literal notranslate"><span class="pre">dispatch_request()</span></code></a> method on it.</p>
+<p>The arguments passed to <a class="reference internal" href="#court.chats.views.ThreadAPI.as_view" title="court.chats.views.ThreadAPI.as_view"><code class="xref py py-meth docutils literal notranslate"><span class="pre">as_view()</span></code></a> are forwarded to the
+constructor of the class.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="court.chats.views.ThreadAPI.dispatch_request">
+<code class="descname">dispatch_request</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#court.chats.views.ThreadAPI.dispatch_request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subclasses have to override this method to implement the
+actual view function code.  This method is called with all
+the arguments from the URL rule.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="court.chats.views.ThreadAPI.get">
+<code class="descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/chats/views.html#ThreadAPI.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.chats.views.ThreadAPI.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Processes a HTTP GET request for the thread REST API.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a Flask HTTP response of all users threads</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-court.users.auth_service">
+<span id="users"></span><h1>Users<a class="headerlink" href="#module-court.users.auth_service" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="court.users.auth_service.AuthService">
+<em class="property">class </em><code class="descclassname">court.users.auth_service.</code><code class="descname">AuthService</code><span class="sig-paren">(</span><em>secret</em>, <em>user_store=&lt;class 'court.users.models.User'&gt;</em>, <em>db_conn=&lt;SQLAlchemy engine=None&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/users/auth_service.html#AuthService"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.users.auth_service.AuthService" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Handles all business logic for creating and managing user’s chat threads.</p>
+<dl class="method">
+<dt id="court.users.auth_service.AuthService.get_current_user">
+<code class="descname">get_current_user</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/users/auth_service.html#AuthService.get_current_user"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.users.auth_service.AuthService.get_current_user" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get user object of user in the current context.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">User object of the user in the current context, otherwise return None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="court.users.auth_service.AuthService.get_current_user_id">
+<code class="descname">get_current_user_id</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/users/auth_service.html#AuthService.get_current_user_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.users.auth_service.AuthService.get_current_user_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get user id of user in the current context.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">User object of the user in the current context, otherwise return None</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="court.users.auth_service.AuthService.login">
+<code class="descname">login</code><span class="sig-paren">(</span><em>access_token</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/users/auth_service.html#AuthService.login"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.users.auth_service.AuthService.login" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs Facebook login and information retrieval to create an initial User entry.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>access_token</strong> – Facebook access token after client-side user authentication</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">encrypted user authentication token, and created user object</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="court.users.auth_service.AuthService.login_required">
+<code class="descname">login_required</code><span class="sig-paren">(</span><em>f</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/users/auth_service.html#AuthService.login_required"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.users.auth_service.AuthService.login_required" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO: Add docstring.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="court.users.auth_service.AuthService.validate_token">
+<code class="descname">validate_token</code><span class="sig-paren">(</span><em>token</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/users/auth_service.html#AuthService.validate_token"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.users.auth_service.AuthService.validate_token" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decodes provided encrypted token and sets current context’s user to provided user.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>token</strong> – unique encrypted user authentication token created at User creation</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body">AuthorizationError</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-court.users.models"></span><dl class="class">
+<dt id="court.users.models.Profile">
+<em class="property">class </em><code class="descclassname">court.users.models.</code><code class="descname">Profile</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/users/models.html#Profile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.users.models.Profile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Model</span></code></p>
+<p>Profile maps a db User row to an Object.</p>
+<dl class="attribute">
+<dt id="court.users.models.Profile.query_class">
+<code class="descname">query_class</code><a class="headerlink" href="#court.users.models.Profile.query_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_sqlalchemy.BaseQuery</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="court.users.models.User">
+<em class="property">class </em><code class="descclassname">court.users.models.</code><code class="descname">User</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/users/models.html#User"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.users.models.User" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Model</span></code></p>
+<p>User is the model to map the database to an Object.</p>
+<dl class="attribute">
+<dt id="court.users.models.User.query_class">
+<code class="descname">query_class</code><a class="headerlink" href="#court.users.models.User.query_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_sqlalchemy.BaseQuery</span></code></p>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-court.users.views"></span><dl class="class">
+<dt id="court.users.views.UserAPI">
+<em class="property">class </em><code class="descclassname">court.users.views.</code><code class="descname">UserAPI</code><span class="sig-paren">(</span><em>auth_service</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/users/views.html#UserAPI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.users.views.UserAPI" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask.views.MethodView</span></code></p>
+<p>Provides the view layer API for Users.</p>
+<dl class="classmethod">
+<dt id="court.users.views.UserAPI.as_view">
+<em class="property">classmethod </em><code class="descname">as_view</code><span class="sig-paren">(</span><em>name</em>, <em>*class_args</em>, <em>**class_kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#court.users.views.UserAPI.as_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts the class into an actual view function that can be used
+with the routing system.  Internally this generates a function on the
+fly which will instantiate the <code class="xref py py-class docutils literal notranslate"><span class="pre">View</span></code> on each request and call
+the <a class="reference internal" href="#court.users.views.UserAPI.dispatch_request" title="court.users.views.UserAPI.dispatch_request"><code class="xref py py-meth docutils literal notranslate"><span class="pre">dispatch_request()</span></code></a> method on it.</p>
+<p>The arguments passed to <a class="reference internal" href="#court.users.views.UserAPI.as_view" title="court.users.views.UserAPI.as_view"><code class="xref py py-meth docutils literal notranslate"><span class="pre">as_view()</span></code></a> are forwarded to the
+constructor of the class.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="court.users.views.UserAPI.dispatch_request">
+<code class="descname">dispatch_request</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#court.users.views.UserAPI.dispatch_request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subclasses have to override this method to implement the
+actual view function code.  This method is called with all
+the arguments from the URL rule.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="court.users.views.UserAPI.post">
+<code class="descname">post</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/users/views.html#UserAPI.post"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.users.views.UserAPI.post" title="Permalink to this definition">¶</a></dt>
+<dd><p>Processes a HTTP POST request for the user REST API.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a Flask HTTP response with after a selected user’s login flow.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body">AuthorizationError, ValidationError</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></li>
+<li><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></li>
+<li><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></li>
+</ul>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Anthony Mirand, Cody Ley-Han, Jessica Douma, Martin Kong, River Mist
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

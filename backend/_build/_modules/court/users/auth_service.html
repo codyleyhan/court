@@ -1,0 +1,316 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>court.users.auth_service &mdash; Court  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Court
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Court</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>court.users.auth_service</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for court.users.auth_service</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">jwt</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="k">import</span> <span class="n">g</span><span class="p">,</span> <span class="n">request</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="k">import</span> <span class="n">wraps</span>
+
+<span class="kn">from</span> <span class="nn">court.database</span> <span class="k">import</span> <span class="n">db</span>
+<span class="kn">from</span> <span class="nn">court.errors</span> <span class="k">import</span> <span class="n">AuthorizationError</span><span class="p">,</span> <span class="n">ValidationError</span>
+<span class="kn">from</span> <span class="nn">court.users.models</span> <span class="k">import</span> <span class="n">User</span><span class="p">,</span> <span class="n">Profile</span>
+
+<span class="c1"># TODO(codyleyhan): Need to add tons of try catches</span>
+
+<div class="viewcode-block" id="AuthService"><a class="viewcode-back" href="../../../index.html#court.users.auth_service.AuthService">[docs]</a><span class="k">class</span> <span class="nc">AuthService</span><span class="p">:</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  Handles all business logic for creating and managing user&#39;s chat threads.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">secret</span><span class="p">,</span> <span class="n">user_store</span><span class="o">=</span><span class="n">User</span><span class="p">,</span> <span class="n">db_conn</span><span class="o">=</span><span class="n">db</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Constructs a new AuthService.</span>
+
+<span class="sd">    :param secret: secret key for database initialization</span>
+<span class="sd">    :param user_store: ORM object to create/query users</span>
+<span class="sd">    :param db_conn: a SQLAlchemy database connection</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">secret</span> <span class="o">=</span> <span class="n">secret</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">user_store</span> <span class="o">=</span> <span class="n">user_store</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="n">db_conn</span>
+
+<div class="viewcode-block" id="AuthService.login"><a class="viewcode-back" href="../../../index.html#court.users.auth_service.AuthService.login">[docs]</a>  <span class="k">def</span> <span class="nf">login</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">access_token</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Performs Facebook login and information retrieval to create an initial User entry.</span>
+
+<span class="sd">    :param access_token: Facebook access token after client-side user authentication</span>
+<span class="sd">    :return: encrypted user authentication token, and created user object</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">access_token</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+      <span class="k">raise</span> <span class="n">ValidationError</span><span class="p">()</span>
+
+    <span class="n">base_url</span> <span class="o">=</span> <span class="s1">&#39;https://graph.facebook.com/me?fields=</span><span class="si">{}</span><span class="s1">&amp;access_token=</span><span class="si">{}</span><span class="s1">&#39;</span>
+    <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span> <span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;first_name&#39;</span><span class="p">,</span> <span class="s1">&#39;last_name&#39;</span><span class="p">,</span> <span class="s1">&#39;email&#39;</span><span class="p">,</span>
+               <span class="s1">&#39;picture.height(300).width(300)&#39;</span> <span class="p">]</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">base_url</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">fields</span><span class="p">),</span> <span class="n">access_token</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">status_code</span> <span class="o">!=</span> <span class="mi">200</span><span class="p">:</span>
+      <span class="k">raise</span> <span class="n">AuthorizationError</span><span class="p">()</span>
+
+    <span class="n">facebook_user_data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+
+    <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_store</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">User</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">facebook_user_data</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">one_or_none</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">user</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span> <span class="c1"># user is new so insert into DB</span>
+      <span class="n">user</span> <span class="o">=</span> <span class="n">User</span><span class="p">()</span>
+      <span class="n">user</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">facebook_user_data</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
+      <span class="n">user</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="n">facebook_user_data</span><span class="p">[</span><span class="s1">&#39;email&#39;</span><span class="p">]</span>
+      <span class="c1"># TODO(codyleyhan) tons of exception handling</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">user</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+    <span class="n">token_data</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">),</span>
+      <span class="s1">&#39;is_admin&#39;</span><span class="p">:</span> <span class="kc">False</span>
+    <span class="p">}</span>
+
+    <span class="n">g</span><span class="o">.</span><span class="n">user_id</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span>
+
+    <span class="n">token</span> <span class="o">=</span> <span class="n">jwt</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">token_data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">secret</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="s1">&#39;HS256&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">token</span><span class="p">,</span> <span class="n">user</span></div>
+
+<div class="viewcode-block" id="AuthService.validate_token"><a class="viewcode-back" href="../../../index.html#court.users.auth_service.AuthService.validate_token">[docs]</a>  <span class="k">def</span> <span class="nf">validate_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Decodes provided encrypted token and sets current context&#39;s user to provided user.</span>
+
+<span class="sd">    :param token: unique encrypted user authentication token created at User creation</span>
+<span class="sd">    :return: None</span>
+<span class="sd">    :raises: AuthorizationError</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+      <span class="n">data</span> <span class="o">=</span> <span class="n">jwt</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">secret</span><span class="p">)</span>
+      <span class="n">g</span><span class="o">.</span><span class="n">user_id</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
+    <span class="k">except</span><span class="p">:</span>
+      <span class="k">raise</span> <span class="n">AuthorizationError</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="AuthService.get_current_user"><a class="viewcode-back" href="../../../index.html#court.users.auth_service.AuthService.get_current_user">[docs]</a>  <span class="k">def</span> <span class="nf">get_current_user</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get user object of user in the current context.</span>
+
+<span class="sd">    :return: User object of the user in the current context, otherwise return None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s1">&#39;user&#39;</span> <span class="ow">in</span> <span class="n">g</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">g</span><span class="o">.</span><span class="n">user</span>
+
+    <span class="n">user_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_current_user_id</span><span class="p">()</span>
+    <span class="k">if</span> <span class="s1">&#39;user_id&#39;</span> <span class="ow">in</span> <span class="n">g</span><span class="p">:</span>
+      <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_store</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span>
+      <span class="n">g</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">user</span>
+      <span class="k">return</span> <span class="n">user</span>
+
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="AuthService.get_current_user_id"><a class="viewcode-back" href="../../../index.html#court.users.auth_service.AuthService.get_current_user_id">[docs]</a>  <span class="k">def</span> <span class="nf">get_current_user_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get user id of user in the current context.</span>
+
+<span class="sd">    :return: User object of the user in the current context, otherwise return None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s1">&#39;user_id&#39;</span> <span class="ow">in</span> <span class="n">g</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">g</span><span class="o">.</span><span class="n">user_id</span>
+
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="AuthService.login_required"><a class="viewcode-back" href="../../../index.html#court.users.auth_service.AuthService.login_required">[docs]</a>  <span class="k">def</span> <span class="nf">login_required</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    TODO: Add docstring.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="nd">@wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">decorated_function</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+      <span class="k">if</span> <span class="s1">&#39;user_id&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">g</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">AuthorizationError</span><span class="p">()</span>
+      <span class="k">return</span> <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">decorated_function</span></div></div>
+
+
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Anthony Mirand, Cody Ley-Han, Jessica Douma, Martin Kong, River Mist
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

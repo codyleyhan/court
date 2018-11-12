@@ -11,12 +11,30 @@ from court.users.models import User, Profile
 # TODO(codyleyhan): Need to add tons of try catches
 
 class AuthService:
+  """
+  Handles all business logic for creating and managing user's chat threads.
+  """
+
+
   def __init__(self, secret, user_store=User, db_conn=db):
+    """
+    Constructs a new AuthService.
+
+    :param secret: secret key for database initialization
+    :param user_store: ORM object to create/query users
+    :param db_conn: a SQLAlchemy database connection
+    """
     self.secret = secret
     self.user_store = user_store
     self.db = db_conn
 
   def login(self, access_token):
+    """
+    Performs Facebook login and information retrieval to create an initial User entry.
+
+    :param access_token: Facebook access token after client-side user authentication
+    :return: encrypted user authentication token, and created user object
+    """
     if access_token.strip() == '':
       raise ValidationError()
 
@@ -38,49 +56,68 @@ class AuthService:
       self.db.session.add(user)
       self.db.session.commit()
 
-    # TODO(anthonymirand): store user profile in database
     token_data = {
       'id': int(user.id),
       'is_admin': False
     }
 
-    g.user_id = int(user.id)
+    g.user_id = user.id
 
-    token = jwt.encode(token_data, self.secret, algorithms=['HS256'])
+    token = jwt.encode(token_data, self.secret, algorithm='HS256')
 
     return token, user
 
   def validate_token(self, token):
+    """
+    Decodes provided encrypted token and sets current context's user to provided user.
+
+    :param token: unique encrypted user authentication token created at User creation
+    :return: None
+    :raises: AuthorizationError
+    """
     try:
-      data = jwt.decode(token, self.secret, algorithms=['HS256'])
+      data = jwt.decode(token, self.secret)
       g.user_id = data['id']
-    except Exception as e:
+    except:
       raise AuthorizationError()
 
   def get_current_user(self):
+    """
+    Get user object of user in the current context.
+
+    :return: User object of the user in the current context, otherwise return None
+    """
     if 'user' in g:
       return g.user
 
     user_id = self.get_current_user_id()
-    if user_id is not None:
-      user = self.user_store.query.get(user_id)
+    if 'user_id' in g:
+      user = self.user_store.query.get(g.user_id)
       g.user = user
       return user
 
     return None
 
   def get_current_user_id(self):
+    """
+    Get user id of user in the current context.
+
+    :return: User object of the user in the current context, otherwise return None
+    """
     if 'user_id' in g:
       return g.user_id
 
     return None
 
   def login_required(self, f):
+    """
+    TODO: Add docstring.
+    """
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if 'user_id' not in g:
-            raise AuthorizationError()
-        return f(*args, **kwargs)
+      if 'user_id' not in g:
+        raise AuthorizationError()
+      return f(*args, **kwargs)
     return decorated_function
 
 

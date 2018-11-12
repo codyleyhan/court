@@ -13,10 +13,17 @@ from court.users.auth_service import AuthService
 from court.users.views import UserAPI
 
 def create_app(config=DevelopmentConfig):
+  """
+  Creates Court Flask application and initializes all necessary databases.
+
+  :param config: The configuration object to be used in Court backend creation.
+  :return: Created/initialized Flask application.
+  """
   app = Flask(__name__)
   app.config.from_object(config)
 
   db.init_app(app)
+  db.create_all(app)
 
   add_error_handlers(app)
   add_routes(app, socketio)
@@ -26,6 +33,12 @@ def create_app(config=DevelopmentConfig):
   return app
 
 def add_error_handlers(app):
+  """
+  Adds error handling endpoints to Flask.
+
+  :param app: The configured Flask backend application to add endpoints to.
+  :return: None.
+  """
   app.register_error_handler(HTTPStatus.INTERNAL_SERVER_ERROR, ErrorHandler.handle_internal_server)
   app.register_error_handler(HTTPStatus.NOT_FOUND, ErrorHandler.handle_not_found)
   app.register_error_handler(ValidationError, ErrorHandler.handle_error_with_message)
@@ -33,6 +46,12 @@ def add_error_handlers(app):
   app.register_error_handler(NotFoundError, ErrorHandler.handle_error_with_message)
 
 def add_routes(app, socketio):
+  """
+  Adds callable endpoints to Flask.
+
+  :param app: The configured Flask backend application to add endpoints to.
+  :return: None.
+  """
   auth_service = AuthService(app.config['SECRET_KEY'])
 
   @app.before_request
@@ -40,7 +59,6 @@ def add_routes(app, socketio):
     if request.headers.get('Authorization') is not None:
       token = request.headers.get('Authorization')
       auth_service.validate_token(token)
-
 
   user_view = UserAPI.as_view('user_api', auth_service)
   app.add_url_rule('/api/users', view_func=user_view, methods=['POST'])

@@ -1,6 +1,9 @@
 import os
 
 class Config(object):
+  """
+  Defines the base Configuration object used to create a Flask instance.
+  """
   DEBUG = False
   TESTING = False
   SQLALCHEMY_TRACK_MODIFICATIONS = False
@@ -11,13 +14,21 @@ class Config(object):
 
 
 class DevelopmentConfig(Config):
+  """
+  Configuration for the development Court Flask instance.
+  """
   DEBUG = True
   SQLALCHEMY_ECHO = True
 
 class TestingConfig(Config):
+  """
+  Configuration for the testing Court Flask instance.
+  """
   TESTING = True
-  SQLALCHEMY_DATABASE_URI = 'sqlite://'
 
 class ProductionConfig(Config):
+  """
+  Configuration for the production Court Flask instance.
+  """
   SQLALCHEMY_ECHO = True
   SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URL')

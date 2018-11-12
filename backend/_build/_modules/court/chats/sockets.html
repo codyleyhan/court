@@ -1,0 +1,274 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>court.chats.sockets &mdash; Court  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Court
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Court</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>court.chats.sockets</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for court.chats.sockets</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">flask_socketio</span> <span class="k">import</span> <span class="n">Namespace</span><span class="p">,</span> <span class="n">disconnect</span><span class="p">,</span> <span class="n">join_room</span><span class="p">,</span> <span class="n">emit</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="k">import</span> <span class="n">request</span><span class="p">,</span> <span class="n">g</span>
+
+<span class="kn">from</span> <span class="nn">court.chats.models</span> <span class="k">import</span> <span class="n">Message</span>
+
+<span class="c1"># TODO (codyleyhan): figure out how we are going to send information notifications</span>
+
+<div class="viewcode-block" id="ThreadSockets"><a class="viewcode-back" href="../../../index.html#court.chats.sockets.ThreadSockets">[docs]</a><span class="k">class</span> <span class="nc">ThreadSockets</span><span class="p">(</span><span class="n">Namespace</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  ThreadSockets is the object that handles the realtime chat aspect of court</span>
+<span class="sd">  providing users realtime messaging between each and notifications.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">namespace</span><span class="p">,</span> <span class="n">auth_service</span><span class="p">,</span> <span class="n">thread_service</span><span class="p">,</span> <span class="n">logger</span><span class="p">):</span>
+    <span class="nb">super</span><span class="p">(</span><span class="n">ThreadSockets</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">namespace</span><span class="o">=</span><span class="n">namespace</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">auth_service</span> <span class="o">=</span> <span class="n">auth_service</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">thread_service</span> <span class="o">=</span> <span class="n">thread_service</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span> <span class="o">=</span> <span class="n">logger</span>
+
+  <span class="k">def</span> <span class="nf">get_user_from_request</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">auth_service</span><span class="o">.</span><span class="n">validate_token</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;token&#39;</span><span class="p">))</span>
+  
+<div class="viewcode-block" id="ThreadSockets.on_connect"><a class="viewcode-back" href="../../../index.html#court.chats.sockets.ThreadSockets.on_connect">[docs]</a>  <span class="k">def</span> <span class="nf">on_connect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Occurs when a user first connects to the server and will be authenticated.</span>
+
+<span class="sd">    :param json: contains json data from the user</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;a new user is trying to connect&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">get_user_from_request</span><span class="p">()</span>
+    <span class="n">user_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">auth_service</span><span class="o">.</span><span class="n">get_current_user_id</span><span class="p">()</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> connected has connected&quot;</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
+    
+    <span class="n">emit</span><span class="p">(</span><span class="s1">&#39;connected&#39;</span><span class="p">,</span> <span class="p">{</span>
+      <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="s2">&quot;you are connected&quot;</span>
+    <span class="p">})</span></div>
+  
+<div class="viewcode-block" id="ThreadSockets.on_message"><a class="viewcode-back" href="../../../index.html#court.chats.sockets.ThreadSockets.on_message">[docs]</a>  <span class="k">def</span> <span class="nf">on_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Occurs when an already joined user sends a message on a thread.  Message will</span>
+<span class="sd">    be saved and then emitted to the everyone in the room including the sender.</span>
+
+<span class="sd">    :param json: contains json data from the user</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">get_user_from_request</span><span class="p">()</span>
+    <span class="n">user_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">auth_service</span><span class="o">.</span><span class="n">get_current_user_id</span><span class="p">()</span>
+    <span class="k">if</span> <span class="s1">&#39;thread&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">json</span> <span class="ow">or</span> <span class="s1">&#39;body&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">json</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> sent a message without the right data&quot;</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
+      <span class="k">raise</span> <span class="ne">Exception</span><span class="p">()</span>
+    <span class="n">thread_id</span> <span class="o">=</span> <span class="n">json</span><span class="p">[</span><span class="s1">&#39;thread&#39;</span><span class="p">]</span>
+    <span class="n">thread</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">thread_service</span><span class="o">.</span><span class="n">get_thread</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">thread_id</span><span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> is trying to add a message to the thread </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="n">thread_id</span><span class="p">)</span>
+
+    <span class="n">message_body</span> <span class="o">=</span> <span class="n">json</span><span class="p">[</span><span class="s1">&#39;body&#39;</span><span class="p">]</span>
+    <span class="n">message</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">thread_id</span><span class="p">,</span> <span class="n">message_body</span><span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">thread_service</span><span class="o">.</span><span class="n">add_message</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> added a message to the thread </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="n">thread_id</span><span class="p">)</span>
+
+    <span class="n">emit</span><span class="p">(</span><span class="s1">&#39;new_message&#39;</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span><span class="n">room</span><span class="o">=</span><span class="n">thread_id</span><span class="p">,</span> <span class="n">broadcast</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+  
+
+<div class="viewcode-block" id="ThreadSockets.on_join"><a class="viewcode-back" href="../../../index.html#court.chats.sockets.ThreadSockets.on_join">[docs]</a>  <span class="k">def</span> <span class="nf">on_join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Occurs when a user subscribes to a realtime chat thread.  The user will have</span>
+<span class="sd">    to pass authorization checks in order to subscribe to the realtime messages.</span>
+
+<span class="sd">    :param json: contains json data from the user</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">get_user_from_request</span><span class="p">()</span>
+    <span class="n">user_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">auth_service</span><span class="o">.</span><span class="n">get_current_user_id</span><span class="p">()</span>
+    <span class="k">if</span> <span class="s1">&#39;thread&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">json</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> did not pass a thread to join&quot;</span><span class="p">,</span> <span class="n">user_id</span><span class="p">)</span>
+      <span class="k">raise</span> <span class="ne">Exception</span><span class="p">()</span>
+    <span class="n">thread_id</span> <span class="o">=</span> <span class="n">json</span><span class="p">[</span><span class="s1">&#39;thread&#39;</span><span class="p">]</span>
+    <span class="n">thread</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">thread_service</span><span class="o">.</span><span class="n">get_thread</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">thread_id</span><span class="p">)</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;connecting user </span><span class="si">%s</span><span class="s2"> to thread </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="n">thread_id</span><span class="p">)</span>
+    <span class="n">join_room</span><span class="p">(</span><span class="n">thread_id</span><span class="p">)</span></div></div>
+    
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Anthony Mirand, Cody Ley-Han, Jessica Douma, Martin Kong, River Mist
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
