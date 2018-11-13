@@ -1,5 +1,7 @@
 # Court
 
+[![Build Status](https://travis-ci.org/codyleyhan/court.svg?branch=master)](https://travis-ci.org/codyleyhan/court)
+
 ```bash
 .
 ├── README.md
