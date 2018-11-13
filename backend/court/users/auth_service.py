@@ -61,9 +61,9 @@ class AuthService:
       'is_admin': False
     }
 
-    g.user_id = user.id
+    g.user_id = int(user.id)
 
-    token = jwt.encode(token_data, self.secret, algorithm='HS256')
+    token = jwt.encode(token_data, self.secret, algorithms=['HS256'])
 
     return token, user
 
@@ -76,7 +76,7 @@ class AuthService:
     :raises: AuthorizationError
     """
     try:
-      data = jwt.decode(token, self.secret)
+      data = jwt.decode(token, self.secret, algorithms=['HS256'])
       g.user_id = data['id']
     except:
       raise AuthorizationError()
