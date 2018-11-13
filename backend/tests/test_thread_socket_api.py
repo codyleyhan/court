@@ -58,6 +58,9 @@ def test_thread_message_events(app):
 
 
 def test_thread_socket_auth(app):
+  """
+  Ensures that all connnected clients pass an appropriate auth token
+  """
   with app.app_context():
     client = socketio.test_client(app)
     events = client.get_received()
