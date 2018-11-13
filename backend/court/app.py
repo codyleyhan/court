@@ -23,7 +23,6 @@ def create_app(config=DevelopmentConfig):
   app.config.from_object(config)
 
   db.init_app(app)
-  db.create_all(app)
 
   add_error_handlers(app)
   add_routes(app, socketio)

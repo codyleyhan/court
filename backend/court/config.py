@@ -24,6 +24,7 @@ class TestingConfig(Config):
   """
   Configuration for the testing Court Flask instance.
   """
+  SQLALCHEMY_DATABASE_URI = 'sqlite://'
   TESTING = True
 
 class ProductionConfig(Config):

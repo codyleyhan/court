@@ -6,6 +6,9 @@ start:
 install-deps:
 	pip install -r requirements.txt
 
+test:
+	pytest
+
 migrate:
 	python migrate.py
 

@@ -1,0 +1,3 @@
+token_for_user_1 = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MX0.7465T4iOn8JFnYYnOKlKy-nhB_NGloQ8hDIbyZqIel8'
+token_for_user_2 = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Mn0.1Ctnx3e0PoW4Q0rVx2trkAecBD1Y7EYIoUcRvQASseA'
+token_for_user_3 = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6M30.A85HxW7u4leuTdm-N-j93I9wuhJHf_0q81k4GCsFeWg'
