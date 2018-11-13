@@ -5,10 +5,7 @@ from court.users.models import User
 
 import pytest
 
-
-from .config import app
-
-def test_validate_token():
+def test_validate_token(app):
   valid_token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTIzfQ.4OcRLSO_GlqmtdRD_eKLcLiVpSaX8ueIM2ddAOrxY1I'
   bad_signature_token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjEyMyJ9.Gyndb3IcLowcYksGg20QWouK6DkRQ28Jqlh80tjG9J8'
   with app.app_context():
@@ -19,7 +16,7 @@ def test_validate_token():
     with pytest.raises(AuthorizationError):
       service.validate_token(bad_signature_token)
 
-def test_get_current_user_id():
+def test_get_current_user_id(app):
   with app.app_context():
     g.user_id = 'test'
     service = AuthService('secret', None, None)
@@ -31,7 +28,7 @@ def test_get_current_user_id():
     id = service.get_current_user_id()
     id is None
 
-def test_login_required():
+def test_login_required(app):
   with app.app_context():
     g.user_id = 'test'
     service = AuthService('secret', None, None)
