@@ -1,6 +1,6 @@
 from http import HTTPStatus
 from flask import Flask, g, jsonify, request,json
-from flask_socketio import SocketIO
+from flask_socketio import SocketIO, emit
 
 from court.chats.sockets import ThreadSockets
 from court.chats.thread_service import ThreadService
@@ -49,6 +49,7 @@ def add_routes(app, socketio):
   Adds callable endpoints to Flask.
 
   :param app: The configured Flask backend application to add endpoints to.
+  :param socketio: The configured socketio instance
   :return: None.
   """
   auth_service = AuthService(app.config['SECRET_KEY'])
@@ -71,6 +72,9 @@ def add_routes(app, socketio):
 
   # register socket
   socketio.on_namespace(ThreadSockets(None, auth_service, thread_service, app.logger))
+  @socketio.on_error_default
+  def handle_socket_error(e):
+    emit('error', e.to_dict())
 
   @app.route('/')
   def health_check():
