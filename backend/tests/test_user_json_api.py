@@ -4,7 +4,7 @@ import pytest
 
 from court.users.models import User
 
-def test_login_new_user(app, requests_mock):
+def test_login(app, requests_mock):
   facebook_token = 'mocksodoesntmatter'
   facebook_url = 'https://graph.facebook.com/me?fields=id,first_name,last_name,email,picture.height(300).width(300)&access_token=' + facebook_token
   mocked_fb_resp = json.loads("""
@@ -44,3 +44,11 @@ def test_login_new_user(app, requests_mock):
       # user should now be in db
       user = User.query.filter(User.id == '102773437400251').one_or_none()
       assert user is not None
+    
+    # ensure an already created user can login again
+    resp = client.post('/api/users', query_string=params)
+    data = json.loads(resp.data)
+    assert data['success']
+    assert data['token'] == court_jwt
+    assert data['user']['email'] == 'kfgzlneeuo_1541453454@fbnw.net'
+    assert data['user']['id'] == '102773437400251'
