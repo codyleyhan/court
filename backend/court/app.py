@@ -17,6 +17,7 @@ def create_app(config=DevelopmentConfig):
   Creates Court Flask application and initializes all necessary databases.
 
   :param config: The configuration object to be used in Court backend creation.
+  :type config: court.config.Config
   :return: Created/initialized Flask application.
   """
   app = Flask(__name__)
@@ -50,6 +51,7 @@ def add_routes(app, socketio):
   Adds callable endpoints to Flask.
 
   :param app: The configured Flask backend application to add endpoints to.
+  :param socketio: the socketio app instance
   :return: None.
   """
   auth_service = AuthService(app.config['SECRET_KEY'])
@@ -60,9 +62,11 @@ def add_routes(app, socketio):
       token = request.headers.get('Authorization')
       auth_service.validate_token(token)
 
+  # register user views
   user_view = UserAPI.as_view('user_api', auth_service)
   app.add_url_rule('/api/users', view_func=user_view, methods=['POST'])
 
+  # register thread views
   thread_service = ThreadService()
   thread_view = auth_service.login_required(ThreadAPI.as_view('thread_api', auth_service))
   thread_message_view = auth_service.login_required(MessageAPI.as_view('message_api', thread_service, auth_service))

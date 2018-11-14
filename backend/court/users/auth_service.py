@@ -21,6 +21,7 @@ class AuthService:
     Constructs a new AuthService.
 
     :param secret: secret key for database initialization
+    :type secret: str
     :param user_store: ORM object to create/query users
     :param db_conn: a SQLAlchemy database connection
     """
@@ -33,6 +34,8 @@ class AuthService:
     Performs Facebook login and information retrieval to create an initial User entry.
 
     :param access_token: Facebook access token after client-side user authentication
+    :type access_token: str
+
     :return: encrypted user authentication token, and created user object
     """
     if access_token.strip() == '':
@@ -72,6 +75,8 @@ class AuthService:
     Decodes provided encrypted token and sets current context's user to provided user.
 
     :param token: unique encrypted user authentication token created at User creation
+    :type token: str
+
     :return: None
     :raises: AuthorizationError
     """
@@ -86,6 +91,7 @@ class AuthService:
     Get user object of user in the current context.
 
     :return: User object of the user in the current context, otherwise return None
+    :rtype: court.users.models.User
     """
     if 'user' in g:
       return g.user
@@ -103,6 +109,7 @@ class AuthService:
     Get user id of user in the current context.
 
     :return: User object of the user in the current context, otherwise return None
+    :rtype: str
     """
     if 'user_id' in g:
       return g.user_id
