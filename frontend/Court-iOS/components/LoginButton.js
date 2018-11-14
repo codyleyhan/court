@@ -6,7 +6,7 @@ import Colors from '../constants/Colors';
 
 export default class LoginButton extends React.Component {
   render() {
-    const { onPress } = this.props;
+    const { onPress, showLogo, text } = this.props;
 
     const fbIcon = (
       <Icon.Ionicons
@@ -20,8 +20,8 @@ export default class LoginButton extends React.Component {
     return (
       <TouchableOpacity onPress={onPress} activeOpacity={0.5}>
         <View style={styles.loginButton}>
-          {fbIcon}
-          <Text style={styles.loginText}>Login with Facebook</Text>
+          {showLogo && fbIcon}
+          <Text style={styles.loginText}>{ text }</Text>
         </View>
       </TouchableOpacity>
     );

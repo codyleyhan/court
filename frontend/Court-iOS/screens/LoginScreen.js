@@ -11,6 +11,9 @@ import {
   View,
 } from 'react-native';
 
+import { Transition } from 'react-navigation-fluid-transitions';
+
+import Authentication from '../constants/Authentication';
 import Colors from '../constants/Colors';
 import LoginButton from '../components/LoginButton';
 import { logInWithFacebook } from '../utils/Login';
@@ -25,28 +28,34 @@ export default class LoginScreen extends React.Component {
     this.state = { isLoading: false };
   }
 
+  // componentDidMount() {
+  //   this.props.navigation.navigate('Interests', { user: { first_name: 'River', picture: { data: { url: "https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=723005941386300&height=300&width=300&ext=1544324078&hash=AeRlSN4NlLUXmWcm" } }} });
+  // }
+
+  async storeItems(response) {
+    try {
+      await AsyncStorage.setItem(Authentication.AUTH_USER, JSON.stringify(response.user));
+      await AsyncStorage.setItem(Authentication.AUTH_TOKEN, response.token);
+    } catch (error) {
+      // Error saving data
+      alert('Error saving credentials', 'Please login again');
+    }
+  }
+
   handleLoginPress = () => {
     // Handle pressing login here
     this.setState({ isLoading: true });
     logInWithFacebook().then((response) => {
       console.log(response);
-      this.setState({ isLoading: false });
       if (response && response.success) {
         // Store credentials
-        _storeData = async () => {
-          try {
-            await AsyncStorage.setItem('auth_user', response.user);
-            await AsyncStorage.setItem('auth_token', response.token);
-          } catch (error) {
-            // Error saving data
-            alert('Error saving credentials', 'Please login again');
-          }
-        }
-        // Navigate to main app
-        this.props.navigation.navigate('App');
+        this.storeItems(response);
+        // Navigate to setup screen
+        this.props.navigation.navigate('Setup', { user: response.user });
       } else {
         alert('Login failed');
       }
+      this.setState({ isLoading: false });
     });
   }
 
@@ -54,16 +63,18 @@ export default class LoginScreen extends React.Component {
     return (
       <View style={styles.container}>
         // White Logo Display
-        <Image
-          style={styles.logoImage}
-          source={ require('../assets/images/court-logo-white.png') }
-        />
+        <Transition shared="logo">
+          <Image
+            style={styles.logoImage}
+            source={ require('../assets/images/court-logo-white.png') }
+          />
+        </Transition>
         // Text Logo
         <Text style={styles.logoText}>court</Text>
         // Login Button
         {this.state.isLoading ?
           <ActivityIndicator color='white' size='large' />
-          : <LoginButton onPress={this.handleLoginPress}/>
+          : <LoginButton onPress={this.handleLoginPress} text="Continue with Facebook" showLogo={true}/>
         }
 
       </View>
