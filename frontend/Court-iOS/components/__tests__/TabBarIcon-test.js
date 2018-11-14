@@ -7,7 +7,7 @@ it('Renders Default TabBarIcon', () => {
   const onPress = jest.fn();
   const tree = renderer.create(
     <TabBarIcon
-      name="Inbox"
+      name="md-chatbubbles"
       focused={true}
     />
   ).toJSON();
