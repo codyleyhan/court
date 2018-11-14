@@ -37,7 +37,6 @@ class UserAPI(MethodView):
     access_token = request.args.get('access_token')
     if access_token is None:
       raise AuthorizationError()
-    print(access_token)
     # create a new user
     try:
       token, user = self.auth_service.login(access_token)
