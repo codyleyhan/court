@@ -24,5 +24,7 @@
   },
   "devDependencies": {
     "jest-expo": "30.0.0",
+    "react-doc-generator": "^1.2.5",
+    "react-styleguidist": "^8.0.4"
   }
 }
