@@ -22,7 +22,7 @@ If you add a dependency then run:
 pip freeze > requirements.txt
 ```
 
-If you want to recompile the documentation then run:
+If you want to recompile the documentation then go to docs/ directory and run:
 ```bash
-make docs
+make html
 ```
