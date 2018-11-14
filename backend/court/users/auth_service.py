@@ -63,9 +63,9 @@ class AuthService:
 
     g.user_id = int(user.id)
 
-    token = jwt.encode(token_data, self.secret, algorithms=['HS256'])
+    token = jwt.encode(token_data, self.secret, algorithm='HS256')
 
-    return token, user
+    return token, facebook_user_data
 
   def validate_token(self, token):
     """
