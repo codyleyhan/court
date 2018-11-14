@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Icon } from 'expo';
 
 import { Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
@@ -8,6 +9,9 @@ import InterestsCloud from '../components/InterestsCloud';
 
 import { queryGoogleKG } from '../utils/GoogleKGS';
 
+/**
+* Provides interface for searching for and selecting interests
+*/
 export default class InterestsFinder extends React.Component {
   constructor(props) {
     super(props);
@@ -69,6 +73,21 @@ export default class InterestsFinder extends React.Component {
       </View>
     );
   }
+}
+
+InterestsFinder.propTypes = {
+  /**
+  * Object containing the user's current selected interests
+  */
+  interests: PropTypes.object.isRequired,
+  /**
+  * Callback function for when a user selects a new interest
+  */
+  onAddInterest: PropTypes.func.isRequired,
+  /**
+  * Callback function for when a user removes an interest
+  */
+  onRemoveInterest: PropTypes.func.isRequired,
 }
 
 const styles = StyleSheet.create({

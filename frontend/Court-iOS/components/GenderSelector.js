@@ -1,9 +1,13 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Icon } from 'expo';
 
 import { Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Colors from '../constants/Colors';
 
+/**
+* Allows a user to select their own gender, as well as the gender(s) they are seeking
+*/
 export default class GenderSelector extends React.Component {
   constructor(props) {
     super(props);
@@ -66,6 +70,17 @@ export default class GenderSelector extends React.Component {
       </View>
     );
   }
+}
+
+GenderSelector.propTypes = {
+  /**
+  * Callback function for when a user selects their own gender
+  */
+  onGenderSelected: PropTypes.func.isRequired,
+  /**
+  * Callback function for when a user selected what gender(s) they are seeking
+  */
+  onPreferenceSelected: PropTypes.func.isRequired,
 }
 
 const styles = StyleSheet.create({

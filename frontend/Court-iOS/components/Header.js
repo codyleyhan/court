@@ -1,8 +1,13 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import { Image, StyleSheet, Text, View } from 'react-native';
 import Colors from '../constants/Colors';
 
+
+/**
+* Creates header with centered text, and optional left and right components
+*/
 export default class Header extends React.Component {
   render() {
     const { text, rightIcon, leftIcon} = this.props;
@@ -35,3 +40,18 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   }
 });
+
+Header.propTypes = {
+  /**
+  * Text to be rendered in center of header
+  */
+  text: PropTypes.string.isRequired,
+  /**
+  * Component to be rendered on left side of header
+  */
+  rightIcon: PropTypes.node,
+  /**
+  * Component to be rendered on right side of header
+  */
+  leftIcon: PropTypes.node,
+}
