@@ -1,6 +1,6 @@
 from http import HTTPStatus
 from flask import Flask, g, jsonify, request,json
-from flask_socketio import SocketIO
+from flask_socketio import SocketIO, emit
 
 from court.chats.sockets import ThreadSockets
 from court.chats.thread_service import ThreadService
@@ -10,7 +10,7 @@ from court.database import db
 from court.sockets import socketio
 from court.errors import *
 from court.users.auth_service import AuthService
-from court.users.views import UserAPI
+from court.users.views import ProfileAPI, UserAPI
 
 def create_app(config=DevelopmentConfig):
   """
@@ -24,7 +24,7 @@ def create_app(config=DevelopmentConfig):
   app.config.from_object(config)
 
   db.init_app(app)
-  db.create_all(app)
+  db.create_all(app=app) # Need this to make User/Profile tables
 
   add_error_handlers(app)
   add_routes(app, socketio)
@@ -51,7 +51,7 @@ def add_routes(app, socketio):
   Adds callable endpoints to Flask.
 
   :param app: The configured Flask backend application to add endpoints to.
-  :param socketio: the socketio app instance
+  :param socketio: The configured socketio instance
   :return: None.
   """
   auth_service = AuthService(app.config['SECRET_KEY'])
@@ -64,7 +64,10 @@ def add_routes(app, socketio):
 
   # register user views
   user_view = UserAPI.as_view('user_api', auth_service)
+  profile_view = auth_service.login_required(ProfileAPI.as_view('profile_api', auth_service))
   app.add_url_rule('/api/users', view_func=user_view, methods=['POST'])
+  app.add_url_rule('/api/users/<int:user_id>', view_func=profile_view,
+    methods=['GET', 'PUT', 'DELETE'])
 
   # register thread views
   thread_service = ThreadService()
@@ -76,6 +79,9 @@ def add_routes(app, socketio):
 
   # register socket
   socketio.on_namespace(ThreadSockets(None, auth_service, thread_service, app.logger))
+  @socketio.on_error_default
+  def handle_socket_error(e):
+    emit('error', e.to_dict())
 
   @app.route('/')
   def health_check():

@@ -3,8 +3,6 @@ from flask import request, g
 
 from court.chats.models import Message
 
-# TODO (codyleyhan): figure out how we are going to send information notifications
-
 class ThreadSockets(Namespace):
   """
   ThreadSockets is the object that handles the realtime chat aspect of court
@@ -33,7 +31,7 @@ class ThreadSockets(Namespace):
     
     emit('connected', {
       "body": "you are connected"
-    })
+    }, json=True)
   
   def on_message(self, json):
     """
@@ -59,7 +57,7 @@ class ThreadSockets(Namespace):
 
     self.logger.info("%s added a message to the thread %d", user_id, thread_id)
 
-    emit('new_message', message,room=thread_id, broadcast=True, json=True)
+    emit('new_message', message, room=thread_id, broadcast=True, json=True)
   
 
   def on_join(self, json):

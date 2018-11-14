@@ -41,9 +41,9 @@ class MessageAPI(MethodView):
     if 'first' in request.args:
       first = request.args.get('first')
     if 'after_id' in request.args:
-      after_id = request.get('after_id')
+      after_id = request.args.get('after_id')
     elif 'before_id' in request.args:
-      before_id = request.get('before_id')
+      before_id = request.args.get('before_id')
 
     messages = self.thread_service.get_messages(user_id, thread_id, first, after_id, before_id)
 

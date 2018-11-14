@@ -1,12 +1,17 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Icon } from 'expo';
 
 import { Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Colors from '../constants/Colors';
 
+
+/**
+* Button that initiates facebook user authentication flow
+*/
 export default class LoginButton extends React.Component {
   render() {
-    const { onPress } = this.props;
+    const { onPress, showLogo, text } = this.props;
 
     const fbIcon = (
       <Icon.Ionicons
@@ -20,8 +25,8 @@ export default class LoginButton extends React.Component {
     return (
       <TouchableOpacity onPress={onPress} activeOpacity={0.5}>
         <View style={styles.loginButton}>
-          {fbIcon}
-          <Text style={styles.loginText}>Login with Facebook</Text>
+          {showLogo && fbIcon}
+          <Text style={styles.loginText}>{ text }</Text>
         </View>
       </TouchableOpacity>
     );
@@ -53,3 +58,18 @@ const styles = StyleSheet.create({
     fontSize: 20,
   }
 });
+
+LoginButton.propTypes = {
+  /**
+  * Function that handles touch event
+  */
+  onPress: PropTypes.func.isRequired,
+  /**
+  * Boolean indicating whether or not to show the facebook logo
+  */
+  showLogo: PropTypes.bool.isRequired,
+  /**
+  * Text to be rendered in button
+  */
+  text: PropTypes.string.isRequired,
+}
