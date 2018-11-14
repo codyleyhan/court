@@ -141,7 +141,7 @@
   <h1>Source code for court.app</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">http</span> <span class="k">import</span> <span class="n">HTTPStatus</span>
 <span class="kn">from</span> <span class="nn">flask</span> <span class="k">import</span> <span class="n">Flask</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">jsonify</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span><span class="n">json</span>
-<span class="kn">from</span> <span class="nn">flask_socketio</span> <span class="k">import</span> <span class="n">SocketIO</span>
+<span class="kn">from</span> <span class="nn">flask_socketio</span> <span class="k">import</span> <span class="n">SocketIO</span><span class="p">,</span> <span class="n">emit</span>
 
 <span class="kn">from</span> <span class="nn">court.chats.sockets</span> <span class="k">import</span> <span class="n">ThreadSockets</span>
 <span class="kn">from</span> <span class="nn">court.chats.thread_service</span> <span class="k">import</span> <span class="n">ThreadService</span>
@@ -151,20 +151,20 @@
 <span class="kn">from</span> <span class="nn">court.sockets</span> <span class="k">import</span> <span class="n">socketio</span>
 <span class="kn">from</span> <span class="nn">court.errors</span> <span class="k">import</span> <span class="o">*</span>
 <span class="kn">from</span> <span class="nn">court.users.auth_service</span> <span class="k">import</span> <span class="n">AuthService</span>
-<span class="kn">from</span> <span class="nn">court.users.views</span> <span class="k">import</span> <span class="n">UserAPI</span>
+<span class="kn">from</span> <span class="nn">court.users.views</span> <span class="k">import</span> <span class="n">ProfileAPI</span><span class="p">,</span> <span class="n">UserAPI</span>
 
 <div class="viewcode-block" id="create_app"><a class="viewcode-back" href="../../index.html#court.app.create_app">[docs]</a><span class="k">def</span> <span class="nf">create_app</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">DevelopmentConfig</span><span class="p">):</span>
   <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">  Creates Court Flask application and initializes all necessary databases.</span>
 
 <span class="sd">  :param config: The configuration object to be used in Court backend creation.</span>
+<span class="sd">  :type config: court.config.Config</span>
 <span class="sd">  :return: Created/initialized Flask application.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
   <span class="n">app</span> <span class="o">=</span> <span class="n">Flask</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
   <span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">from_object</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
 
   <span class="n">db</span><span class="o">.</span><span class="n">init_app</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
-  <span class="n">db</span><span class="o">.</span><span class="n">create_all</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
 
   <span class="n">add_error_handlers</span><span class="p">(</span><span class="n">app</span><span class="p">)</span>
   <span class="n">add_routes</span><span class="p">(</span><span class="n">app</span><span class="p">,</span> <span class="n">socketio</span><span class="p">)</span>
@@ -191,6 +191,7 @@
 <span class="sd">  Adds callable endpoints to Flask.</span>
 
 <span class="sd">  :param app: The configured Flask backend application to add endpoints to.</span>
+<span class="sd">  :param socketio: The configured socketio instance</span>
 <span class="sd">  :return: None.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
   <span class="n">auth_service</span> <span class="o">=</span> <span class="n">AuthService</span><span class="p">(</span><span class="n">app</span><span class="o">.</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;SECRET_KEY&#39;</span><span class="p">])</span>
@@ -201,9 +202,14 @@
       <span class="n">token</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">headers</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;Authorization&#39;</span><span class="p">)</span>
       <span class="n">auth_service</span><span class="o">.</span><span class="n">validate_token</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
 
+  <span class="c1"># register user views</span>
   <span class="n">user_view</span> <span class="o">=</span> <span class="n">UserAPI</span><span class="o">.</span><span class="n">as_view</span><span class="p">(</span><span class="s1">&#39;user_api&#39;</span><span class="p">,</span> <span class="n">auth_service</span><span class="p">)</span>
+  <span class="n">profile_view</span> <span class="o">=</span> <span class="n">auth_service</span><span class="o">.</span><span class="n">login_required</span><span class="p">(</span><span class="n">ProfileAPI</span><span class="o">.</span><span class="n">as_view</span><span class="p">(</span><span class="s1">&#39;profile_api&#39;</span><span class="p">,</span> <span class="n">auth_service</span><span class="p">))</span>
   <span class="n">app</span><span class="o">.</span><span class="n">add_url_rule</span><span class="p">(</span><span class="s1">&#39;/api/users&#39;</span><span class="p">,</span> <span class="n">view_func</span><span class="o">=</span><span class="n">user_view</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
+  <span class="n">app</span><span class="o">.</span><span class="n">add_url_rule</span><span class="p">(</span><span class="s1">&#39;/api/users/&lt;int:user_id&gt;&#39;</span><span class="p">,</span> <span class="n">view_func</span><span class="o">=</span><span class="n">profile_view</span><span class="p">,</span>
+    <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;PUT&#39;</span><span class="p">,</span> <span class="s1">&#39;DELETE&#39;</span><span class="p">])</span>
 
+  <span class="c1"># register thread views</span>
   <span class="n">thread_service</span> <span class="o">=</span> <span class="n">ThreadService</span><span class="p">()</span>
   <span class="n">thread_view</span> <span class="o">=</span> <span class="n">auth_service</span><span class="o">.</span><span class="n">login_required</span><span class="p">(</span><span class="n">ThreadAPI</span><span class="o">.</span><span class="n">as_view</span><span class="p">(</span><span class="s1">&#39;thread_api&#39;</span><span class="p">,</span> <span class="n">auth_service</span><span class="p">))</span>
   <span class="n">thread_message_view</span> <span class="o">=</span> <span class="n">auth_service</span><span class="o">.</span><span class="n">login_required</span><span class="p">(</span><span class="n">MessageAPI</span><span class="o">.</span><span class="n">as_view</span><span class="p">(</span><span class="s1">&#39;message_api&#39;</span><span class="p">,</span> <span class="n">thread_service</span><span class="p">,</span> <span class="n">auth_service</span><span class="p">))</span>
@@ -213,6 +219,9 @@
 
   <span class="c1"># register socket</span>
   <span class="n">socketio</span><span class="o">.</span><span class="n">on_namespace</span><span class="p">(</span><span class="n">ThreadSockets</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">auth_service</span><span class="p">,</span> <span class="n">thread_service</span><span class="p">,</span> <span class="n">app</span><span class="o">.</span><span class="n">logger</span><span class="p">))</span>
+  <span class="nd">@socketio</span><span class="o">.</span><span class="n">on_error_default</span>
+  <span class="k">def</span> <span class="nf">handle_socket_error</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
+    <span class="n">emit</span><span class="p">(</span><span class="s1">&#39;error&#39;</span><span class="p">,</span> <span class="n">e</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
 
   <span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
   <span class="k">def</span> <span class="nf">health_check</span><span class="p">():</span>

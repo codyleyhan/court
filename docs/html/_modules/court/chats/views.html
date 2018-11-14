@@ -157,7 +157,9 @@
 <span class="sd">    MessageAPI.as_view(url, thread_service, auth_service) to initialize.</span>
 
 <span class="sd">    :param thread_service: a ThreadService instance</span>
+<span class="sd">    :type thread_service: court.chats.thread_service.ThreadService</span>
 <span class="sd">    :param auth_service: an AuthService instance</span>
+<span class="sd">    :type auth_service: court.users.auth_service.AuthService</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">thread_service</span> <span class="o">=</span> <span class="n">thread_service</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">auth_service</span> <span class="o">=</span> <span class="n">auth_service</span>
@@ -167,6 +169,7 @@
 <span class="sd">    Processes a HTTP GET request for the message REST API.</span>
 
 <span class="sd">    :param thread_id: the id of the thread requested</span>
+<span class="sd">    :type thread_id: int</span>
 <span class="sd">    :return: a Flask HTTP response with a list of thread messages</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">auth_service</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">auth_service</span>
@@ -179,9 +182,9 @@
     <span class="k">if</span> <span class="s1">&#39;first&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
       <span class="n">first</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;first&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="s1">&#39;after_id&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
-      <span class="n">after_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;after_id&#39;</span><span class="p">)</span>
+      <span class="n">after_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;after_id&#39;</span><span class="p">)</span>
     <span class="k">elif</span> <span class="s1">&#39;before_id&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
-      <span class="n">before_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;before_id&#39;</span><span class="p">)</span>
+      <span class="n">before_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;before_id&#39;</span><span class="p">)</span>
 
     <span class="n">messages</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">thread_service</span><span class="o">.</span><span class="n">get_messages</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">thread_id</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">after_id</span><span class="p">,</span> <span class="n">before_id</span><span class="p">)</span>
 
@@ -197,6 +200,7 @@
 <span class="sd">    ThreadAPI.as_view(url, auth_service) to initialize.</span>
 
 <span class="sd">    :param auth_service: an AuthService instance</span>
+<span class="sd">    :type auth_service: court.users.auth_service.AuthService</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">auth_service</span> <span class="o">=</span> <span class="n">auth_service</span>
 

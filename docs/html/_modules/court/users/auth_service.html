@@ -162,6 +162,7 @@
 <span class="sd">    Constructs a new AuthService.</span>
 
 <span class="sd">    :param secret: secret key for database initialization</span>
+<span class="sd">    :type secret: str</span>
 <span class="sd">    :param user_store: ORM object to create/query users</span>
 <span class="sd">    :param db_conn: a SQLAlchemy database connection</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -174,6 +175,8 @@
 <span class="sd">    Performs Facebook login and information retrieval to create an initial User entry.</span>
 
 <span class="sd">    :param access_token: Facebook access token after client-side user authentication</span>
+<span class="sd">    :type access_token: str</span>
+
 <span class="sd">    :return: encrypted user authentication token, and created user object</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">access_token</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
@@ -202,22 +205,24 @@
       <span class="s1">&#39;is_admin&#39;</span><span class="p">:</span> <span class="kc">False</span>
     <span class="p">}</span>
 
-    <span class="n">g</span><span class="o">.</span><span class="n">user_id</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span>
+    <span class="n">g</span><span class="o">.</span><span class="n">user_id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
 
     <span class="n">token</span> <span class="o">=</span> <span class="n">jwt</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="n">token_data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">secret</span><span class="p">,</span> <span class="n">algorithm</span><span class="o">=</span><span class="s1">&#39;HS256&#39;</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">token</span><span class="p">,</span> <span class="n">user</span></div>
+    <span class="k">return</span> <span class="n">token</span><span class="p">,</span> <span class="n">facebook_user_data</span></div>
 
 <div class="viewcode-block" id="AuthService.validate_token"><a class="viewcode-back" href="../../../index.html#court.users.auth_service.AuthService.validate_token">[docs]</a>  <span class="k">def</span> <span class="nf">validate_token</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">token</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Decodes provided encrypted token and sets current context&#39;s user to provided user.</span>
 
 <span class="sd">    :param token: unique encrypted user authentication token created at User creation</span>
+<span class="sd">    :type token: str</span>
+
 <span class="sd">    :return: None</span>
 <span class="sd">    :raises: AuthorizationError</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
-      <span class="n">data</span> <span class="o">=</span> <span class="n">jwt</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">secret</span><span class="p">)</span>
+      <span class="n">data</span> <span class="o">=</span> <span class="n">jwt</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">token</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">secret</span><span class="p">,</span> <span class="n">algorithms</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;HS256&#39;</span><span class="p">])</span>
       <span class="n">g</span><span class="o">.</span><span class="n">user_id</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
     <span class="k">except</span><span class="p">:</span>
       <span class="k">raise</span> <span class="n">AuthorizationError</span><span class="p">()</span></div>
@@ -227,6 +232,7 @@
 <span class="sd">    Get user object of user in the current context.</span>
 
 <span class="sd">    :return: User object of the user in the current context, otherwise return None</span>
+<span class="sd">    :rtype: court.users.models.User</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s1">&#39;user&#39;</span> <span class="ow">in</span> <span class="n">g</span><span class="p">:</span>
       <span class="k">return</span> <span class="n">g</span><span class="o">.</span><span class="n">user</span>
@@ -239,11 +245,45 @@
 
     <span class="k">return</span> <span class="kc">None</span></div>
 
+<div class="viewcode-block" id="AuthService.get_current_user_profile"><a class="viewcode-back" href="../../../index.html#court.users.auth_service.AuthService.get_current_user_profile">[docs]</a>  <span class="k">def</span> <span class="nf">get_current_user_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get profile object of user in the current context.</span>
+
+<span class="sd">    :return: Profile object of the user in the current context, otherwise return None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># TODO(anthonymirand): might need to user db not user_store</span>
+    <span class="n">user_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_current_user_id</span><span class="p">()</span>
+    <span class="k">if</span> <span class="s1">&#39;user_id&#39;</span> <span class="ow">in</span> <span class="n">g</span><span class="p">:</span>
+      <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_store</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span>
+      <span class="n">g</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">user</span>
+      <span class="n">profile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span><span class="o">.</span><span class="n">profile</span>
+      <span class="k">return</span> <span class="n">profile</span>
+
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="AuthService.update_current_user_profile"><a class="viewcode-back" href="../../../index.html#court.users.auth_service.AuthService.update_current_user_profile">[docs]</a>  <span class="k">def</span> <span class="nf">update_current_user_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fields</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Updates profile object of user in the current context.</span>
+
+<span class="sd">    :return: Profile object of the user in the current context, otherwise return None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># TODO(anthonymirand): try/catch valid fields</span>
+    <span class="n">user_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_current_user_id</span><span class="p">()</span>
+    <span class="k">if</span> <span class="s1">&#39;user_id&#39;</span> <span class="ow">in</span> <span class="n">g</span><span class="p">:</span>
+      <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span>
+      <span class="n">g</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">user</span>
+      <span class="n">profile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span><span class="o">.</span><span class="n">profile</span>
+      <span class="n">profile</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="kc">None</span></div>
+
 <div class="viewcode-block" id="AuthService.get_current_user_id"><a class="viewcode-back" href="../../../index.html#court.users.auth_service.AuthService.get_current_user_id">[docs]</a>  <span class="k">def</span> <span class="nf">get_current_user_id</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get user id of user in the current context.</span>
 
 <span class="sd">    :return: User object of the user in the current context, otherwise return None</span>
+<span class="sd">    :rtype: str</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s1">&#39;user_id&#39;</span> <span class="ow">in</span> <span class="n">g</span><span class="p">:</span>
       <span class="k">return</span> <span class="n">g</span><span class="o">.</span><span class="n">user_id</span>
