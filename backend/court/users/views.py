@@ -32,30 +32,35 @@ class UserAPI(MethodView):
     """
     Processes a HTTP POST request for the user REST API.
 
-    An example request is below
-    :request: POST localhost:8000/api/users?access_token={facebook access token for user}
+    An example request is below:
+
+    .. code-block:: bash
+
+      POST localhost:8000/api/users?access_token={facebook access token for user}
+
+
     Example response:
-    `
-    {
-      "success": true,
-      "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MTAyNzczNDM3NDAwMjUxLCJpc19hZG1pbiI6ZmFsc2V9.qVJ99o4cG1xsHAac2ztrBsyExST76pDlzhnJx9Nxt0s",
-      "user": {
-        "email": "kfgzlneeuo_1541453454@tfbnw.net",
-        "first_name": "Will",
-        "id": "102773437400251",
-        "last_name": "Occhinoberg",
-        "picture": {
-          "data": {
-            "height": 320,
-            "is_silhouette": true,
-            "url": "https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=102773437400251&height=300&width=300&ext=1544820635&hash=AeQAGANVCW2xEscN",
-            "width": 320
+
+    .. code-block:: json
+
+      {
+        "success": true,
+        "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MTAyNzczNDM3NDAwMjUxLCJpc19hZG1pbiI6ZmFsc2V9.qVJ99o4cG1xsHAac2ztrBsyExST76pDlzhnJx9Nxt0s",
+        "user": {
+          "email": "kfgzlneeuo_1541453454@tfbnw.net",
+          "first_name": "Will",
+          "id": "102773437400251",
+          "last_name": "Occhinoberg",
+          "picture": {
+            "data": {
+              "height": 320,
+              "is_silhouette": true,
+              "url": "https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=102773437400251&height=300&width=300&ext=1544820635&hash=AeQAGANVCW2xEscN",
+              "width": 320
+            }
           }
         }
       }
-    }
-    `
-
 
     :return: a Flask HTTP response with after a selected user's login flow.
     :raises: AuthorizationError, ValidationError
