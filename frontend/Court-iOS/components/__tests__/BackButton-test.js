@@ -1,6 +1,6 @@
 import 'react-native';
 import React from 'react';
-import Avatar from '../BackButton';
+import BackButton from '../BackButton';
 import renderer from 'react-test-renderer';
 
 it('Renders BackButton with navigation', () => {
