@@ -104,6 +104,39 @@ class AuthService:
 
     return None
 
+  def get_current_user_profile(self):
+    """
+    Get profile object of user in the current context.
+
+    :return: Profile object of the user in the current context, otherwise return None
+    """
+    # TODO(anthonymirand): might need to user db not user_store
+    user_id = self.get_current_user_id()
+    if 'user_id' in g:
+      user = self.user_store.query.get(g.user_id)
+      g.user = user
+      profile = self.db.session.query(User).filter_by(id=user_id).first().profile
+      return profile
+
+    return None
+
+  def update_current_user_profile(self, fields):
+    """
+    Updates profile object of user in the current context.
+
+    :return: Profile object of the user in the current context, otherwise return None
+    """
+    # TODO(anthonymirand): try/catch valid fields
+    user_id = self.get_current_user_id()
+    if 'user_id' in g:
+      user = self.db.query.get(g.user_id)
+      g.user = user
+      profile = self.db.session.query(User).filter_by(id=user_id).first().profile
+      profile.update(fields)
+      self.db.session.commit()
+
+    return None
+
   def get_current_user_id(self):
     """
     Get user id of user in the current context.
