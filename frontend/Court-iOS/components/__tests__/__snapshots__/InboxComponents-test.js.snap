@@ -1,0 +1,180 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Renders Default InboxCard 1`] = `
+<View
+  accessibilityComponentType={undefined}
+  accessibilityLabel={undefined}
+  accessibilityTraits={undefined}
+  accessible={true}
+  collapsable={undefined}
+  hasTVPreferredFocus={undefined}
+  hitSlop={undefined}
+  isTVSelectable={true}
+  nativeID={undefined}
+  onLayout={undefined}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    Object {
+      "opacity": 1,
+    }
+  }
+  testID={undefined}
+  tvParallaxProperties={undefined}
+>
+  <View
+    style={
+      Object {
+        "backgroundColor": "white",
+        "borderRadius": 15,
+        "flex": 1,
+        "flexDirection": "row",
+        "marginHorizontal": 20,
+        "marginVertical": 12,
+        "paddingHorizontal": 10,
+        "paddingVertical": 15,
+        "shadowColor": "black",
+        "shadowOffset": Object {
+          "height": 8,
+        },
+        "shadowOpacity": 0.15,
+        "shadowRadius": 9,
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "flexDirection": "column",
+          "justifyContent": "center",
+        }
+      }
+    >
+      <View
+        style={
+          Object {
+            "height": 65,
+            "width": 65,
+          }
+        }
+      >
+        <View
+          onLayout={[Function]}
+          style={
+            Array [
+              Object {
+                "borderRadius": 0,
+                "overflow": "hidden",
+              },
+              Object {
+                "height": undefined,
+                "width": undefined,
+              },
+              Object {
+                "borderRadius": 0,
+              },
+            ]
+          }
+        >
+          <Image
+            source={
+              Object {
+                "uri": "https://test.com/img.png",
+              }
+            }
+            style={
+              Object {
+                "height": 65,
+                "width": 65,
+              }
+            }
+          />
+          <View
+            style={
+              Object {
+                "backgroundColor": "rgba(0, 0, 0, 0.03)",
+                "height": "100%",
+                "left": 0,
+                "position": "absolute",
+                "top": 0,
+                "width": "100%",
+              }
+            }
+          />
+        </View>
+      </View>
+    </View>
+    <View
+      style={
+        Object {
+          "flex": 1,
+          "flexDirection": "column",
+          "justifyContent": "center",
+          "paddingHorizontal": 10,
+        }
+      }
+    >
+      <Text
+        accessible={true}
+        allowFontScaling={true}
+        ellipsizeMode="tail"
+        numberOfLines={1}
+        style={
+          Object {
+            "color": "#21ACA5",
+            "fontSize": 25,
+          }
+        }
+      >
+        River
+      </Text>
+      <Text
+        accessible={true}
+        allowFontScaling={true}
+        ellipsizeMode="tail"
+        numberOfLines={1}
+        style={
+          Object {
+            "fontSize": 15,
+          }
+        }
+      >
+        Test Message
+      </Text>
+      <Text
+        accessible={true}
+        allowFontScaling={true}
+        ellipsizeMode="tail"
+        style={
+          Object {
+            "color": "grey",
+            "paddingTop": 8,
+          }
+        }
+      >
+        10:00 AM
+      </Text>
+    </View>
+    <View>
+      <Text
+        accessible={true}
+        allowFontScaling={true}
+        ellipsizeMode="tail"
+        style={
+          Object {
+            "color": "#21ACA5",
+            "fontSize": 25,
+          }
+        }
+      >
+        60%
+        %
+      </Text>
+    </View>
+  </View>
+</View>
+`;

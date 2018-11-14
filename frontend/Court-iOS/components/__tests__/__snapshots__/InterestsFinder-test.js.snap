@@ -1,0 +1,66 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Renders Default InterestsFinder 1`] = `
+<View
+  style={
+    Object {
+      "alignItems": "center",
+      "flexDirection": "column",
+      "justifyContent": "center",
+      "marginHorizontal": 20,
+      "marginVertical": 30,
+    }
+  }
+>
+  <View
+    style={
+      Object {
+        "alignItems": "center",
+        "borderBottomWidth": 1,
+        "borderColor": "white",
+        "flexDirection": "row",
+        "justifyContent": "center",
+      }
+    }
+  >
+    <TextInput
+      allowFontScaling={true}
+      multiline={false}
+      onChangeText={[Function]}
+      placeholder="The Office"
+      placeholderColor="rgba(255,255,255,0.)"
+      style={
+        Object {
+          "color": "white",
+          "flex": 1,
+          "fontSize": 30,
+        }
+      }
+      value=""
+    />
+    <Text
+      accessible={true}
+      allowFontScaling={true}
+      ellipsizeMode="tail"
+    />
+  </View>
+  <View
+    style={
+      Object {
+        "flex": 1,
+      }
+    }
+  >
+    <View
+      style={
+        Object {
+          "flexDirection": "row",
+          "flexWrap": "wrap",
+          "justifyContent": "center",
+          "paddingTop": 20,
+        }
+      }
+    />
+  </View>
+</View>
+`;
