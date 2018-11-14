@@ -13,7 +13,7 @@ matrix:
       - '8'
       cache:
         directories:
-        - node_modules
+        - frontend/Court-iOS/node_modules
       before_install:
         - cd frontend/Court-iOS
         - npm update
