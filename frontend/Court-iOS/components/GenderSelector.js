@@ -76,11 +76,11 @@ GenderSelector.propTypes = {
   /**
   * Callback function for when a user selects their own gender
   */
-  onGenderSelected: PropTypes.function.isRequired,
+  onGenderSelected: PropTypes.func.isRequired,
   /**
   * Callback function for when a user selected what gender(s) they are seeking
   */
-  onPreferenceSelected: PropTypes.function.isRequired,
+  onPreferenceSelected: PropTypes.func.isRequired,
 }
 
 const styles = StyleSheet.create({

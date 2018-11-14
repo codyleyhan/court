@@ -83,11 +83,11 @@ InterestsFinder.propTypes = {
   /**
   * Callback function for when a user selects a new interest
   */
-  onAddInterest: PropTypes.function.isRequired,
+  onAddInterest: PropTypes.func.isRequired,
   /**
   * Callback function for when a user removes an interest
   */
-  onRemoveInterest: PropTypes.function.isRequired,
+  onRemoveInterest: PropTypes.func.isRequired,
 }
 
 const styles = StyleSheet.create({

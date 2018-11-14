@@ -104,7 +104,7 @@ InterestsItem.propTypes = {
   /**
   * Callback for removing a given interest (used in onPress handler for the removeIcon)
   */
-  onRemoveInterest: PropTypes.function,
+  onRemoveInterest: PropTypes.func,
 }
 
 const styles = StyleSheet.create({
