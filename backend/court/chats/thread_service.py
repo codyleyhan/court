@@ -27,8 +27,12 @@ class ThreadService:
     Creates and persists a new chat thread between the users passed.
 
     :param user_1: is a User object
+    :type user_1: court.users.models.User
     :param user_2: is a User object
+    :type user_2: court.users.models.User
+
     :return: returns a Thread object with the two users associated
+    :rtype: court.chats.models.Thread
     """
     if user_1 is None or user_2 is None:
       raise RuntimeError()
@@ -49,8 +53,12 @@ class ThreadService:
     user.
 
     :param current_user_id: the id the user requesting the thread information
+    :type current_user_id: int
     :param thread_id: the id of the thread being requested
+    :type thread_id: int
+
     :return: a Thread object associated with the thread_id
+    :rtype: court.chats.models.Thread
     """
     thread = self.thread_store.query.get(thread_id)
     if thread is None:
@@ -64,8 +72,12 @@ class ThreadService:
     Checks if a user is authorized to be in a thread.
 
     :param user_id: the user id being checked
+    :type user_id: int
     :param thread: Thread object that is being checked
+    :type thread: court.chats.models.Thread
+
     :return: true if the user is authorized to see the thread
+    :rtype: bool
     """
     print(user_id)
     for user in thread.users:
@@ -79,10 +91,16 @@ class ThreadService:
     before_id are passed then only after_id will be used.
 
     :param current_user_id: the user requesting the messages
+    :type current_user_id: int
     :param thread_id: the id of the thread the messages are being requested
-    :param first: the number of messages to return upto
+    :type thread_id: int
+    :param first: the number of messages to return upto, default 50
+    :type first: int
     :param after_id: if passed returns all messages with id greater than after_id
+    :type after_id: int
     :param before_id: if passed returns all messages with id less than before_id
+    :type before_id: int
+
     :return: list of thread messages
     """
     thread = self.get_thread(current_user_id, thread_id)
@@ -106,7 +124,9 @@ class ThreadService:
     Adds a message to a thread.
 
     :param message: a message object
+    :type message: court.chats.models.Message
     :return: message with id added
+    :rtype: court.chats.models.Message
     """
     if message is None:
       raise RuntimeError()

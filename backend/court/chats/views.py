@@ -16,7 +16,9 @@ class MessageAPI(MethodView):
     MessageAPI.as_view(url, thread_service, auth_service) to initialize.
 
     :param thread_service: a ThreadService instance
+    :type thread_service: court.chats.thread_service.ThreadService
     :param auth_service: an AuthService instance
+    :type auth_service: court.users.auth_service.AuthService
     """
     self.thread_service = thread_service
     self.auth_service = auth_service
@@ -26,6 +28,7 @@ class MessageAPI(MethodView):
     Processes a HTTP GET request for the message REST API.
 
     :param thread_id: the id of the thread requested
+    :type thread_id: int
     :return: a Flask HTTP response with a list of thread messages
     """
     auth_service = self.auth_service
@@ -56,6 +59,7 @@ class ThreadAPI(MethodView):
     ThreadAPI.as_view(url, auth_service) to initialize.
 
     :param auth_service: an AuthService instance
+    :type auth_service: court.users.auth_service.AuthService
     """
     self.auth_service = auth_service
 
