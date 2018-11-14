@@ -17,14 +17,24 @@ class UserAPI(MethodView):
     """
     self.auth_service = auth_service
 
+  def get(self):
+    """
+    Processes a HTTP GET request for the user REST API.
+
+    :return: a Flask HTTP response containing a user's id and email
+    :raises: AuthorizationError, ValidationError
+    """
+    user = self.auth_service.get_current_user()
+    return jsonify(user=user)
+
   def post(self):
     """
     Processes a HTTP POST request for the user REST API.
 
-    :return: a Flask HTTP response with after a selected user's login flow.
+    :return: a Flask HTTP response after a selected user's login flow.
     :raises: AuthorizationError, ValidationError
     """
-    access_token = request.json['access_token']
+    access_token = request.args.get('access_token')
     if access_token is None:
       raise AuthorizationError()
     print(access_token)
@@ -41,3 +51,40 @@ class UserAPI(MethodView):
         'success': False,
         'error': e.message
       })
+
+class ProfileAPI(MethodView):
+  """
+  Provides the view layer API for Profiles.
+  """
+  def __init__(self, auth_service):
+    """
+    Creates a new ProfileAPI object. Should be called with
+    ProfileAPI.as_view('user_api', auth_service) to initialize.
+
+    :param auth_service: an AuthService instance
+    """
+    self.auth_service = auth_service
+
+  def get(self):
+    """
+    Processes a HTTP GET request for the profile REST API.
+
+    :return: a Flask HTTP response with a User's associated Profile.
+    """
+    return jsonify({'status': 'need to implement profile API'})
+
+  def put(self):
+    """
+    Processes a HTTP PUT request for the profile REST API.
+
+    :return: a Flask HTTP response with a User's associated Profile.
+    """
+    return jsonify({'status': 'need to implement profile API'})
+
+  def delete(self):
+    """
+    Processes a HTTP DELETE request for the profile REST API.
+
+    :return: a Flask HTTP response with a User's associated Profile.
+    """
+    return jsonify({'status': 'need to implement profile API'})
