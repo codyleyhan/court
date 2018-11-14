@@ -1,5 +1,5 @@
 {
-  "name": "my-new-project",
+  "name": "Court-iOS",
   "main": "node_modules/expo/AppEntry.js",
   "private": true,
   "scripts": {
@@ -23,13 +23,6 @@
     "react-navigation-fluid-transitions": "^0.2.73"
   },
   "devDependencies": {
-    "eslint": "^5.9.0",
-    "eslint-config-airbnb": "^17.1.0",
-    "eslint-plugin-import": "^2.14.0",
-    "eslint-plugin-jsx-a11y": "^6.1.2",
-    "eslint-plugin-react": "^7.11.1",
     "jest-expo": "30.0.0",
-    "react-doc-generator": "^1.2.5",
-    "react-styleguidist": "^8.0.4"
   }
 }

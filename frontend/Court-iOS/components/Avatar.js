@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import Mask from 'react-native-mask';
 import { Image, View } from 'react-native';
-import IconImage from '../components/IconImage';
+import IconImage from './IconImage';
 
 /**
 * Displays a Circular image of specified height
@@ -52,4 +52,4 @@ Avatar.propTypes = {
   * Background color of resulting image, if PNG
   */
   color: PropTypes.string,
-}
+};
