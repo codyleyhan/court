@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Renders Default Header 1`] = `
+<View
+  style={
+    Object {
+      "alignItems": "center",
+      "backgroundColor": "#fff",
+      "borderBottomColor": "#21ACA5",
+      "borderBottomWidth": 2,
+      "flexDirection": "row",
+      "justifyContent": "center",
+      "paddingBottom": 10,
+      "paddingHorizontal": 20,
+      "paddingTop": 40,
+    }
+  }
+>
+  <Text
+    accessible={true}
+    allowFontScaling={true}
+    ellipsizeMode="tail"
+    style={
+      Object {
+        "color": "#21ACA5",
+        "flex": 1,
+        "fontSize": 30,
+        "textAlign": "center",
+      }
+    }
+  >
+    Test Header
+  </Text>
+</View>
+`;
