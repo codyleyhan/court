@@ -144,8 +144,6 @@
 
 <span class="kn">from</span> <span class="nn">court.chats.models</span> <span class="k">import</span> <span class="n">Message</span>
 
-<span class="c1"># TODO (codyleyhan): figure out how we are going to send information notifications</span>
-
 <div class="viewcode-block" id="ThreadSockets"><a class="viewcode-back" href="../../../index.html#court.chats.sockets.ThreadSockets">[docs]</a><span class="k">class</span> <span class="nc">ThreadSockets</span><span class="p">(</span><span class="n">Namespace</span><span class="p">):</span>
   <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">  ThreadSockets is the object that handles the realtime chat aspect of court</span>
@@ -174,7 +172,7 @@
     
     <span class="n">emit</span><span class="p">(</span><span class="s1">&#39;connected&#39;</span><span class="p">,</span> <span class="p">{</span>
       <span class="s2">&quot;body&quot;</span><span class="p">:</span> <span class="s2">&quot;you are connected&quot;</span>
-    <span class="p">})</span></div>
+    <span class="p">},</span> <span class="n">json</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
   
 <div class="viewcode-block" id="ThreadSockets.on_message"><a class="viewcode-back" href="../../../index.html#court.chats.sockets.ThreadSockets.on_message">[docs]</a>  <span class="k">def</span> <span class="nf">on_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -200,7 +198,7 @@
 
     <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> added a message to the thread </span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="n">thread_id</span><span class="p">)</span>
 
-    <span class="n">emit</span><span class="p">(</span><span class="s1">&#39;new_message&#39;</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span><span class="n">room</span><span class="o">=</span><span class="n">thread_id</span><span class="p">,</span> <span class="n">broadcast</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
+    <span class="n">emit</span><span class="p">(</span><span class="s1">&#39;new_message&#39;</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">room</span><span class="o">=</span><span class="n">thread_id</span><span class="p">,</span> <span class="n">broadcast</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">json</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span></div>
   
 
 <div class="viewcode-block" id="ThreadSockets.on_join"><a class="viewcode-back" href="../../../index.html#court.chats.sockets.ThreadSockets.on_join">[docs]</a>  <span class="k">def</span> <span class="nf">on_join</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">json</span><span class="p">):</span>

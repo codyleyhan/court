@@ -168,8 +168,12 @@
 <span class="sd">    Creates and persists a new chat thread between the users passed.</span>
 
 <span class="sd">    :param user_1: is a User object</span>
+<span class="sd">    :type user_1: court.users.models.User</span>
 <span class="sd">    :param user_2: is a User object</span>
+<span class="sd">    :type user_2: court.users.models.User</span>
+
 <span class="sd">    :return: returns a Thread object with the two users associated</span>
+<span class="sd">    :rtype: court.chats.models.Thread</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">user_1</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">user_2</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
       <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">()</span>
@@ -190,8 +194,12 @@
 <span class="sd">    user.</span>
 
 <span class="sd">    :param current_user_id: the id the user requesting the thread information</span>
+<span class="sd">    :type current_user_id: int</span>
 <span class="sd">    :param thread_id: the id of the thread being requested</span>
+<span class="sd">    :type thread_id: int</span>
+
 <span class="sd">    :return: a Thread object associated with the thread_id</span>
+<span class="sd">    :rtype: court.chats.models.Thread</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">thread</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">thread_store</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">thread_id</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">thread</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -205,8 +213,12 @@
 <span class="sd">    Checks if a user is authorized to be in a thread.</span>
 
 <span class="sd">    :param user_id: the user id being checked</span>
+<span class="sd">    :type user_id: int</span>
 <span class="sd">    :param thread: Thread object that is being checked</span>
+<span class="sd">    :type thread: court.chats.models.Thread</span>
+
 <span class="sd">    :return: true if the user is authorized to see the thread</span>
+<span class="sd">    :rtype: bool</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">thread</span><span class="o">.</span><span class="n">users</span><span class="p">:</span>
@@ -220,10 +232,16 @@
 <span class="sd">    before_id are passed then only after_id will be used.</span>
 
 <span class="sd">    :param current_user_id: the user requesting the messages</span>
+<span class="sd">    :type current_user_id: int</span>
 <span class="sd">    :param thread_id: the id of the thread the messages are being requested</span>
-<span class="sd">    :param first: the number of messages to return upto</span>
+<span class="sd">    :type thread_id: int</span>
+<span class="sd">    :param first: the number of messages to return upto, default 50</span>
+<span class="sd">    :type first: int</span>
 <span class="sd">    :param after_id: if passed returns all messages with id greater than after_id</span>
+<span class="sd">    :type after_id: int</span>
 <span class="sd">    :param before_id: if passed returns all messages with id less than before_id</span>
+<span class="sd">    :type before_id: int</span>
+
 <span class="sd">    :return: list of thread messages</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">thread</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_thread</span><span class="p">(</span><span class="n">current_user_id</span><span class="p">,</span> <span class="n">thread_id</span><span class="p">)</span>
@@ -247,7 +265,9 @@
 <span class="sd">    Adds a message to a thread.</span>
 
 <span class="sd">    :param message: a message object</span>
+<span class="sd">    :type message: court.chats.models.Message</span>
 <span class="sd">    :return: message with id added</span>
+<span class="sd">    :rtype: court.chats.models.Message</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">message</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
       <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">()</span>
