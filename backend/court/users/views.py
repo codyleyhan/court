@@ -25,7 +25,7 @@ class UserAPI(MethodView):
     :raises: AuthorizationError, ValidationError
     """
     user = self.auth_service.get_current_user()
-    return jsonify(user=user)
+    return jsonify(user=user._asdict())
 
   def post(self):
     """
@@ -71,7 +71,8 @@ class ProfileAPI(MethodView):
 
     :return: a Flask HTTP response with a User's associated Profile.
     """
-    return jsonify({'status': 'need to implement profile API'})
+    profile = self.auth_service.get_current_user_profile()
+    return jsonify(profile=profile._asdict())
 
   def put(self):
     """
@@ -79,7 +80,9 @@ class ProfileAPI(MethodView):
 
     :return: a Flask HTTP response with a User's associated Profile.
     """
-    return jsonify({'status': 'need to implement profile API'})
+    fields = request.get_json()
+    profile = self.auth_service.update_current_user_profile(fields)
+    return jsonify(profile=profile._asdict())
 
   def delete(self):
     """

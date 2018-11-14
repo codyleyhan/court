@@ -28,6 +28,14 @@ def test_get_current_user_id(app):
     id = service.get_current_user_id()
     id is None
 
+# TODO(anthonymirand): use db_conn and finish Profile test
+def test_get_current_user_profile(app):
+  with app.app_context():
+    g.user_id = 'test'
+    service = AuthService('secret', None, None)
+    profile = None # service.get_current_user_profile()
+    profile is None
+
 def test_login_required(app):
   with app.app_context():
     g.user_id = 'test'
