@@ -47,7 +47,7 @@ Avatar.propTypes = {
   /**
   * The string uri to fetch, either a web url, or local uri
   */
-  src: PropTypes.string.isRequired,
+  src: PropTypes.string,
   /**
   * Background color of resulting image, if PNG
   */
