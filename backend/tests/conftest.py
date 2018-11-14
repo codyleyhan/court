@@ -11,7 +11,7 @@ def app():
   app = create_app(TestingConfig)
   with app.app_context():
     seed_data(db)
-  
+
   yield app
 
 @pytest.fixture
@@ -29,14 +29,17 @@ def seed_data(db_conn):
   :param db_conn: the db connection
   """
   db_conn.create_all()
-  user1 = User('1@ucla.edu')
+  user1 = User()
   user1.id = 1
+  user1.email = '1@ucla.edu'
 
-  user2 = User('2@ucla.edu')
+  user2 = User()
   user2.id = 2
+  user2.email = '2@ucla.edu'
 
-  user3 = User('3@ucla.edu')
+  user3 = User()
   user3.id = 3
+  user3.email = '3@ucla.edu'
 
 
   thread = Thread()

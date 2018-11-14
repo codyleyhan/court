@@ -10,7 +10,7 @@ from court.database import db
 from court.sockets import socketio
 from court.errors import *
 from court.users.auth_service import AuthService
-from court.users.views import UserAPI
+from court.users.views import ProfileAPI, UserAPI
 
 def create_app(config=DevelopmentConfig):
   """
@@ -23,6 +23,7 @@ def create_app(config=DevelopmentConfig):
   app.config.from_object(config)
 
   db.init_app(app)
+  db.create_all(app=app) # Need this to make User/Profile tables
 
   add_error_handlers(app)
   add_routes(app, socketio)
@@ -61,7 +62,10 @@ def add_routes(app, socketio):
       auth_service.validate_token(token)
 
   user_view = UserAPI.as_view('user_api', auth_service)
+  profile_view = auth_service.login_required(ProfileAPI.as_view('profile_api', auth_service))
   app.add_url_rule('/api/users', view_func=user_view, methods=['POST'])
+  app.add_url_rule('/api/users/<int:user_id>', view_func=profile_view,
+    methods=['GET', 'PUT', 'DELETE'])
 
   thread_service = ThreadService()
   thread_view = auth_service.login_required(ThreadAPI.as_view('thread_api', auth_service))
