@@ -1,8 +1,12 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import Avatar from '../components/Avatar';
 
+/**
+* Card in the user's inbox for each of their current chats
+*/
 export class InboxItem extends React.Component {
   onPressChat() {
     // This is where we should handle navigation to the chat screen
@@ -29,6 +33,29 @@ export class InboxItem extends React.Component {
       </TouchableOpacity>
     );
   }
+}
+
+InboxItem.propTypes = {
+  /**
+  * URL for the given user's profile picture
+  */
+  imgUrl: PropTypes.string.isRequired,
+  /**
+  * Name of the other user in the chat
+  */
+  name: PropTypes.string.isRequired,
+  /**
+  * The text of the last message sent in the chat
+  */
+  lastMessage: PropTypes.string.isRequired,
+  /**
+  * The time that the last message was sent
+  */
+  lastTime: PropTypes.string.isRequired,
+  /**
+  * Percent of profile unlocked for the given user
+  */
+  percent: PropTypes.string.isRequired,
 }
 
 const styles = StyleSheet.create({

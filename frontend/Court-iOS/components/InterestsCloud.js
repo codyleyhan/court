@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Icon } from 'expo';
 
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -6,6 +7,9 @@ import Colors from '../constants/Colors';
 
 import InterestsItem from '../components/InterestsItem';
 
+/**
+* Displays a 'cloud' of interests in a flex box
+*/
 export default class InterestsCloud extends React.Component {
   render() {
     const { interests, onAddInterest, onRemoveInterest, recommendations } = this.props;
@@ -32,6 +36,25 @@ export default class InterestsCloud extends React.Component {
       </View>
     );
   }
+}
+
+InterestsCloud.propTypes = {
+  /**
+  * Object containing the user's current selected interests
+  */
+  interests: PropTypes.object.isRequired,
+  /**
+  * Callback function for when a user selects a new interest
+  */
+  onAddInterest: PropTypes.function.isRequired,
+  /**
+  * Callback function for when a user removes an interest
+  */
+  onRemoveInterest: PropTypes.function.isRequired,
+  /**
+  * List of recommended interests given a specific search
+  */
+  recommendations: PropTypes.arrayOf(PropTypes.object).isRequired,
 }
 
 const styles = StyleSheet.create({

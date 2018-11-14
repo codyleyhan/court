@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Icon } from 'expo';
 
 import {  StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -6,6 +7,9 @@ import Colors from '../constants/Colors';
 
 import Avatar from '../components/Avatar';
 
+/**
+* Displays a singular interest with title, description, and image
+*/
 export default class InterestsItem extends React.Component {
   constructor(props) {
     super(props);
@@ -70,6 +74,37 @@ export default class InterestsItem extends React.Component {
       </TouchableOpacity>
     );
   }
+}
+
+InterestsItem.propTypes = {
+  /**
+  * Unique identifier for the given interest (from Google KGS)
+  */
+  id: PropTypes.string.isRequired,
+  /**
+  * URL for the interest's image preview
+  */
+  imgUrl: PropTypes.string,
+  /**
+  * Disables the onPress handler for pressing the interest
+  */
+  disableSelect: PropTypes.bool,
+  /**
+  * Displays an dismiss icon on the right of the component
+  */
+  showRemoveIcon: PropTypes.bool,
+  /**
+  * Title of the interest
+  */
+  title: PropTypes.string.isRequired,
+  /**
+  * Description of the interest
+  */
+  description: PropTypes.string,
+  /**
+  * Callback for removing a given interest (used in onPress handler for the removeIcon)
+  */
+  onRemoveInterest: PropTypes.function,
 }
 
 const styles = StyleSheet.create({
