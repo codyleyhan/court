@@ -31,7 +31,7 @@ class MessageAPI(MethodView):
 
     .. code-block:: bash
 
-    GET localhost:8000/api/threads/1/messages
+      GET localhost:8000/api/threads/1/messages
 
     Example response:
 
@@ -92,7 +92,7 @@ class ThreadAPI(MethodView):
 
     .. code-block:: bash
 
-    GET localhost:8000/api/threads
+      GET localhost:8000/api/threads
 
     Example response:
     

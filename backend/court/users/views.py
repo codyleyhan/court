@@ -22,6 +22,10 @@ class UserAPI(MethodView):
     """
     Processes a HTTP GET request for the user REST API.
 
+    .. code-block:: bash
+
+      GET localhost:8000/api/users
+
     Example response:
 
     .. code-block:: json

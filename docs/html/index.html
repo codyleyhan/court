@@ -684,7 +684,18 @@ the arguments from the URL rule.</p>
 <dl class="method">
 <dt id="court.users.auth_service.AuthService.login_required">
 <code class="descname">login_required</code><span class="sig-paren">(</span><em>f</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/users/auth_service.html#AuthService.login_required"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.users.auth_service.AuthService.login_required" title="Permalink to this definition">¶</a></dt>
-<dd><p>TODO: Add docstring.</p>
+<dd><p>Decorator to add an authorization check around the function, the function
+must be run in an flask application context to work.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>f</strong> – the function to be wrapped</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">a function that now only runs if a user is authorized</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
