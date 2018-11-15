@@ -92,6 +92,7 @@ def add_routes(app, socketio):
   
   @app.route('/match')
   def match_check():
+    m = Match()
     return jsonify({
-      "health": Match.match()
+      "results": m.match()
     })  
