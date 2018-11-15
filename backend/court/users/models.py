@@ -1,4 +1,5 @@
 import datetime as dt
+import json
 
 from court.database import db
 from court.chats.models import thread_users
@@ -49,7 +50,7 @@ class Profile(db.Model):
   _interests = db.Column(db.String, nullable=False)
   @property
   def interests(self):
-    return json.loads(self._interests)[0]
+    return json.loads(self._interests)
   @interests.setter
   def interests(self, value):
     self._interests = json.dumps(value)

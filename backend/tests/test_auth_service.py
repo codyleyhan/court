@@ -28,13 +28,29 @@ def test_get_current_user_id(app):
     id = service.get_current_user_id()
     id is None
 
-# TODO(anthonymirand): use db_conn and finish Profile test
 def test_get_current_user_profile(app):
   with app.app_context():
-    g.user_id = 'test'
-    service = AuthService('secret', None, None)
-    profile = None # service.get_current_user_profile()
-    profile is None
+    g.user_id = '1'
+    service = AuthService('secret')
+    profile = service.get_current_user_profile()._asdict()
+
+    # TODO(anthonymirand): Compare a real Profile object
+    assert profile is not None
+
+def test_update_current_user_profile(app):
+  with app.app_context():
+    g.user_id = '1'
+    service = AuthService('secret')
+    old_profile = service.get_current_user_profile()._asdict()
+
+    fields = {'first_name' : 'Tim'}
+    # NOTE: This updates the object in the DB,
+    #       considering making user4 for this test.
+    new_profile = service.update_current_user_profile(fields)._asdict()
+
+    # TODO(anthonymirand): Compare a real Profile object
+    assert new_profile is not old_profile and \
+           new_profile['updated_at'] > old_profile['updated_at']
 
 def test_login_required(app):
   with app.app_context():

@@ -3,6 +3,7 @@ import json
 from flask import g, request
 import requests
 from functools import wraps
+import datetime as dt
 
 from court.database import db
 from court.errors import AuthorizationError, ValidationError
@@ -110,7 +111,6 @@ class AuthService:
 
     :return: Profile object of the user in the current context, otherwise return None
     """
-    # TODO(anthonymirand): might need to user db not user_store
     user_id = self.get_current_user_id()
     if 'user_id' in g:
       user = self.user_store.query.get(g.user_id)
@@ -126,14 +126,21 @@ class AuthService:
 
     :return: Profile object of the user in the current context, otherwise return None
     """
+    def update(object, fields):
+      fields['updated_at'] = dt.datetime.utcnow()
+      for key, value in fields.items():
+        setattr(object, key, value)
+      self.db.session.commit()
+      return object
+
     # TODO(anthonymirand): try/catch valid fields
     user_id = self.get_current_user_id()
     if 'user_id' in g:
-      user = self.db.query.get(g.user_id)
+      user = self.user_store.query.get(g.user_id)
       g.user = user
       profile = self.db.session.query(User).filter_by(id=user_id).first().profile
-      profile.update(fields)
-      self.db.session.commit()
+      update(profile, fields)
+      return profile
 
     return None
 
