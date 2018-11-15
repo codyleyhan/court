@@ -22,7 +22,17 @@ If you add a dependency then run:
 pip freeze > requirements.txt
 ```
 
-If you want to recompile the documentation then run:
+If you want to recompile the documentation then go to docs/ directory and run:
 ```bash
-make docs
+make html
 ```
+
+## Routes
+
+|Endpoint     |Methods           |Rule
+|------------ |----------------  |-------------------------------------
+|health_check |GET               |/
+|thread_api   |GET               |/api/threads
+|message_api  |GET               |/api/threads/<int:thread_id>/messages
+|user_api     |POST              |/api/users
+|profile_api   |DELETE, GET, PUT  |/api/users/<int:user_id>

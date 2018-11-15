@@ -1,7 +1,23 @@
-language: python
-python:
-  - "3.6"
-install:
-  - pip install -r ./backend/requirements.txt
-script:
-  - pytest ./backend
+matrix:
+  include:
+    - language: python
+      python:
+        - "3.6"
+      install:
+        - pip install -r ./backend/requirements.txt
+      script:
+        - pytest ./backend
+
+    - language: node_js
+      node_js:
+      - '8'
+      cache:
+        directories:
+        - frontend/Court-iOS/node_modules
+      before_install:
+        - cd frontend/Court-iOS
+        - npm update
+      install:
+        - npm install
+      script:
+        - npm test

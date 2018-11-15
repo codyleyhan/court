@@ -21,6 +21,7 @@ class AuthService:
     Constructs a new AuthService.
 
     :param secret: secret key for database initialization
+    :type secret: str
     :param user_store: ORM object to create/query users
     :param db_conn: a SQLAlchemy database connection
     """
@@ -33,6 +34,8 @@ class AuthService:
     Performs Facebook login and information retrieval to create an initial User entry.
 
     :param access_token: Facebook access token after client-side user authentication
+    :type access_token: str
+
     :return: encrypted user authentication token, and created user object
     """
     if access_token.strip() == '':
@@ -72,6 +75,8 @@ class AuthService:
     Decodes provided encrypted token and sets current context's user to provided user.
 
     :param token: unique encrypted user authentication token created at User creation
+    :type token: str
+
     :return: None
     :raises: AuthorizationError
     """
@@ -86,6 +91,7 @@ class AuthService:
     Get user object of user in the current context.
 
     :return: User object of the user in the current context, otherwise return None
+    :rtype: court.users.models.User
     """
     if 'user' in g:
       return g.user
@@ -98,11 +104,45 @@ class AuthService:
 
     return None
 
+  def get_current_user_profile(self):
+    """
+    Get profile object of user in the current context.
+
+    :return: Profile object of the user in the current context, otherwise return None
+    """
+    # TODO(anthonymirand): might need to user db not user_store
+    user_id = self.get_current_user_id()
+    if 'user_id' in g:
+      user = self.user_store.query.get(g.user_id)
+      g.user = user
+      profile = self.db.session.query(User).filter_by(id=user_id).first().profile
+      return profile
+
+    return None
+
+  def update_current_user_profile(self, fields):
+    """
+    Updates profile object of user in the current context.
+
+    :return: Profile object of the user in the current context, otherwise return None
+    """
+    # TODO(anthonymirand): try/catch valid fields
+    user_id = self.get_current_user_id()
+    if 'user_id' in g:
+      user = self.db.query.get(g.user_id)
+      g.user = user
+      profile = self.db.session.query(User).filter_by(id=user_id).first().profile
+      profile.update(fields)
+      self.db.session.commit()
+
+    return None
+
   def get_current_user_id(self):
     """
     Get user id of user in the current context.
 
     :return: User object of the user in the current context, otherwise return None
+    :rtype: str
     """
     if 'user_id' in g:
       return g.user_id
@@ -111,7 +151,11 @@ class AuthService:
 
   def login_required(self, f):
     """
-    TODO: Add docstring.
+    Decorator to add an authorization check around the function, the function
+    must be run in an flask application context to work.
+
+    :param f: the function to be wrapped
+    :return: a function that now only runs if a user is authorized
     """
     @wraps(f)
     def decorated_function(*args, **kwargs):

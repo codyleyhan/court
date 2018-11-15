@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Renders Default IconImage 1`] = `
+<View
+  style={
+    Object {
+      "alignItems": "center",
+      "backgroundColor": "#000",
+      "height": 100,
+      "justifyContent": "center",
+      "width": 100,
+    }
+  }
+>
+  <Image
+    source={1}
+    style={
+      Object {
+        "height": 60,
+        "tintColor": "white",
+        "width": 60,
+      }
+    }
+  />
+</View>
+`;

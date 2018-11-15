@@ -157,7 +157,9 @@
 <span class="sd">    MessageAPI.as_view(url, thread_service, auth_service) to initialize.</span>
 
 <span class="sd">    :param thread_service: a ThreadService instance</span>
+<span class="sd">    :type thread_service: court.chats.thread_service.ThreadService</span>
 <span class="sd">    :param auth_service: an AuthService instance</span>
+<span class="sd">    :type auth_service: court.users.auth_service.AuthService</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">thread_service</span> <span class="o">=</span> <span class="n">thread_service</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">auth_service</span> <span class="o">=</span> <span class="n">auth_service</span>
@@ -166,7 +168,29 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Processes a HTTP GET request for the message REST API.</span>
 
+<span class="sd">    Example request:</span>
+
+<span class="sd">    .. code-block:: bash</span>
+
+<span class="sd">      GET localhost:8000/api/threads/1/messages</span>
+
+<span class="sd">    Example response:</span>
+
+<span class="sd">    .. code-block:: json</span>
+
+<span class="sd">      {</span>
+<span class="sd">        &quot;messages&quot;: [</span>
+<span class="sd">          {</span>
+<span class="sd">            &quot;id&quot;: 1,</span>
+<span class="sd">            &quot;user_id&quot;: 14324324,</span>
+<span class="sd">            &quot;body&quot;: &quot;this is the message body&quot;</span>
+<span class="sd">          }</span>
+<span class="sd">        ]</span>
+<span class="sd">      }</span>
+
 <span class="sd">    :param thread_id: the id of the thread requested</span>
+
+<span class="sd">    :type thread_id: int</span>
 <span class="sd">    :return: a Flask HTTP response with a list of thread messages</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">auth_service</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">auth_service</span>
@@ -179,9 +203,9 @@
     <span class="k">if</span> <span class="s1">&#39;first&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
       <span class="n">first</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;first&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="s1">&#39;after_id&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
-      <span class="n">after_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;after_id&#39;</span><span class="p">)</span>
+      <span class="n">after_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;after_id&#39;</span><span class="p">)</span>
     <span class="k">elif</span> <span class="s1">&#39;before_id&#39;</span> <span class="ow">in</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
-      <span class="n">before_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;before_id&#39;</span><span class="p">)</span>
+      <span class="n">before_id</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;before_id&#39;</span><span class="p">)</span>
 
     <span class="n">messages</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">thread_service</span><span class="o">.</span><span class="n">get_messages</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">thread_id</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">after_id</span><span class="p">,</span> <span class="n">before_id</span><span class="p">)</span>
 
@@ -197,12 +221,42 @@
 <span class="sd">    ThreadAPI.as_view(url, auth_service) to initialize.</span>
 
 <span class="sd">    :param auth_service: an AuthService instance</span>
+<span class="sd">    :type auth_service: court.users.auth_service.AuthService</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">auth_service</span> <span class="o">=</span> <span class="n">auth_service</span>
 
 <div class="viewcode-block" id="ThreadAPI.get"><a class="viewcode-back" href="../../../index.html#court.chats.views.ThreadAPI.get">[docs]</a>  <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Processes a HTTP GET request for the thread REST API.</span>
+
+<span class="sd">    Example request:</span>
+
+<span class="sd">    .. code-block:: bash</span>
+
+<span class="sd">      GET localhost:8000/api/threads</span>
+
+<span class="sd">    Example response:</span>
+<span class="sd">    </span>
+<span class="sd">    .. code-block:: json</span>
+
+<span class="sd">      {</span>
+<span class="sd">        &quot;threads&quot;: [</span>
+<span class="sd">          {</span>
+<span class="sd">            &quot;id&quot;: 1,</span>
+<span class="sd">            &quot;is_active&quot;: true,</span>
+<span class="sd">            &quot;users&quot;: [</span>
+<span class="sd">              {</span>
+<span class="sd">                &quot;id&quot;: 1232434,</span>
+<span class="sd">                &quot;email&quot;: &quot;test@test.com&quot;</span>
+<span class="sd">              },</span>
+<span class="sd">              {</span>
+<span class="sd">                &quot;id&quot;: 43532454535,</span>
+<span class="sd">                &quot;email&quot;: &quot;another@another.com&quot;</span>
+<span class="sd">              }</span>
+<span class="sd">            ]</span>
+<span class="sd">          }</span>
+<span class="sd">        ]</span>
+<span class="sd">      }</span>
 
 <span class="sd">    :return: a Flask HTTP response of all users threads</span>
 <span class="sd">    &quot;&quot;&quot;</span>

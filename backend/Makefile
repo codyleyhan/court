@@ -7,7 +7,7 @@ install-deps:
 	pip install -r requirements.txt
 
 test:
-	pytest
+	pytest -v
 
 migrate:
 	python migrate.py

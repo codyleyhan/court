@@ -178,9 +178,14 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>app</strong> – The configured Flask backend application to add endpoints to.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>app</strong> – The configured Flask backend application to add endpoints to.</li>
+<li><strong>socketio</strong> – The configured socketio instance</li>
+</ul>
+</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None.</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">None.</p>
+</td>
 </tr>
 </tbody>
 </table>
@@ -194,7 +199,7 @@
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>config</strong> – The configuration object to be used in Court backend creation.</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>config</strong> (<em>court.config.Config</em>) – The configuration object to be used in Court backend creation.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Created/initialized Flask application.</td>
 </tr>
@@ -295,6 +300,12 @@ associated with the class is used.</p>
 <code class="descname">on_join</code><span class="sig-paren">(</span><em>json</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/chats/sockets.html#ThreadSockets.on_join"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.chats.sockets.ThreadSockets.on_join" title="Permalink to this definition">¶</a></dt>
 <dd><p>Occurs when a user subscribes to a realtime chat thread.  The user will have
 to pass authorization checks in order to subscribe to the realtime messages.</p>
+<p>Example json:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;thread&quot;</span><span class="p">:</span> <span class="mi">1</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -310,6 +321,13 @@ to pass authorization checks in order to subscribe to the realtime messages.</p>
 <code class="descname">on_message</code><span class="sig-paren">(</span><em>json</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/chats/sockets.html#ThreadSockets.on_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.chats.sockets.ThreadSockets.on_message" title="Permalink to this definition">¶</a></dt>
 <dd><p>Occurs when an already joined user sends a message on a thread.  Message will
 be saved and then emitted to the everyone in the room including the sender.</p>
+<p>Example json:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;thread&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="nt">&quot;body&quot;</span><span class="p">:</span> <span class="s2">&quot;a new message&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -360,9 +378,11 @@ having a single method that catches all events is desired.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>message</strong> – a message object</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>message</strong> (<a class="reference internal" href="#court.chats.models.Message" title="court.chats.models.Message"><em>court.chats.models.Message</em></a>) – a message object</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">message with id added</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#court.chats.models.Message" title="court.chats.models.Message">court.chats.models.Message</a></td>
 </tr>
 </tbody>
 </table>
@@ -377,12 +397,15 @@ having a single method that catches all events is desired.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>user_1</strong> – is a User object</li>
-<li><strong>user_2</strong> – is a User object</li>
+<li><strong>user_1</strong> (<a class="reference internal" href="#court.users.models.User" title="court.users.models.User"><em>court.users.models.User</em></a>) – is a User object</li>
+<li><strong>user_2</strong> (<a class="reference internal" href="#court.users.models.User" title="court.users.models.User"><em>court.users.models.User</em></a>) – is a User object</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">returns a Thread object with the two users associated</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">returns a Thread object with the two users associated</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#court.chats.models.Thread" title="court.chats.models.Thread">court.chats.models.Thread</a></p>
 </td>
 </tr>
 </tbody>
@@ -399,11 +422,11 @@ before_id are passed then only after_id will be used.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>current_user_id</strong> – the user requesting the messages</li>
-<li><strong>thread_id</strong> – the id of the thread the messages are being requested</li>
-<li><strong>first</strong> – the number of messages to return upto</li>
-<li><strong>after_id</strong> – if passed returns all messages with id greater than after_id</li>
-<li><strong>before_id</strong> – if passed returns all messages with id less than before_id</li>
+<li><strong>current_user_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – the user requesting the messages</li>
+<li><strong>thread_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – the id of the thread the messages are being requested</li>
+<li><strong>first</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – the number of messages to return upto, default 50</li>
+<li><strong>after_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – if passed returns all messages with id greater than after_id</li>
+<li><strong>before_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – if passed returns all messages with id less than before_id</li>
 </ul>
 </td>
 </tr>
@@ -424,12 +447,15 @@ user.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>current_user_id</strong> – the id the user requesting the thread information</li>
-<li><strong>thread_id</strong> – the id of the thread being requested</li>
+<li><strong>current_user_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – the id the user requesting the thread information</li>
+<li><strong>thread_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – the id of the thread being requested</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a Thread object associated with the thread_id</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">a Thread object associated with the thread_id</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#court.chats.models.Thread" title="court.chats.models.Thread">court.chats.models.Thread</a></p>
 </td>
 </tr>
 </tbody>
@@ -445,12 +471,15 @@ user.</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>user_id</strong> – the user id being checked</li>
-<li><strong>thread</strong> – Thread object that is being checked</li>
+<li><strong>user_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – the user id being checked</li>
+<li><strong>thread</strong> (<a class="reference internal" href="#court.chats.models.Thread" title="court.chats.models.Thread"><em>court.chats.models.Thread</em></a>) – Thread object that is being checked</li>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">true if the user is authorized to see the thread</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">true if the user is authorized to see the thread</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)">bool</a></p>
 </td>
 </tr>
 </tbody>
@@ -487,11 +516,27 @@ the arguments from the URL rule.</p>
 <dt id="court.chats.views.MessageAPI.get">
 <code class="descname">get</code><span class="sig-paren">(</span><em>thread_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/chats/views.html#MessageAPI.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.chats.views.MessageAPI.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Processes a HTTP GET request for the message REST API.</p>
+<p>Example request:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>GET localhost:8000/api/threads/1/messages
+</pre></div>
+</div>
+<p>Example response:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+      <span class="nt">&quot;user_id&quot;</span><span class="p">:</span> <span class="mi">14324324</span><span class="p">,</span>
+      <span class="nt">&quot;body&quot;</span><span class="p">:</span> <span class="s2">&quot;this is the message body&quot;</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>thread_id</strong> – the id of the thread requested</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>thread_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – the id of the thread requested</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">a Flask HTTP response with a list of thread messages</td>
 </tr>
@@ -529,6 +574,31 @@ the arguments from the URL rule.</p>
 <dt id="court.chats.views.ThreadAPI.get">
 <code class="descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/chats/views.html#ThreadAPI.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.chats.views.ThreadAPI.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Processes a HTTP GET request for the thread REST API.</p>
+<p>Example request:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>GET localhost:8000/api/threads
+</pre></div>
+</div>
+<p>Example response:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;threads&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+      <span class="nt">&quot;is_active&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+      <span class="nt">&quot;users&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+          <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="mi">1232434</span><span class="p">,</span>
+          <span class="nt">&quot;email&quot;</span><span class="p">:</span> <span class="s2">&quot;test@test.com&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+          <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="mi">43532454535</span><span class="p">,</span>
+          <span class="nt">&quot;email&quot;</span><span class="p">:</span> <span class="s2">&quot;another@another.com&quot;</span>
+        <span class="p">}</span>
+      <span class="p">]</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -559,6 +629,8 @@ the arguments from the URL rule.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">User object of the user in the current context, otherwise return None</td>
 </tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="#court.users.models.User" title="court.users.models.User">court.users.models.User</a></td>
+</tr>
 </tbody>
 </table>
 </dd></dl>
@@ -573,6 +645,22 @@ the arguments from the URL rule.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">User object of the user in the current context, otherwise return None</td>
 </tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="court.users.auth_service.AuthService.get_current_user_profile">
+<code class="descname">get_current_user_profile</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/users/auth_service.html#AuthService.get_current_user_profile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.users.auth_service.AuthService.get_current_user_profile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get profile object of user in the current context.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Profile object of the user in the current context, otherwise return None</td>
+</tr>
 </tbody>
 </table>
 </dd></dl>
@@ -585,7 +673,7 @@ the arguments from the URL rule.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>access_token</strong> – Facebook access token after client-side user authentication</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>access_token</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Facebook access token after client-side user authentication</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">encrypted user authentication token, and created user object</td>
 </tr>
@@ -596,7 +684,32 @@ the arguments from the URL rule.</p>
 <dl class="method">
 <dt id="court.users.auth_service.AuthService.login_required">
 <code class="descname">login_required</code><span class="sig-paren">(</span><em>f</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/users/auth_service.html#AuthService.login_required"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.users.auth_service.AuthService.login_required" title="Permalink to this definition">¶</a></dt>
-<dd><p>TODO: Add docstring.</p>
+<dd><p>Decorator to add an authorization check around the function, the function
+must be run in an flask application context to work.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>f</strong> – the function to be wrapped</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">a function that now only runs if a user is authorized</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="court.users.auth_service.AuthService.update_current_user_profile">
+<code class="descname">update_current_user_profile</code><span class="sig-paren">(</span><em>fields</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/users/auth_service.html#AuthService.update_current_user_profile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.users.auth_service.AuthService.update_current_user_profile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates profile object of user in the current context.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Profile object of the user in the current context, otherwise return None</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -607,7 +720,7 @@ the arguments from the URL rule.</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>token</strong> – unique encrypted user authentication token created at User creation</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>token</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – unique encrypted user authentication token created at User creation</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None</td>
 </tr>
@@ -646,6 +759,74 @@ the arguments from the URL rule.</p>
 </dd></dl>
 
 <span class="target" id="module-court.users.views"></span><dl class="class">
+<dt id="court.users.views.ProfileAPI">
+<em class="property">class </em><code class="descclassname">court.users.views.</code><code class="descname">ProfileAPI</code><span class="sig-paren">(</span><em>auth_service</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/users/views.html#ProfileAPI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.users.views.ProfileAPI" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask.views.MethodView</span></code></p>
+<p>Provides the view layer API for Profiles.</p>
+<dl class="classmethod">
+<dt id="court.users.views.ProfileAPI.as_view">
+<em class="property">classmethod </em><code class="descname">as_view</code><span class="sig-paren">(</span><em>name</em>, <em>*class_args</em>, <em>**class_kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#court.users.views.ProfileAPI.as_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts the class into an actual view function that can be used
+with the routing system.  Internally this generates a function on the
+fly which will instantiate the <code class="xref py py-class docutils literal notranslate"><span class="pre">View</span></code> on each request and call
+the <a class="reference internal" href="#court.users.views.ProfileAPI.dispatch_request" title="court.users.views.ProfileAPI.dispatch_request"><code class="xref py py-meth docutils literal notranslate"><span class="pre">dispatch_request()</span></code></a> method on it.</p>
+<p>The arguments passed to <a class="reference internal" href="#court.users.views.ProfileAPI.as_view" title="court.users.views.ProfileAPI.as_view"><code class="xref py py-meth docutils literal notranslate"><span class="pre">as_view()</span></code></a> are forwarded to the
+constructor of the class.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="court.users.views.ProfileAPI.delete">
+<code class="descname">delete</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/users/views.html#ProfileAPI.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.users.views.ProfileAPI.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Processes a HTTP DELETE request for the profile REST API.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a Flask HTTP response with a User’s associated Profile.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="court.users.views.ProfileAPI.dispatch_request">
+<code class="descname">dispatch_request</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#court.users.views.ProfileAPI.dispatch_request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subclasses have to override this method to implement the
+actual view function code.  This method is called with all
+the arguments from the URL rule.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="court.users.views.ProfileAPI.get">
+<code class="descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/users/views.html#ProfileAPI.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.users.views.ProfileAPI.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Processes a HTTP GET request for the profile REST API.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a Flask HTTP response with a User’s associated Profile.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="court.users.views.ProfileAPI.put">
+<code class="descname">put</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/users/views.html#ProfileAPI.put"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.users.views.ProfileAPI.put" title="Permalink to this definition">¶</a></dt>
+<dd><p>Processes a HTTP PUT request for the profile REST API.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a Flask HTTP response with a User’s associated Profile.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="court.users.views.UserAPI">
 <em class="property">class </em><code class="descclassname">court.users.views.</code><code class="descname">UserAPI</code><span class="sig-paren">(</span><em>auth_service</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/users/views.html#UserAPI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.users.views.UserAPI" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask.views.MethodView</span></code></p>
@@ -670,9 +851,72 @@ the arguments from the URL rule.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="court.users.views.UserAPI.get">
+<code class="descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/users/views.html#UserAPI.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.users.views.UserAPI.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Processes a HTTP GET request for the user REST API.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>GET localhost:8000/api/users
+</pre></div>
+</div>
+<p>Example response:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;user&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;email&quot;</span><span class="p">:</span> <span class="s2">&quot;kfgzlneeuo_1541453454@tfbnw.net&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;first_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Will&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;102773437400251&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;last_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Occhinoberg&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;picture&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;height&quot;</span><span class="p">:</span> <span class="mi">320</span><span class="p">,</span>
+        <span class="nt">&quot;is_silhouette&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="nt">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=102773437400251&amp;height=300&amp;width=300&amp;ext=1544820635&amp;hash=AeQAGANVCW2xEscN&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;width&quot;</span><span class="p">:</span> <span class="mi">320</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a Flask HTTP response containing a user’s id and email</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body">AuthorizationError, ValidationError</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="court.users.views.UserAPI.post">
 <code class="descname">post</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/users/views.html#UserAPI.post"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.users.views.UserAPI.post" title="Permalink to this definition">¶</a></dt>
 <dd><p>Processes a HTTP POST request for the user REST API.</p>
+<p>An example request is below:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>POST localhost:8000/api/users?access_token<span class="o">={</span>facebook access token <span class="k">for</span> user<span class="o">}</span>
+</pre></div>
+</div>
+<p>Example response:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;success&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+  <span class="nt">&quot;token&quot;</span><span class="p">:</span> <span class="s2">&quot;eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MTAyNzczNDM3NDAwMjUxLCJpc19hZG1pbiI6ZmFsc2V9.qVJ99o4cG1xsHAac2ztrBsyExST76pDlzhnJx9Nxt0s&quot;</span><span class="p">,</span>
+  <span class="nt">&quot;user&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;email&quot;</span><span class="p">:</span> <span class="s2">&quot;kfgzlneeuo_1541453454@tfbnw.net&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;first_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Will&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;102773437400251&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;last_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Occhinoberg&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;picture&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;height&quot;</span><span class="p">:</span> <span class="mi">320</span><span class="p">,</span>
+        <span class="nt">&quot;is_silhouette&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="nt">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=102773437400251&amp;height=300&amp;width=300&amp;ext=1544820635&amp;hash=AeQAGANVCW2xEscN&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;width&quot;</span><span class="p">:</span> <span class="mi">320</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />

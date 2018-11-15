@@ -155,33 +155,133 @@
 <span class="sd">    UserAPI.as_view(&#39;user_api&#39;, auth_service) to initialize.</span>
 
 <span class="sd">    :param auth_service: an AuthService instance</span>
+<span class="sd">    :type auth_service: court.users.auth_service.AuthService</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">auth_service</span> <span class="o">=</span> <span class="n">auth_service</span>
+
+<div class="viewcode-block" id="UserAPI.get"><a class="viewcode-back" href="../../../index.html#court.users.views.UserAPI.get">[docs]</a>  <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Processes a HTTP GET request for the user REST API.</span>
+
+<span class="sd">    .. code-block:: bash</span>
+
+<span class="sd">      GET localhost:8000/api/users</span>
+
+<span class="sd">    Example response:</span>
+
+<span class="sd">    .. code-block:: json</span>
+
+<span class="sd">      {</span>
+<span class="sd">        &quot;user&quot;: {</span>
+<span class="sd">          &quot;email&quot;: &quot;kfgzlneeuo_1541453454@tfbnw.net&quot;,</span>
+<span class="sd">          &quot;first_name&quot;: &quot;Will&quot;,</span>
+<span class="sd">          &quot;id&quot;: &quot;102773437400251&quot;,</span>
+<span class="sd">          &quot;last_name&quot;: &quot;Occhinoberg&quot;,</span>
+<span class="sd">          &quot;picture&quot;: {</span>
+<span class="sd">            &quot;data&quot;: {</span>
+<span class="sd">              &quot;height&quot;: 320,</span>
+<span class="sd">              &quot;is_silhouette&quot;: true,</span>
+<span class="sd">              &quot;url&quot;: &quot;https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=102773437400251&amp;height=300&amp;width=300&amp;ext=1544820635&amp;hash=AeQAGANVCW2xEscN&quot;,</span>
+<span class="sd">              &quot;width&quot;: 320</span>
+<span class="sd">            }</span>
+<span class="sd">          }</span>
+<span class="sd">        }</span>
+<span class="sd">      }</span>
+
+<span class="sd">    :return: a Flask HTTP response containing a user&#39;s id and email</span>
+<span class="sd">    :raises: AuthorizationError, ValidationError</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">auth_service</span><span class="o">.</span><span class="n">get_current_user</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">_asdict</span><span class="p">())</span></div>
 
 <div class="viewcode-block" id="UserAPI.post"><a class="viewcode-back" href="../../../index.html#court.users.views.UserAPI.post">[docs]</a>  <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Processes a HTTP POST request for the user REST API.</span>
 
+<span class="sd">    An example request is below:</span>
+
+<span class="sd">    .. code-block:: bash</span>
+
+<span class="sd">      POST localhost:8000/api/users?access_token={facebook access token for user}</span>
+
+
+<span class="sd">    Example response:</span>
+
+<span class="sd">    .. code-block:: json</span>
+
+<span class="sd">      {</span>
+<span class="sd">        &quot;success&quot;: true,</span>
+<span class="sd">        &quot;token&quot;: &quot;eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MTAyNzczNDM3NDAwMjUxLCJpc19hZG1pbiI6ZmFsc2V9.qVJ99o4cG1xsHAac2ztrBsyExST76pDlzhnJx9Nxt0s&quot;,</span>
+<span class="sd">        &quot;user&quot;: {</span>
+<span class="sd">          &quot;email&quot;: &quot;kfgzlneeuo_1541453454@tfbnw.net&quot;,</span>
+<span class="sd">          &quot;first_name&quot;: &quot;Will&quot;,</span>
+<span class="sd">          &quot;id&quot;: &quot;102773437400251&quot;,</span>
+<span class="sd">          &quot;last_name&quot;: &quot;Occhinoberg&quot;,</span>
+<span class="sd">          &quot;picture&quot;: {</span>
+<span class="sd">            &quot;data&quot;: {</span>
+<span class="sd">              &quot;height&quot;: 320,</span>
+<span class="sd">              &quot;is_silhouette&quot;: true,</span>
+<span class="sd">              &quot;url&quot;: &quot;https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=102773437400251&amp;height=300&amp;width=300&amp;ext=1544820635&amp;hash=AeQAGANVCW2xEscN&quot;,</span>
+<span class="sd">              &quot;width&quot;: 320</span>
+<span class="sd">            }</span>
+<span class="sd">          }</span>
+<span class="sd">        }</span>
+<span class="sd">      }</span>
+
 <span class="sd">    :return: a Flask HTTP response with after a selected user&#39;s login flow.</span>
 <span class="sd">    :raises: AuthorizationError, ValidationError</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">access_token</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">json</span><span class="p">[</span><span class="s1">&#39;access_token&#39;</span><span class="p">]</span>
+    <span class="n">access_token</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;access_token&#39;</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">access_token</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
       <span class="k">raise</span> <span class="n">AuthorizationError</span><span class="p">()</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">access_token</span><span class="p">)</span>
     <span class="c1"># create a new user</span>
-    <span class="k">try</span><span class="p">:</span>
-      <span class="n">token</span><span class="p">,</span> <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">auth_service</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">access_token</span><span class="p">)</span>
-      <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span>
-        <span class="s1">&#39;success&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="s1">&#39;token&#39;</span><span class="p">:</span> <span class="n">token</span><span class="p">,</span>
-        <span class="s1">&#39;user&#39;</span><span class="p">:</span> <span class="n">user</span>
-      <span class="p">})</span>
-    <span class="k">except</span> <span class="p">(</span><span class="n">AuthorizationError</span><span class="p">,</span> <span class="n">ValidationError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-      <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span>
-        <span class="s1">&#39;success&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="n">e</span><span class="o">.</span><span class="n">message</span>
-      <span class="p">})</span></div></div>
+    <span class="n">token</span><span class="p">,</span> <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">auth_service</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">access_token</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span>
+      <span class="s1">&#39;success&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+      <span class="s1">&#39;token&#39;</span><span class="p">:</span> <span class="n">token</span><span class="p">,</span>
+      <span class="s1">&#39;user&#39;</span><span class="p">:</span> <span class="n">user</span>
+    <span class="p">})</span></div></div>
+
+
+<div class="viewcode-block" id="ProfileAPI"><a class="viewcode-back" href="../../../index.html#court.users.views.ProfileAPI">[docs]</a><span class="k">class</span> <span class="nc">ProfileAPI</span><span class="p">(</span><span class="n">MethodView</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  Provides the view layer API for Profiles.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">auth_service</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a new ProfileAPI object. Should be called with</span>
+<span class="sd">    ProfileAPI.as_view(&#39;user_api&#39;, auth_service) to initialize.</span>
+
+<span class="sd">    :param auth_service: an AuthService instance</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">auth_service</span> <span class="o">=</span> <span class="n">auth_service</span>
+
+<div class="viewcode-block" id="ProfileAPI.get"><a class="viewcode-back" href="../../../index.html#court.users.views.ProfileAPI.get">[docs]</a>  <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Processes a HTTP GET request for the profile REST API.</span>
+
+<span class="sd">    :return: a Flask HTTP response with a User&#39;s associated Profile.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">profile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">auth_service</span><span class="o">.</span><span class="n">get_current_user_profile</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">profile</span><span class="o">=</span><span class="n">profile</span><span class="o">.</span><span class="n">_asdict</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="ProfileAPI.put"><a class="viewcode-back" href="../../../index.html#court.users.views.ProfileAPI.put">[docs]</a>  <span class="k">def</span> <span class="nf">put</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Processes a HTTP PUT request for the profile REST API.</span>
+
+<span class="sd">    :return: a Flask HTTP response with a User&#39;s associated Profile.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">fields</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">()</span>
+    <span class="n">profile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">auth_service</span><span class="o">.</span><span class="n">update_current_user_profile</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">profile</span><span class="o">=</span><span class="n">profile</span><span class="o">.</span><span class="n">_asdict</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="ProfileAPI.delete"><a class="viewcode-back" href="../../../index.html#court.users.views.ProfileAPI.delete">[docs]</a>  <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Processes a HTTP DELETE request for the profile REST API.</span>
+
+<span class="sd">    :return: a Flask HTTP response with a User&#39;s associated Profile.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="s1">&#39;need to implement profile API&#39;</span><span class="p">})</span></div></div>
 </pre></div>
 
            </div>

@@ -14,6 +14,7 @@ class UserAPI(MethodView):
     UserAPI.as_view('user_api', auth_service) to initialize.
 
     :param auth_service: an AuthService instance
+    :type auth_service: court.users.auth_service.AuthService
     """
     self.auth_service = auth_service
 
@@ -21,36 +22,85 @@ class UserAPI(MethodView):
     """
     Processes a HTTP GET request for the user REST API.
 
+    .. code-block:: bash
+
+      GET localhost:8000/api/users
+
+    Example response:
+
+    .. code-block:: json
+
+      {
+        "user": {
+          "email": "kfgzlneeuo_1541453454@tfbnw.net",
+          "first_name": "Will",
+          "id": "102773437400251",
+          "last_name": "Occhinoberg",
+          "picture": {
+            "data": {
+              "height": 320,
+              "is_silhouette": true,
+              "url": "https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=102773437400251&height=300&width=300&ext=1544820635&hash=AeQAGANVCW2xEscN",
+              "width": 320
+            }
+          }
+        }
+      }
+
     :return: a Flask HTTP response containing a user's id and email
     :raises: AuthorizationError, ValidationError
     """
     user = self.auth_service.get_current_user()
-    return jsonify(user=user)
+    return jsonify(user=user._asdict())
 
   def post(self):
     """
     Processes a HTTP POST request for the user REST API.
 
-    :return: a Flask HTTP response after a selected user's login flow.
+    An example request is below:
+
+    .. code-block:: bash
+
+      POST localhost:8000/api/users?access_token={facebook access token for user}
+
+
+    Example response:
+
+    .. code-block:: json
+
+      {
+        "success": true,
+        "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MTAyNzczNDM3NDAwMjUxLCJpc19hZG1pbiI6ZmFsc2V9.qVJ99o4cG1xsHAac2ztrBsyExST76pDlzhnJx9Nxt0s",
+        "user": {
+          "email": "kfgzlneeuo_1541453454@tfbnw.net",
+          "first_name": "Will",
+          "id": "102773437400251",
+          "last_name": "Occhinoberg",
+          "picture": {
+            "data": {
+              "height": 320,
+              "is_silhouette": true,
+              "url": "https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=102773437400251&height=300&width=300&ext=1544820635&hash=AeQAGANVCW2xEscN",
+              "width": 320
+            }
+          }
+        }
+      }
+
+    :return: a Flask HTTP response with after a selected user's login flow.
     :raises: AuthorizationError, ValidationError
     """
     access_token = request.args.get('access_token')
     if access_token is None:
       raise AuthorizationError()
-    print(access_token)
     # create a new user
-    try:
-      token, user = self.auth_service.login(access_token)
-      return jsonify({
-        'success': True,
-        'token': token,
-        'user': user
-      })
-    except (AuthorizationError, ValidationError) as e:
-      return jsonify({
-        'success': False,
-        'error': e.message
-      })
+    token, user = self.auth_service.login(access_token)
+    return jsonify({
+      'success': True,
+      'token': token,
+      'user': user
+    })
+
 
 class ProfileAPI(MethodView):
   """
@@ -71,7 +121,8 @@ class ProfileAPI(MethodView):
 
     :return: a Flask HTTP response with a User's associated Profile.
     """
-    return jsonify({'status': 'need to implement profile API'})
+    profile = self.auth_service.get_current_user_profile()
+    return jsonify(profile=profile._asdict())
 
   def put(self):
     """
@@ -79,7 +130,9 @@ class ProfileAPI(MethodView):
 
     :return: a Flask HTTP response with a User's associated Profile.
     """
-    return jsonify({'status': 'need to implement profile API'})
+    fields = request.get_json()
+    profile = self.auth_service.update_current_user_profile(fields)
+    return jsonify(profile=profile._asdict())
 
   def delete(self):
     """

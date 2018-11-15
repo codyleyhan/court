@@ -38,6 +38,15 @@ class ThreadSockets(Namespace):
     Occurs when an already joined user sends a message on a thread.  Message will
     be saved and then emitted to the everyone in the room including the sender.
 
+    Example json:
+
+    .. code-block:: json
+
+      {
+        "thread": 1,
+        "body": "a new message"
+      }
+
     :param json: contains json data from the user
     """
     self.get_user_from_request()
@@ -64,6 +73,14 @@ class ThreadSockets(Namespace):
     """
     Occurs when a user subscribes to a realtime chat thread.  The user will have
     to pass authorization checks in order to subscribe to the realtime messages.
+
+    Example json:
+
+    .. code-block:: json
+
+      {
+        "thread": 1
+      }
 
     :param json: contains json data from the user
     """
