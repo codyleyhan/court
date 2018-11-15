@@ -29,22 +29,14 @@ export default class InboxScreen extends React.Component {
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
           // Temp list for example messages
           // TODO(river): populate from an API call
-          <InboxItem imgUrl="https://heightline.com/wp-content/uploads/Justin-Roberts-640x427.jpg" name="Justin Roberts" lastMessage="Yo bro I have huge balls" lastTime="4:02 PM" percent="67"/>
+          <InboxItem imgUrl="https://heightline.com/wp-content/uploads/Justin-Roberts-640x427.jpg" name="Justin Roberts" lastMessage="I'm really into cooking in my free time!" lastTime="4:02 PM" percent="67"/>
           <InboxItem name="Anonymous Panda" lastMessage="I Love to office so much it's so cool" lastTime="2:15 PM" percent="40"/>
-          <InboxItem name="Anonymous Cock" lastMessage="This app is amazing, what are you doing?" lastTime="10:07 AM" percent="15"/>
+          <InboxItem name="Anonymous Sloth" lastMessage="This app is amazing, what are you doing?" lastTime="10:07 AM" percent="15"/>
 
           // Add a message for new matches
           <Text style={{marginTop: 15, textAlign: 'center', color: 'grey'}}>Looking for more chats?</Text>
           <Text style={{textAlign: 'center', color: 'grey'}}>{"They'll show up here when you have a match."}</Text>
         </ScrollView>
-
-        <View style={styles.tabBarInfoContainer}>
-          <Text style={styles.tabBarInfoText}>TODO(river): Decide if we want a TabBar controller. Currently:</Text>
-
-          <View style={[styles.codeHighlightContainer, styles.navigationFilename]}>
-            <MonoText style={styles.codeHighlightText}>navigation/MainTabNavigator.js</MonoText>
-          </View>
-        </View>
       </View>
     );
   }
