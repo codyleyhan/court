@@ -36,16 +36,14 @@ export default class ConfirmationScreen extends React.Component {
     return (
       <View style={styles.container}>
         <BackButton navigation={this.props.navigation} />
-        <Transition appear= "horizontal" shared="avatar">
-          <View style={{height: 100, width: 100, marginBottom: 15, marginTop: 80}}>
-            <Mask shape={'circle'}>
-              <Image
-                style={styles.userImage}
-                source={{ uri: profile_url }}
-              />
-            </Mask>
-          </View>
-        </Transition>
+        <View style={{height: 100, width: 100, marginBottom: 15, marginTop: 80}}>
+          <Mask shape={'circle'}>
+            <Image
+              style={styles.userImage}
+              source={{ uri: profile_url }}
+            />
+          </Mask>
+        </View>
         <View style={{alignItems: 'center', justifyContent: 'center'}}>
           <Transition appear="horizontal">
             <Text style={styles.welcomeText}>{`Congrats ${user_name}!`}</Text>
@@ -62,6 +60,7 @@ export default class ConfirmationScreen extends React.Component {
           loop={false}
           style={styles.animation}
         />
+
         <View style={styles.continueButton}>
           <TouchableOpacity onPress={() => this.goNext()} activeOpacity={0.75}>
             <Text style={styles.continueText}>
