@@ -52,6 +52,7 @@ class AuthService:
     facebook_user_data = json.loads(r.text)
 
     user = self.user_store.query.filter(User.id == facebook_user_data['id']).one_or_none()
+    exists = True if user is not None else False
     if user is None: # user is new so insert into DB
       user = User()
       user.id = int(facebook_user_data['id'])
@@ -75,7 +76,7 @@ class AuthService:
 
     token = jwt.encode(token_data, self.secret, algorithm='HS256')
 
-    return token, facebook_user_data
+    return token, facebook_user_data, exists
 
   def validate_token(self, token):
     """

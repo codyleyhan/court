@@ -70,11 +70,12 @@ class UserAPI(MethodView):
       raise AuthorizationError()
     # create a new user
     try:
-      token, user = self.auth_service.login(access_token)
+      token, user, exists = self.auth_service.login(access_token)
       return jsonify({
         'success': True,
         'token': token,
-        'user': user
+        'user': user,
+        'exists': exists
       })
     except (AuthorizationError, ValidationError) as e:
       return jsonify({
