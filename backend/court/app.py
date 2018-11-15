@@ -12,7 +12,7 @@ from court.errors import *
 from court.users.auth_service import AuthService
 from court.users.views import ProfileAPI, UserAPI
 
-from court.matching import Match
+from court.match import Match
 
 def create_app(config=DevelopmentConfig):
   """
