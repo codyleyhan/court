@@ -53,10 +53,16 @@ export default class ConfirmationScreen extends React.Component {
             <Text style={styles.subText}>{'Your account is all set up'}</Text>
           </Transition>
         </View>
+        // Animation
+        <LottieView
+          source={require('../assets/animations/simple_tick.json')}
+          autoPlay
+          style={styles.animation}
+        />
         <View style={styles.continueButton}>
           <TouchableOpacity onPress={() => this.goNext(user)} activeOpacity={0.75}>
             <Text style={styles.continueText}>
-              Continue
+              Go to Inbox
             </Text>
           </TouchableOpacity>
         </View>
@@ -71,12 +77,6 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.teal,
     flexDirection: 'column',
     alignItems: 'center',
-  },
-  interestsListWrapper: {
-    maxHeight: 50,
-  },
-  interestsList: {
-    // backgroundColor: 'green',
   },
   continueButton: {
     position: 'absolute',
@@ -116,5 +116,9 @@ const styles = StyleSheet.create({
   subText: {
     fontSize: 20,
     color: 'white',
+  },
+  animation: {
+    height: 150,
+    width: 150,
   }
 });
