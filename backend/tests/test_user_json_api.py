@@ -44,7 +44,7 @@ def test_login(app, requests_mock):
       # user should now be in db
       user = User.query.filter(User.id == '102773437400251').one_or_none()
       assert user is not None
-    
+
     # ensure an already created user can login again
     resp = client.post('/api/users', query_string=params)
     data = json.loads(resp.data)

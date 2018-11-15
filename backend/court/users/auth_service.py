@@ -54,10 +54,16 @@ class AuthService:
     user = self.user_store.query.filter(User.id == facebook_user_data['id']).one_or_none()
     if user is None: # user is new so insert into DB
       user = User()
-      user.id = facebook_user_data['id']
+      user.id = int(facebook_user_data['id'])
       user.email = facebook_user_data['email']
+      profile = Profile(int(facebook_user_data['id']),
+                        facebook_user_data['first_name'],
+                        facebook_user_data['last_name'],
+                        facebook_user_data['picture']['data']['url'])
+      user.profile = profile
       # TODO(codyleyhan) tons of exception handling
       self.db.session.add(user)
+      self.db.session.add(profile)
       self.db.session.commit()
 
     token_data = {
