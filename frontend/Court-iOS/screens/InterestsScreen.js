@@ -43,8 +43,9 @@ export default class InterestsScreen extends React.Component {
     this.setState({ interests });
   }
 
-  goNext(user) {
+  goNext(user, genderSelection) {
     // Publish interests to API, navigate to next page
+    
     // TODO(rivmist): update the backend with these changes
     this.props.navigation.navigate('Confirmation', {user: user});
   }
@@ -52,6 +53,7 @@ export default class InterestsScreen extends React.Component {
   render() {
     const { interests } = this.state;
     const user = this.props.navigation.getParam('user', null);
+    const genderSelection = this.props.navigation.getParam('genderSelection', null);
     const user_name = user.first_name;
     const profile_url = user.picture.data.url;
     const remove = this.removeInterest.bind(this);
@@ -104,7 +106,7 @@ export default class InterestsScreen extends React.Component {
         <InterestsFinder interests={interests} onAddInterest={this.addInterest.bind(this)} onRemoveInterest={this.removeInterest.bind(this)} />
         {Object.keys(interests).length > 0 && (
           <View style={styles.continueButton}>
-            <TouchableOpacity onPress={() => this.goNext(user)} activeOpacity={0.75}>
+            <TouchableOpacity onPress={() => this.goNext(user, genderSelection)} activeOpacity={0.75}>
               <Text style={styles.continueText}>
                 Continue
               </Text>

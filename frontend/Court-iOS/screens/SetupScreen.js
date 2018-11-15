@@ -38,7 +38,7 @@ export default class SetupScreen extends React.Component {
   handleContinueClick = (user) => {
     // Navigate to next screen, and submit user selections to API
     // TODO(river): submit these details to the backend
-    this.props.navigation.navigate('Interests', { user: user });
+    this.props.navigation.navigate('Interests', { user: user, genderSelection: { self: this.state.gender, other: this.state.preferred } });
   }
 
   render() {
