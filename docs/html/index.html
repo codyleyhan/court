@@ -517,10 +517,9 @@ the arguments from the URL rule.</p>
 <code class="descname">get</code><span class="sig-paren">(</span><em>thread_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/chats/views.html#MessageAPI.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.chats.views.MessageAPI.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Processes a HTTP GET request for the message REST API.</p>
 <p>Example request:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>GET localhost:8000/api/threads/1/messages
 </pre></div>
 </div>
-<p>GET localhost:8000/api/threads/1/messages</p>
 <p>Example response:</p>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
   <span class="nt">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span>
@@ -576,10 +575,9 @@ the arguments from the URL rule.</p>
 <code class="descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/chats/views.html#ThreadAPI.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.chats.views.ThreadAPI.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Processes a HTTP GET request for the thread REST API.</p>
 <p>Example request:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>GET localhost:8000/api/threads
 </pre></div>
 </div>
-<p>GET localhost:8000/api/threads</p>
 <p>Example response:</p>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
   <span class="nt">&quot;threads&quot;</span><span class="p">:</span> <span class="p">[</span>
@@ -845,6 +843,9 @@ the arguments from the URL rule.</p>
 <dt id="court.users.views.UserAPI.get">
 <code class="descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/users/views.html#UserAPI.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.users.views.UserAPI.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Processes a HTTP GET request for the user REST API.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>GET localhost:8000/api/users
+</pre></div>
+</div>
 <p>Example response:</p>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
   <span class="nt">&quot;user&quot;</span><span class="p">:</span> <span class="p">{</span>
