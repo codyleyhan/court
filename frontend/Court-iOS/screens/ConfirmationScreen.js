@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import LottieView from 'lottie-react-native';
 
 import { Transition } from 'react-navigation-fluid-transitions';
 import Mask from 'react-native-mask';
