@@ -163,6 +163,27 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Processes a HTTP GET request for the user REST API.</span>
 
+<span class="sd">    Example response:</span>
+
+<span class="sd">    .. code-block:: json</span>
+
+<span class="sd">      {</span>
+<span class="sd">        &quot;user&quot;: {</span>
+<span class="sd">          &quot;email&quot;: &quot;kfgzlneeuo_1541453454@tfbnw.net&quot;,</span>
+<span class="sd">          &quot;first_name&quot;: &quot;Will&quot;,</span>
+<span class="sd">          &quot;id&quot;: &quot;102773437400251&quot;,</span>
+<span class="sd">          &quot;last_name&quot;: &quot;Occhinoberg&quot;,</span>
+<span class="sd">          &quot;picture&quot;: {</span>
+<span class="sd">            &quot;data&quot;: {</span>
+<span class="sd">              &quot;height&quot;: 320,</span>
+<span class="sd">              &quot;is_silhouette&quot;: true,</span>
+<span class="sd">              &quot;url&quot;: &quot;https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=102773437400251&amp;height=300&amp;width=300&amp;ext=1544820635&amp;hash=AeQAGANVCW2xEscN&quot;,</span>
+<span class="sd">              &quot;width&quot;: 320</span>
+<span class="sd">            }</span>
+<span class="sd">          }</span>
+<span class="sd">        }</span>
+<span class="sd">      }</span>
+
 <span class="sd">    :return: a Flask HTTP response containing a user&#39;s id and email</span>
 <span class="sd">    :raises: AuthorizationError, ValidationError</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -210,18 +231,13 @@
     <span class="k">if</span> <span class="n">access_token</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
       <span class="k">raise</span> <span class="n">AuthorizationError</span><span class="p">()</span>
     <span class="c1"># create a new user</span>
-    <span class="k">try</span><span class="p">:</span>
-      <span class="n">token</span><span class="p">,</span> <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">auth_service</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">access_token</span><span class="p">)</span>
-      <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span>
-        <span class="s1">&#39;success&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-        <span class="s1">&#39;token&#39;</span><span class="p">:</span> <span class="n">token</span><span class="p">,</span>
-        <span class="s1">&#39;user&#39;</span><span class="p">:</span> <span class="n">user</span>
-      <span class="p">})</span>
-    <span class="k">except</span> <span class="p">(</span><span class="n">AuthorizationError</span><span class="p">,</span> <span class="n">ValidationError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-      <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span>
-        <span class="s1">&#39;success&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-        <span class="s1">&#39;error&#39;</span><span class="p">:</span> <span class="n">e</span><span class="o">.</span><span class="n">message</span>
-      <span class="p">})</span></div></div>
+    <span class="n">token</span><span class="p">,</span> <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">auth_service</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">access_token</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span>
+      <span class="s1">&#39;success&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+      <span class="s1">&#39;token&#39;</span><span class="p">:</span> <span class="n">token</span><span class="p">,</span>
+      <span class="s1">&#39;user&#39;</span><span class="p">:</span> <span class="n">user</span>
+    <span class="p">})</span></div></div>
+
 
 <div class="viewcode-block" id="ProfileAPI"><a class="viewcode-back" href="../../../index.html#court.users.views.ProfileAPI">[docs]</a><span class="k">class</span> <span class="nc">ProfileAPI</span><span class="p">(</span><span class="n">MethodView</span><span class="p">):</span>
   <span class="sd">&quot;&quot;&quot;</span>

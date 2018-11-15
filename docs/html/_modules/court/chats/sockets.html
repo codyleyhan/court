@@ -179,6 +179,15 @@
 <span class="sd">    Occurs when an already joined user sends a message on a thread.  Message will</span>
 <span class="sd">    be saved and then emitted to the everyone in the room including the sender.</span>
 
+<span class="sd">    Example json:</span>
+
+<span class="sd">    .. code-block:: json</span>
+
+<span class="sd">      {</span>
+<span class="sd">        &quot;thread&quot;: 1,</span>
+<span class="sd">        &quot;body&quot;: &quot;a new message&quot;</span>
+<span class="sd">      }</span>
+
 <span class="sd">    :param json: contains json data from the user</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">get_user_from_request</span><span class="p">()</span>
@@ -205,6 +214,14 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Occurs when a user subscribes to a realtime chat thread.  The user will have</span>
 <span class="sd">    to pass authorization checks in order to subscribe to the realtime messages.</span>
+
+<span class="sd">    Example json:</span>
+
+<span class="sd">    .. code-block:: json</span>
+
+<span class="sd">      {</span>
+<span class="sd">        &quot;thread&quot;: 1</span>
+<span class="sd">      }</span>
 
 <span class="sd">    :param json: contains json data from the user</span>
 <span class="sd">    &quot;&quot;&quot;</span>
