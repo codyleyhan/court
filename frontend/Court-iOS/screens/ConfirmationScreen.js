@@ -25,7 +25,7 @@ export default class ConfirmationScreen extends React.Component {
   };
 
   goNext() {
-    this.props.navigation.navigate('Auth');
+    this.props.navigation.navigate('App');
   }
 
   render() {
@@ -36,7 +36,7 @@ export default class ConfirmationScreen extends React.Component {
     return (
       <View style={styles.container}>
         <BackButton navigation={this.props.navigation} />
-        <Transition appear="horizontal" shared="avatar">
+        <Transition appear= "horizontal" shared="avatar">
           <View style={{height: 100, width: 100, marginBottom: 15, marginTop: 80}}>
             <Mask shape={'circle'}>
               <Image
@@ -58,10 +58,12 @@ export default class ConfirmationScreen extends React.Component {
         <LottieView
           source={require('../assets/animations/simple_tick.json')}
           autoPlay
+          speed={0.7}
+          loop={false}
           style={styles.animation}
         />
         <View style={styles.continueButton}>
-          <TouchableOpacity onPress={() => this.goNext(user)} activeOpacity={0.75}>
+          <TouchableOpacity onPress={() => this.goNext()} activeOpacity={0.75}>
             <Text style={styles.continueText}>
               Go to Inbox
             </Text>
@@ -119,7 +121,8 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   animation: {
-    height: 150,
-    width: 150,
+    marginTop: 50,
+    height: 200,
+    width: 200,
   }
 });

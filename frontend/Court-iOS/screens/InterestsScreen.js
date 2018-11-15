@@ -58,7 +58,7 @@ export default class InterestsScreen extends React.Component {
     return (
       <View style={styles.container}>
         <BackButton navigation={this.props.navigation} />
-        <Transition appear="horizontal" shared="avatar">
+        <Transition shared="avatar">
           <View style={{height: 100, width: 100, marginBottom: 15, marginTop: 80}}>
             <Mask shape={'circle'}>
               <Image
