@@ -69,18 +69,13 @@ class UserAPI(MethodView):
     if access_token is None:
       raise AuthorizationError()
     # create a new user
-    try:
-      token, user = self.auth_service.login(access_token)
-      return jsonify({
-        'success': True,
-        'token': token,
-        'user': user
-      })
-    except (AuthorizationError, ValidationError) as e:
-      return jsonify({
-        'success': False,
-        'error': e.message
-      })
+    token, user = self.auth_service.login(access_token)
+    return jsonify({
+      'success': True,
+      'token': token,
+      'user': user
+    })
+
 
 class ProfileAPI(MethodView):
   """

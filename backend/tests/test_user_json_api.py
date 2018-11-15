@@ -8,11 +8,11 @@ def test_login(app, requests_mock):
   facebook_token = 'mocksodoesntmatter'
   facebook_url = 'https://graph.facebook.com/me?fields=id,first_name,last_name,email,picture.height(300).width(300)&access_token=' + facebook_token
   mocked_fb_resp = {
-  "id": "102773437400251",
-  "first_name": "Will",
-  "last_name": "Occhinoberg",
-  "email": "kfgzlneeuo_1541453454@fbnw.net",
-  "picture": {
+    "id": "102773437400251",
+    "first_name": "Will",
+    "last_name": "Occhinoberg",
+    "email": "kfgzlneeuo_1541453454@fbnw.net",
+    "picture": {
       "data": {
         "height": 320,
         "is_silhouette": True,
@@ -33,6 +33,7 @@ def test_login(app, requests_mock):
     params = { 'access_token': facebook_token }
     resp = client.post('/api/users', query_string=params)
     data = json.loads(resp.data)
+    assert resp.status_code == 200
     assert data['success']
     assert data['token'] == court_jwt
     assert data['user']['email'] == 'kfgzlneeuo_1541453454@fbnw.net'
@@ -46,6 +47,7 @@ def test_login(app, requests_mock):
     # ensure an already created user can login again
     resp = client.post('/api/users', query_string=params)
     data = json.loads(resp.data)
+    assert resp.status_code == 200
     assert data['success']
     assert data['token'] == court_jwt
     assert data['user']['email'] == 'kfgzlneeuo_1541453454@fbnw.net'
@@ -68,5 +70,6 @@ def test_login_bad_token(app, requests_mock):
     params = { 'access_token': facebook_token }
     resp = client.post('/api/users', query_string=params)
     data = json.loads(resp.data)
+    assert resp.status_code == 401
     assert not data['success']
     assert data['error'] == 'Not authorized'
