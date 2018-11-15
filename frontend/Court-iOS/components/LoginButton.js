@@ -67,7 +67,7 @@ LoginButton.propTypes = {
   /**
   * Boolean indicating whether or not to show the facebook logo
   */
-  showLogo: PropTypes.bool.isRequired,
+  showLogo: PropTypes.bool,
   /**
   * Text to be rendered in button
   */

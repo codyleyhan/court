@@ -31,5 +31,5 @@ BackButton.propTypes = {
   /**
   * Stack of previously viewed screens
   */
-  navigation: PropTypes.instanceOf(StackNavigator).isRequired,
+  navigation: PropTypes.object.isRequired,
 }
