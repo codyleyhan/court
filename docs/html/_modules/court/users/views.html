@@ -211,11 +211,12 @@
       <span class="k">raise</span> <span class="n">AuthorizationError</span><span class="p">()</span>
     <span class="c1"># create a new user</span>
     <span class="k">try</span><span class="p">:</span>
-      <span class="n">token</span><span class="p">,</span> <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">auth_service</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">access_token</span><span class="p">)</span>
+      <span class="n">token</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">exists</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">auth_service</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">access_token</span><span class="p">)</span>
       <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span>
         <span class="s1">&#39;success&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
         <span class="s1">&#39;token&#39;</span><span class="p">:</span> <span class="n">token</span><span class="p">,</span>
-        <span class="s1">&#39;user&#39;</span><span class="p">:</span> <span class="n">user</span>
+        <span class="s1">&#39;user&#39;</span><span class="p">:</span> <span class="n">user</span><span class="p">,</span>
+        <span class="s1">&#39;exists&#39;</span><span class="p">:</span> <span class="n">exists</span>
       <span class="p">})</span>
     <span class="k">except</span> <span class="p">(</span><span class="n">AuthorizationError</span><span class="p">,</span> <span class="n">ValidationError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
       <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span>
@@ -233,6 +234,7 @@
 <span class="sd">    ProfileAPI.as_view(&#39;user_api&#39;, auth_service) to initialize.</span>
 
 <span class="sd">    :param auth_service: an AuthService instance</span>
+<span class="sd">    :type auth_service: court.users.auth_service.AuthService</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">auth_service</span> <span class="o">=</span> <span class="n">auth_service</span>
 
@@ -251,17 +253,9 @@
 
 <span class="sd">    :return: a Flask HTTP response with a User&#39;s associated Profile.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">fields</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">get_json</span><span class="p">()</span>
+    <span class="n">fields</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(</span><span class="n">flat</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">profile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">auth_service</span><span class="o">.</span><span class="n">update_current_user_profile</span><span class="p">(</span><span class="n">fields</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">profile</span><span class="o">=</span><span class="n">profile</span><span class="o">.</span><span class="n">_asdict</span><span class="p">())</span></div>
-
-<div class="viewcode-block" id="ProfileAPI.delete"><a class="viewcode-back" href="../../../index.html#court.users.views.ProfileAPI.delete">[docs]</a>  <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Processes a HTTP DELETE request for the profile REST API.</span>
-
-<span class="sd">    :return: a Flask HTTP response with a User&#39;s associated Profile.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span><span class="s1">&#39;status&#39;</span><span class="p">:</span> <span class="s1">&#39;need to implement profile API&#39;</span><span class="p">})</span></div></div>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">profile</span><span class="o">=</span><span class="n">profile</span><span class="o">.</span><span class="n">_asdict</span><span class="p">())</span></div></div>
 </pre></div>
 
            </div>

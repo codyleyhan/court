@@ -172,8 +172,8 @@ class AuthService:
 
     :param f: Target model view as a function
     :type f: function
-    :return: f(*args, **kwargs)
-    :rtype: type(f(*args, **kwargs))
+    :return: f(\*args, \*\*kwargs)
+    :rtype: type(f(\*args, \*\*kwargs))
     :raises: AuthorizationError
     """
     @wraps(f)
