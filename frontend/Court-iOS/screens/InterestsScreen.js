@@ -15,6 +15,8 @@ import Mask from 'react-native-mask';
 
 import Colors from '../constants/Colors';
 
+import { publishInterests } from '../utils/api/PublishInterests';
+
 import LoginButton from '../components/LoginButton';
 import BackButton from '../components/BackButton';
 import InterestsFinder from '../components/InterestsFinder';
@@ -45,7 +47,7 @@ export default class InterestsScreen extends React.Component {
 
   goNext(user, genderSelection) {
     // Publish interests to API, navigate to next page
-    
+    // publishInterests(genderSelection, this.state.interests);
     // TODO(rivmist): update the backend with these changes
     this.props.navigation.navigate('Confirmation', {user: user});
   }
