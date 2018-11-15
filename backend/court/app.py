@@ -65,8 +65,8 @@ def add_routes(app, socketio):
   user_view = UserAPI.as_view('user_api', auth_service)
   profile_view = auth_service.login_required(ProfileAPI.as_view('profile_api', auth_service))
   app.add_url_rule('/api/users', view_func=user_view, methods=['POST'])
-  app.add_url_rule('/api/users/<int:user_id>', view_func=profile_view,
-    methods=['GET', 'PUT', 'DELETE'])
+  app.add_url_rule('/api/users', view_func=profile_view, methods=['PUT'])
+  app.add_url_rule('/api/users/<int:user_id>', view_func=profile_view, methods=['GET'])
 
   # register thread views
   thread_service = ThreadService()

@@ -111,14 +111,6 @@ class ProfileAPI(MethodView):
 
     :return: a Flask HTTP response with a User's associated Profile.
     """
-    fields = request.get_json()
+    fields = request.args.to_dict(flat=True)
     profile = self.auth_service.update_current_user_profile(fields)
     return jsonify(profile=profile._asdict())
-
-  def delete(self):
-    """
-    Processes a HTTP DELETE request for the profile REST API.
-
-    :return: a Flask HTTP response with a User's associated Profile.
-    """
-    return jsonify({'status': 'need to implement profile API'})

@@ -16,6 +16,12 @@ def test_validate_token(app):
     with pytest.raises(AuthorizationError):
       service.validate_token(bad_signature_token)
 
+def test_new_user_creation(app):
+  pass
+
+def test_existing_user_creation(app):
+  pass
+
 def test_get_current_user_id(app):
   with app.app_context():
     g.user_id = 'test'

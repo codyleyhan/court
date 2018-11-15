@@ -133,12 +133,11 @@ class AuthService:
 
     :return: Profile object of the user in the current context, otherwise return None
     """
-    def update(object, fields):
+    def _update_profile(profile, fields):
       fields['updated_at'] = dt.datetime.utcnow()
       for key, value in fields.items():
-        setattr(object, key, value)
+        setattr(profile, key, value)
       self.db.session.commit()
-      return object
 
     # TODO(anthonymirand): try/catch valid fields
     user_id = self.get_current_user_id()
@@ -146,7 +145,7 @@ class AuthService:
       user = self.user_store.query.get(g.user_id)
       g.user = user
       profile = self.db.session.query(User).filter_by(id=user_id).first().profile
-      update(profile, fields)
+      _update_profile(profile, fields)
       return profile
 
     return None
