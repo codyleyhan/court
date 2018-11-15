@@ -24,7 +24,9 @@ class AuthService:
     :param secret: secret key for database initialization
     :type secret: str
     :param user_store: ORM object to create/query users
+    :type user_store: court.users.models.User
     :param db_conn: a SQLAlchemy database connection
+    :type db_conn: flask_sqlalchemy.SQLAlchemy
     """
     self.secret = secret
     self.user_store = user_store
@@ -117,6 +119,7 @@ class AuthService:
     Get profile object of user in the current context.
 
     :return: Profile object of the user in the current context, otherwise return None
+    :rtype: court.users.models.Profile
     """
     user_id = self.get_current_user_id()
     if 'user_id' in g:
@@ -132,6 +135,7 @@ class AuthService:
     Updates profile object of user in the current context.
 
     :return: Profile object of the user in the current context, otherwise return None
+    :rtype: court.users.models.Profile
     """
     def _update_profile(profile, fields):
       fields['updated_at'] = dt.datetime.utcnow()
@@ -164,7 +168,13 @@ class AuthService:
 
   def login_required(self, f):
     """
-    TODO: Add docstring.
+    Login required decorator.
+
+    :param f: Target model view as a function
+    :type f: function
+    :return: f(*args, **kwargs)
+    :rtype: type(f(*args, **kwargs))
+    :raises: AuthorizationError
     """
     @wraps(f)
     def decorated_function(*args, **kwargs):

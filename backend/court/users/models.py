@@ -10,10 +10,6 @@ class User(db.Model):
   """
   __tablename__ = 'users'
 
-  # TODO: figure out if we need this constructor
-  # def __init__(self, email):
-  #   self.email = email
-
   id = db.Column(db.BigInteger, primary_key=True)
   email = db.Column(db.String(128), unique=True, nullable=False)
   profile = db.relationship('Profile', backref='user', lazy=True, uselist=False)

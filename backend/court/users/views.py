@@ -93,6 +93,7 @@ class ProfileAPI(MethodView):
     ProfileAPI.as_view('user_api', auth_service) to initialize.
 
     :param auth_service: an AuthService instance
+    :type auth_service: court.users.auth_service.AuthService
     """
     self.auth_service = auth_service
 
