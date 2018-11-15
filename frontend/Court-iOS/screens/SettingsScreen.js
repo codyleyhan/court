@@ -19,10 +19,10 @@ export default class SettingsScreen extends React.Component {
     return (
       <View style={styles.container}>
         // To Do: update header text to name
-        <Header text="Profile" />
+        <Header text="River Mist" />
 
         <View style={styles.avatarWrapper}>
-            <Avatar width={200} isLocal={true} src='sloth' color={Colors.merlot}/>
+            <Avatar width={175} isLocal={false} src='https://scontent-lax3-1.xx.fbcdn.net/v/t1.0-1/p320x320/45633486_724429254577302_7800013110386884608_n.jpg?_nc_cat=110&_nc_ht=scontent-lax3-1.xx&oh=047aee994e46263362c790eacf1d9488&oe=5C840353'/>
         </View>
 
       </View>
