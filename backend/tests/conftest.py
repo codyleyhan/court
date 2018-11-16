@@ -1,7 +1,7 @@
 import pytest
 
 from court.database import db
-from court.users.models import User
+from court.users.models import User, Profile
 from court.chats.models import Thread, Message
 from court.config import TestingConfig
 from court.app import create_app
@@ -11,7 +11,6 @@ def app():
   app = create_app(TestingConfig)
   with app.app_context():
     seed_data(db)
-
   yield app
 
 @pytest.fixture
@@ -19,7 +18,6 @@ def db_conn(app):
   db.app = app
   with app.app_context():
     seed_data(db)
-
   yield db
 
 def seed_data(db_conn):
@@ -32,6 +30,13 @@ def seed_data(db_conn):
   user1 = User()
   user1.id = 1
   user1.email = '1@ucla.edu'
+  user1_profile = Profile()
+  user1_profile.first_name = 'Joe'
+  user1_profile.last_name = 'Bruin'
+  user1_profile.gender = 'Male'
+  user1_profile.preferred_gender = 'Female'
+  user1_profile.interests = [{'interest1':'value1'}]
+  user1.profile = user1_profile
 
   user2 = User()
   user2.id = 2

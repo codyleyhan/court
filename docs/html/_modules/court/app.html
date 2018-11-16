@@ -153,6 +153,8 @@
 <span class="kn">from</span> <span class="nn">court.users.auth_service</span> <span class="k">import</span> <span class="n">AuthService</span>
 <span class="kn">from</span> <span class="nn">court.users.views</span> <span class="k">import</span> <span class="n">ProfileAPI</span><span class="p">,</span> <span class="n">UserAPI</span>
 
+<span class="kn">from</span> <span class="nn">court.match</span> <span class="k">import</span> <span class="n">Match</span>
+
 <div class="viewcode-block" id="create_app"><a class="viewcode-back" href="../../index.html#court.app.create_app">[docs]</a><span class="k">def</span> <span class="nf">create_app</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">DevelopmentConfig</span><span class="p">):</span>
   <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">  Creates Court Flask application and initializes all necessary databases.</span>
@@ -206,8 +208,8 @@
   <span class="n">user_view</span> <span class="o">=</span> <span class="n">UserAPI</span><span class="o">.</span><span class="n">as_view</span><span class="p">(</span><span class="s1">&#39;user_api&#39;</span><span class="p">,</span> <span class="n">auth_service</span><span class="p">)</span>
   <span class="n">profile_view</span> <span class="o">=</span> <span class="n">auth_service</span><span class="o">.</span><span class="n">login_required</span><span class="p">(</span><span class="n">ProfileAPI</span><span class="o">.</span><span class="n">as_view</span><span class="p">(</span><span class="s1">&#39;profile_api&#39;</span><span class="p">,</span> <span class="n">auth_service</span><span class="p">))</span>
   <span class="n">app</span><span class="o">.</span><span class="n">add_url_rule</span><span class="p">(</span><span class="s1">&#39;/api/users&#39;</span><span class="p">,</span> <span class="n">view_func</span><span class="o">=</span><span class="n">user_view</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;POST&#39;</span><span class="p">])</span>
-  <span class="n">app</span><span class="o">.</span><span class="n">add_url_rule</span><span class="p">(</span><span class="s1">&#39;/api/users/&lt;int:user_id&gt;&#39;</span><span class="p">,</span> <span class="n">view_func</span><span class="o">=</span><span class="n">profile_view</span><span class="p">,</span>
-    <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">,</span> <span class="s1">&#39;PUT&#39;</span><span class="p">,</span> <span class="s1">&#39;DELETE&#39;</span><span class="p">])</span>
+  <span class="n">app</span><span class="o">.</span><span class="n">add_url_rule</span><span class="p">(</span><span class="s1">&#39;/api/users&#39;</span><span class="p">,</span> <span class="n">view_func</span><span class="o">=</span><span class="n">profile_view</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;PUT&#39;</span><span class="p">])</span>
+  <span class="n">app</span><span class="o">.</span><span class="n">add_url_rule</span><span class="p">(</span><span class="s1">&#39;/api/users/&lt;int:user_id&gt;&#39;</span><span class="p">,</span> <span class="n">view_func</span><span class="o">=</span><span class="n">profile_view</span><span class="p">,</span> <span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;GET&#39;</span><span class="p">])</span>
 
   <span class="c1"># register thread views</span>
   <span class="n">thread_service</span> <span class="o">=</span> <span class="n">ThreadService</span><span class="p">()</span>
@@ -227,7 +229,14 @@
   <span class="k">def</span> <span class="nf">health_check</span><span class="p">():</span>
     <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span>
       <span class="s2">&quot;health&quot;</span><span class="p">:</span> <span class="s2">&quot;ok&quot;</span>
-    <span class="p">})</span></div>
+    <span class="p">})</span>
+  
+  <span class="nd">@app</span><span class="o">.</span><span class="n">route</span><span class="p">(</span><span class="s1">&#39;/match&#39;</span><span class="p">)</span>
+  <span class="k">def</span> <span class="nf">match_check</span><span class="p">():</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">Match</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">({</span>
+      <span class="s2">&quot;results&quot;</span><span class="p">:</span> <span class="n">m</span><span class="o">.</span><span class="n">match</span><span class="p">()</span>
+    <span class="p">})</span>  </div>
 </pre></div>
 
            </div>

@@ -3,6 +3,7 @@ import json
 from flask import g, request
 import requests
 from functools import wraps
+import datetime as dt
 
 from court.database import db
 from court.errors import AuthorizationError, ValidationError
@@ -23,7 +24,9 @@ class AuthService:
     :param secret: secret key for database initialization
     :type secret: str
     :param user_store: ORM object to create/query users
+    :type user_store: court.users.models.User
     :param db_conn: a SQLAlchemy database connection
+    :type db_conn: flask_sqlalchemy.SQLAlchemy
     """
     self.secret = secret
     self.user_store = user_store
@@ -51,12 +54,19 @@ class AuthService:
     facebook_user_data = json.loads(r.text)
 
     user = self.user_store.query.filter(User.id == facebook_user_data['id']).one_or_none()
+    exists = True if user is not None else False
     if user is None: # user is new so insert into DB
       user = User()
-      user.id = facebook_user_data['id']
+      user.id = int(facebook_user_data['id'])
       user.email = facebook_user_data['email']
+      profile = Profile(int(facebook_user_data['id']),
+                        facebook_user_data['first_name'],
+                        facebook_user_data['last_name'],
+                        facebook_user_data['picture']['data']['url'])
+      user.profile = profile
       # TODO(codyleyhan) tons of exception handling
       self.db.session.add(user)
+      self.db.session.add(profile)
       self.db.session.commit()
 
     token_data = {
@@ -68,7 +78,7 @@ class AuthService:
 
     token = jwt.encode(token_data, self.secret, algorithm='HS256')
 
-    return token, facebook_user_data
+    return token, facebook_user_data, exists
 
   def validate_token(self, token):
     """
@@ -109,8 +119,8 @@ class AuthService:
     Get profile object of user in the current context.
 
     :return: Profile object of the user in the current context, otherwise return None
+    :rtype: court.users.models.Profile
     """
-    # TODO(anthonymirand): might need to user db not user_store
     user_id = self.get_current_user_id()
     if 'user_id' in g:
       user = self.user_store.query.get(g.user_id)
@@ -125,15 +135,22 @@ class AuthService:
     Updates profile object of user in the current context.
 
     :return: Profile object of the user in the current context, otherwise return None
+    :rtype: court.users.models.Profile
     """
+    def _update_profile(profile, fields):
+      fields['updated_at'] = dt.datetime.utcnow()
+      for key, value in fields.items():
+        setattr(profile, key, value)
+      self.db.session.commit()
+
     # TODO(anthonymirand): try/catch valid fields
     user_id = self.get_current_user_id()
     if 'user_id' in g:
-      user = self.db.query.get(g.user_id)
+      user = self.user_store.query.get(g.user_id)
       g.user = user
       profile = self.db.session.query(User).filter_by(id=user_id).first().profile
-      profile.update(fields)
-      self.db.session.commit()
+      _update_profile(profile, fields)
+      return profile
 
     return None
 

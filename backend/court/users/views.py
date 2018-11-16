@@ -94,13 +94,13 @@ class UserAPI(MethodView):
     if access_token is None:
       raise AuthorizationError()
     # create a new user
-    token, user = self.auth_service.login(access_token)
+    token, user, exists = self.auth_service.login(access_token)
     return jsonify({
       'success': True,
       'token': token,
-      'user': user
+      'user': user,
+      'exists': exists
     })
-
 
 class ProfileAPI(MethodView):
   """
@@ -112,6 +112,7 @@ class ProfileAPI(MethodView):
     ProfileAPI.as_view('user_api', auth_service) to initialize.
 
     :param auth_service: an AuthService instance
+    :type auth_service: court.users.auth_service.AuthService
     """
     self.auth_service = auth_service
 
@@ -130,14 +131,6 @@ class ProfileAPI(MethodView):
 
     :return: a Flask HTTP response with a User's associated Profile.
     """
-    fields = request.get_json()
+    fields = request.args.to_dict(flat=True)
     profile = self.auth_service.update_current_user_profile(fields)
     return jsonify(profile=profile._asdict())
-
-  def delete(self):
-    """
-    Processes a HTTP DELETE request for the profile REST API.
-
-    :return: a Flask HTTP response with a User's associated Profile.
-    """
-    return jsonify({'status': 'need to implement profile API'})

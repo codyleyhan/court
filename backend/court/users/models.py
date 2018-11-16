@@ -10,10 +10,6 @@ class User(db.Model):
   """
   __tablename__ = 'users'
 
-  # TODO: figure out if we need this constructor
-  # def __init__(self, email):
-  #   self.email = email
-
   id = db.Column(db.BigInteger, primary_key=True)
   email = db.Column(db.String(128), unique=True, nullable=False)
   profile = db.relationship('Profile', backref='user', lazy=True, uselist=False)
@@ -37,20 +33,27 @@ class Profile(db.Model):
   """
   __tablename__ = 'profiles'
 
+  def __init__(self, id=None, first_name=None, last_name=None, profile_picture=None):
+    self.id = id
+    self.first_name = first_name
+    self.last_name = last_name
+    self.profile_picture = profile_picture
+
   # TODO(anthonymirand): replace all Profile.id with Profile.user_id (fb_id)
   id = db.Column(db.Integer, primary_key=True)
   user_id = db.Column(db.BigInteger, db.ForeignKey('users.id'), nullable=False)
   first_name = db.Column(db.String(128), nullable=False)
   last_name = db.Column(db.String(128), nullable=False)
   profile_picture = db.Column(db.String(512))
-  gender = db.Column(db.String(128), nullable=False)
-  preferred_gender = db.Column(db.String(128), nullable=False) # M/F/Both
+
+  gender = db.Column(db.String(128), nullable=False, default="")
+  preferred_gender = db.Column(db.String(128), nullable=False, default="") # M/F/Both
   # TODO(anthonymirand): add age/age range/location
 
-  _interests = db.Column(db.String, nullable=False)
+  _interests = db.Column(db.String, nullable=False, default="[{}]")
   @property
   def interests(self):
-    return json.loads(self._interests)[0]
+    return json.loads(self._interests)
   @interests.setter
   def interests(self, value):
     self._interests = json.dumps(value)
