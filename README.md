@@ -2,102 +2,65 @@
 
 [![Build Status](https://travis-ci.org/codyleyhan/court.svg?branch=master)](https://travis-ci.org/codyleyhan/court)
 
+## Directory Structure
+### Backend
+#### Docs
 ```bash
-.
-├── README.md
-├── backend
-│   ├── Makefile
-│   ├── Procfile
-│   ├── README.md
-│   ├── court
-│   │   ├── __init__.py
-│   │   ├── app.py
-│   │   ├── chats
-│   │   │   ├── __init__.py
-│   │   │   ├── models.py
-│   │   │   ├── sockets.py
-│   │   │   ├── thread_service.py
-│   │   │   └── views.py
-│   │   ├── config.py
-│   │   ├── court.db
-│   │   ├── database.py
-│   │   ├── errors.py
-│   │   ├── sockets.py
-│   │   └── users
-│   │       ├── __init__.py
-│   │       ├── auth_service.py
-│   │       ├── models.py
-│   │       └── views.py
-│   ├── migrate.py
-│   ├── requirements.txt
-│   ├── runtime.txt
-│   ├── tests
-│   │   ├── __init__.py
-│   │   ├── config.py
-│   │   └── test_auth_service.py
-│   └── wsgi.py
-├── docs
-│   ├── Makefile
-│   ├── conf.py
-│   ├── doctrees
-│   │   ├── environment.pickle
-│   │   └── index.doctree
-│   ├── html
-│   │   ├── _sources
-│   │   │   └── index.rst.txt
-│   │   ├── genindex.html
-│   │   ├── index.html
-│   │   ├── objects.inv
-│   │   ├── py-modindex.html
-│   │   ├── search.html
-│   │   └── searchindex.js
-│   ├── index.html
-│   └── index.rst
-└── frontend
-    ├── Court-iOS
-    │   ├── App.js
-    │   ├── __tests__
-    │   │   └── App-test.js
-    │   ├── app.json
-    │   ├── assets
-    │   │   └── images
-    │   │       ├── court-logo-black.png
-    │   │       ├── court-logo-white.png
-    │   │       ├── icon.png
-    │   │       ├── robot-dev.png
-    │   │       ├── robot-prod.png
-    │   │       └── splash.png
-    │   ├── components
-    │   │   ├── Avatar.js
-    │   │   ├── Header.js
-    │   │   ├── InboxComponents.js
-    │   │   ├── LoginButton.js
-    │   │   ├── StyledText.js
-    │   │   ├── TabBarIcon.js
-    │   │   └── __tests__
-    │   │       └── StyledText-test.js
-    │   ├── constants
-    │   │   ├── Colors.js
-    │   │   ├── Layout.js
-    │   │   └── Network.js
-    │   ├── navigation
-    │   │   ├── AppNavigator.js
-    │   │   └── MainTabNavigator.js
-    │   ├── package-lock.json
-    │   ├── package.json
-    │   ├── screens
-    │   │   ├── InboxScreen.js
-    │   │   ├── LinksScreen.js
-    │   │   ├── LoginScreen.js
-    │   │   └── SettingsScreen.js
-    │   └── utils
-    │       ├── Login.js
-    │       └── api
-    │           └── FacebookLogin.js
-    └── README.md
-  ```
+/docs
+```
+#### Initialization/Config
+```bash
+/backend
+```
+#### Tests
+```bash
+/backend/tests
+```
+#### Database Files
+```bash
+/backend/court
+```
+#### Chat and Thread Views, API Declarations
+```bash
+/backend/court/chats
+/backend/court/threads
+```
+### Frontend
+#### Docs
+```bash
+/frontend/docs
+```
+#### App Root
+```bash
+/frontend/Court-iOS
+```
+#### Utilities
+```bash
+/frontend/Court-iOS/utils
+```
+#### Screens
+```bash
+/frontend/Court-iOS/screens
+```
+#### Navigation
+```bash
+/frontend/Court-iOS/navigation
+```
+#### React Components
+```bash
+/frontend/Court-iOS/components
+```
+#### Component Snapshot Tests
+```bash
+/frontend/Court-iOS/components/__tests__
+```
+#### Images
+```bash
+/frontend/Court-iOS/assets
+```
+## Generating a directory tree
 
-Remake directory tree with:
+You can automatically generate a text tree of the directory structure by running the following:
 ```bash
 brew install tree
 tree -v --charset utf-8 -I 'venv|\*.pyc|\_\_pycache\_\_|\_static|\_modules|fonts'
