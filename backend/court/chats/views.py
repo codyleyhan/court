@@ -27,7 +27,28 @@ class MessageAPI(MethodView):
     """
     Processes a HTTP GET request for the message REST API.
 
+    Example request:
+
+    .. code-block:: bash
+
+      GET localhost:8000/api/threads/1/messages
+
+    Example response:
+
+    .. code-block:: json
+
+      {
+        "messages": [
+          {
+            "id": 1,
+            "user_id": 14324324,
+            "body": "this is the message body"
+          }
+        ]
+      }
+
     :param thread_id: the id of the thread requested
+
     :type thread_id: int
     :return: a Flask HTTP response with a list of thread messages
     """
@@ -66,6 +87,35 @@ class ThreadAPI(MethodView):
   def get(self):
     """
     Processes a HTTP GET request for the thread REST API.
+
+    Example request:
+
+    .. code-block:: bash
+
+      GET localhost:8000/api/threads
+
+    Example response:
+    
+    .. code-block:: json
+
+      {
+        "threads": [
+          {
+            "id": 1,
+            "is_active": true,
+            "users": [
+              {
+                "id": 1232434,
+                "email": "test@test.com"
+              },
+              {
+                "id": 43532454535,
+                "email": "another@another.com"
+              }
+            ]
+          }
+        ]
+      }
 
     :return: a Flask HTTP response of all users threads
     """

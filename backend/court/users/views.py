@@ -22,6 +22,31 @@ class UserAPI(MethodView):
     """
     Processes a HTTP GET request for the user REST API.
 
+    .. code-block:: bash
+
+      GET localhost:8000/api/users
+
+    Example response:
+
+    .. code-block:: json
+
+      {
+        "user": {
+          "email": "kfgzlneeuo_1541453454@tfbnw.net",
+          "first_name": "Will",
+          "id": "102773437400251",
+          "last_name": "Occhinoberg",
+          "picture": {
+            "data": {
+              "height": 320,
+              "is_silhouette": true,
+              "url": "https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=102773437400251&height=300&width=300&ext=1544820635&hash=AeQAGANVCW2xEscN",
+              "width": 320
+            }
+          }
+        }
+      }
+
     :return: a Flask HTTP response containing a user's id and email
     :raises: AuthorizationError, ValidationError
     """
@@ -69,19 +94,13 @@ class UserAPI(MethodView):
     if access_token is None:
       raise AuthorizationError()
     # create a new user
-    try:
-      token, user, exists = self.auth_service.login(access_token)
-      return jsonify({
-        'success': True,
-        'token': token,
-        'user': user,
-        'exists': exists
-      })
-    except (AuthorizationError, ValidationError) as e:
-      return jsonify({
-        'success': False,
-        'error': e.message
-      })
+    token, user, exists = self.auth_service.login(access_token)
+    return jsonify({
+      'success': True,
+      'token': token,
+      'user': user,
+      'exists': exists
+    })
 
 class ProfileAPI(MethodView):
   """

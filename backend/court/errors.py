@@ -61,10 +61,12 @@ class ErrorHandler:
     """
     :param e(court.errors.APIError): the error message
     """
+    status_code = getattr(e, 'status_code', HTTPStatus.INTERNAL_SERVER_ERROR)
+
     return jsonify({
       'success': False,
       'error': e.message
-    })
+    }), status_code
   
   @staticmethod
   def handle_not_found(e):
@@ -74,7 +76,7 @@ class ErrorHandler:
     return jsonify({
       'success': False,
       'error': "Page not found"
-    })
+    }), HTTPStatus.NOT_FOUND
   
   @staticmethod
   def handle_internal_server(e):
@@ -84,4 +86,4 @@ class ErrorHandler:
     return jsonify({
       'success': False,
       'error': "There was a problem on our end"
-    })
+    }), HTTPStatus.INTERNAL_SERVER_ERROR

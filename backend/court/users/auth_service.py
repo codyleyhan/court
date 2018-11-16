@@ -168,13 +168,11 @@ class AuthService:
 
   def login_required(self, f):
     """
-    Login required decorator.
+    Decorator to add an authorization check around the function, the function
+    must be run in an flask application context to work.
 
-    :param f: Target model view as a function
-    :type f: function
-    :return: f(*args, **kwargs)
-    :rtype: type(f(*args, **kwargs))
-    :raises: AuthorizationError
+    :param f: the function to be wrapped
+    :return: a function that now only runs if a user is authorized
     """
     @wraps(f)
     def decorated_function(*args, **kwargs):
