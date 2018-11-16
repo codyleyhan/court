@@ -300,6 +300,12 @@ associated with the class is used.</p>
 <code class="descname">on_join</code><span class="sig-paren">(</span><em>json</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/chats/sockets.html#ThreadSockets.on_join"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.chats.sockets.ThreadSockets.on_join" title="Permalink to this definition">¶</a></dt>
 <dd><p>Occurs when a user subscribes to a realtime chat thread.  The user will have
 to pass authorization checks in order to subscribe to the realtime messages.</p>
+<p>Example json:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;thread&quot;</span><span class="p">:</span> <span class="mi">1</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -315,6 +321,13 @@ to pass authorization checks in order to subscribe to the realtime messages.</p>
 <code class="descname">on_message</code><span class="sig-paren">(</span><em>json</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/chats/sockets.html#ThreadSockets.on_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.chats.sockets.ThreadSockets.on_message" title="Permalink to this definition">¶</a></dt>
 <dd><p>Occurs when an already joined user sends a message on a thread.  Message will
 be saved and then emitted to the everyone in the room including the sender.</p>
+<p>Example json:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;thread&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="nt">&quot;body&quot;</span><span class="p">:</span> <span class="s2">&quot;a new message&quot;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -503,6 +516,22 @@ the arguments from the URL rule.</p>
 <dt id="court.chats.views.MessageAPI.get">
 <code class="descname">get</code><span class="sig-paren">(</span><em>thread_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/chats/views.html#MessageAPI.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.chats.views.MessageAPI.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Processes a HTTP GET request for the message REST API.</p>
+<p>Example request:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>GET localhost:8000/api/threads/1/messages
+</pre></div>
+</div>
+<p>Example response:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;messages&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+      <span class="nt">&quot;user_id&quot;</span><span class="p">:</span> <span class="mi">14324324</span><span class="p">,</span>
+      <span class="nt">&quot;body&quot;</span><span class="p">:</span> <span class="s2">&quot;this is the message body&quot;</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -545,6 +574,31 @@ the arguments from the URL rule.</p>
 <dt id="court.chats.views.ThreadAPI.get">
 <code class="descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/chats/views.html#ThreadAPI.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.chats.views.ThreadAPI.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Processes a HTTP GET request for the thread REST API.</p>
+<p>Example request:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>GET localhost:8000/api/threads
+</pre></div>
+</div>
+<p>Example response:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;threads&quot;</span><span class="p">:</span> <span class="p">[</span>
+    <span class="p">{</span>
+      <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+      <span class="nt">&quot;is_active&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+      <span class="nt">&quot;users&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+          <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="mi">1232434</span><span class="p">,</span>
+          <span class="nt">&quot;email&quot;</span><span class="p">:</span> <span class="s2">&quot;test@test.com&quot;</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+          <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="mi">43532454535</span><span class="p">,</span>
+          <span class="nt">&quot;email&quot;</span><span class="p">:</span> <span class="s2">&quot;another@another.com&quot;</span>
+        <span class="p">}</span>
+      <span class="p">]</span>
+    <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -632,18 +686,15 @@ the arguments from the URL rule.</p>
 <dl class="method">
 <dt id="court.users.auth_service.AuthService.login_required">
 <code class="descname">login_required</code><span class="sig-paren">(</span><em>f</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/users/auth_service.html#AuthService.login_required"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.users.auth_service.AuthService.login_required" title="Permalink to this definition">¶</a></dt>
-<dd><p>Login required decorator.</p>
+<dd><p>Decorator to add an authorization check around the function, the function
+must be run in an flask application context to work.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>f</strong> (<em>function</em>) – Target model view as a function</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>f</strong> – the function to be wrapped</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">f(*args, **kwargs)</td>
-</tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.7)">type</a>(f(*args, **kwargs))</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body">AuthorizationError</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">a function that now only runs if a user is authorized</td>
 </tr>
 </tbody>
 </table>
@@ -793,6 +844,28 @@ the arguments from the URL rule.</p>
 <dt id="court.users.views.UserAPI.get">
 <code class="descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/users/views.html#UserAPI.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.users.views.UserAPI.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Processes a HTTP GET request for the user REST API.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>GET localhost:8000/api/users
+</pre></div>
+</div>
+<p>Example response:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;user&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;email&quot;</span><span class="p">:</span> <span class="s2">&quot;kfgzlneeuo_1541453454@tfbnw.net&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;first_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Will&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;102773437400251&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;last_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Occhinoberg&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;picture&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;height&quot;</span><span class="p">:</span> <span class="mi">320</span><span class="p">,</span>
+        <span class="nt">&quot;is_silhouette&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="nt">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=102773437400251&amp;height=300&amp;width=300&amp;ext=1544820635&amp;hash=AeQAGANVCW2xEscN&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;width&quot;</span><span class="p">:</span> <span class="mi">320</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />

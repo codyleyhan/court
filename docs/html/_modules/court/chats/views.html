@@ -168,7 +168,28 @@
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Processes a HTTP GET request for the message REST API.</span>
 
+<span class="sd">    Example request:</span>
+
+<span class="sd">    .. code-block:: bash</span>
+
+<span class="sd">      GET localhost:8000/api/threads/1/messages</span>
+
+<span class="sd">    Example response:</span>
+
+<span class="sd">    .. code-block:: json</span>
+
+<span class="sd">      {</span>
+<span class="sd">        &quot;messages&quot;: [</span>
+<span class="sd">          {</span>
+<span class="sd">            &quot;id&quot;: 1,</span>
+<span class="sd">            &quot;user_id&quot;: 14324324,</span>
+<span class="sd">            &quot;body&quot;: &quot;this is the message body&quot;</span>
+<span class="sd">          }</span>
+<span class="sd">        ]</span>
+<span class="sd">      }</span>
+
 <span class="sd">    :param thread_id: the id of the thread requested</span>
+
 <span class="sd">    :type thread_id: int</span>
 <span class="sd">    :return: a Flask HTTP response with a list of thread messages</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -207,6 +228,35 @@
 <div class="viewcode-block" id="ThreadAPI.get"><a class="viewcode-back" href="../../../index.html#court.chats.views.ThreadAPI.get">[docs]</a>  <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Processes a HTTP GET request for the thread REST API.</span>
+
+<span class="sd">    Example request:</span>
+
+<span class="sd">    .. code-block:: bash</span>
+
+<span class="sd">      GET localhost:8000/api/threads</span>
+
+<span class="sd">    Example response:</span>
+<span class="sd">    </span>
+<span class="sd">    .. code-block:: json</span>
+
+<span class="sd">      {</span>
+<span class="sd">        &quot;threads&quot;: [</span>
+<span class="sd">          {</span>
+<span class="sd">            &quot;id&quot;: 1,</span>
+<span class="sd">            &quot;is_active&quot;: true,</span>
+<span class="sd">            &quot;users&quot;: [</span>
+<span class="sd">              {</span>
+<span class="sd">                &quot;id&quot;: 1232434,</span>
+<span class="sd">                &quot;email&quot;: &quot;test@test.com&quot;</span>
+<span class="sd">              },</span>
+<span class="sd">              {</span>
+<span class="sd">                &quot;id&quot;: 43532454535,</span>
+<span class="sd">                &quot;email&quot;: &quot;another@another.com&quot;</span>
+<span class="sd">              }</span>
+<span class="sd">            ]</span>
+<span class="sd">          }</span>
+<span class="sd">        ]</span>
+<span class="sd">      }</span>
 
 <span class="sd">    :return: a Flask HTTP response of all users threads</span>
 <span class="sd">    &quot;&quot;&quot;</span>

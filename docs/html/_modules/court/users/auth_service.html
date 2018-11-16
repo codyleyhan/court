@@ -309,13 +309,11 @@
 
 <div class="viewcode-block" id="AuthService.login_required"><a class="viewcode-back" href="../../../index.html#court.users.auth_service.AuthService.login_required">[docs]</a>  <span class="k">def</span> <span class="nf">login_required</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Login required decorator.</span>
+<span class="sd">    Decorator to add an authorization check around the function, the function</span>
+<span class="sd">    must be run in an flask application context to work.</span>
 
-<span class="sd">    :param f: Target model view as a function</span>
-<span class="sd">    :type f: function</span>
-<span class="sd">    :return: f(\*args, \*\*kwargs)</span>
-<span class="sd">    :rtype: type(f(\*args, \*\*kwargs))</span>
-<span class="sd">    :raises: AuthorizationError</span>
+<span class="sd">    :param f: the function to be wrapped</span>
+<span class="sd">    :return: a function that now only runs if a user is authorized</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="nd">@wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
     <span class="k">def</span> <span class="nf">decorated_function</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
