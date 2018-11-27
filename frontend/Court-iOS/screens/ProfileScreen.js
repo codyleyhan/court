@@ -18,13 +18,13 @@ export default class SettingsScreen extends React.Component {
   render() {
     const { navigation } = this.props;
     const chatName = navigation.getParam('chatName', 'Profile');
-    const profileInfo = navigation.getParam('profileInfo', {});
-
+    //const profileInfo = navigation.getParam('profileInfo', {});
+    const profileInfo = {imgURL: 'https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=1957294744324290&height=300&width=300&ext=1545942632&hash=AeTWXCxPFYgeBIRK', animalName:'sloth', color:Colors.merlot}
     const profileIcon = (
       <Avatar
-        isLocal={profileInfo.animalName && profileInfo.color ? true : false}
-        width={175} src={profileInfo.imgUrl ? profileInfo.imgUrl : profileInfo.animalName}
-        color={profileInfo.color ? profileInfo.color : null}
+        width={175} imgURL={profileInfo.imgURL}
+        color={profileInfo.color}
+        animalName={profileInfo.animalName}
       />
     );
 
