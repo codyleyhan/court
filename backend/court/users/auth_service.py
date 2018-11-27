@@ -144,6 +144,7 @@ class AuthService:
       self.db.session.commit()
 
     # TODO(anthonymirand): try/catch valid fields
+    # TODO(anthonymirand): reuse other functions
     user_id = self.get_current_user_id()
     if 'user_id' in g:
       user = self.user_store.query.get(g.user_id)
@@ -165,6 +166,23 @@ class AuthService:
       return g.user_id
 
     return None
+
+  def get_current_matches(self):
+    """
+    Get matches list of user in the current context.
+
+    :return: Match dictionary of the user in the current context, otherwise return empty
+    :rtype: dict
+    """
+    user_id = self.get_current_user_id()
+    if 'user_id' in g:
+      user = self.user_store.query.get(g.user_id)
+      g.user = user
+      matches = self.db.session.query(User).filter_by(id=user_id).first().profile.match_history
+      active_matches = { k : v for (k, v) in matches.items() if v['active'] }
+      return active_matches
+
+    return {}
 
   def login_required(self, f):
     """

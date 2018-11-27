@@ -46,17 +46,33 @@ class Profile(db.Model):
   last_name = db.Column(db.String(128), nullable=False)
   profile_picture = db.Column(db.String(512))
 
-  gender = db.Column(db.String(128), nullable=False, default="")
-  preferred_gender = db.Column(db.String(128), nullable=False, default="") # M/F/Both
+  gender = db.Column(db.String(128), nullable=False, default='')
+  preferred_gender = db.Column(db.String(128), nullable=False, default='') # M/F/Both
+  color = db.Column(db.String(128), nullable=False, default='')
+  animal = db.Column(db.String(128), nullable=False, default='')
   # TODO(anthonymirand): add age/age range/location
 
-  _interests = db.Column(db.String, nullable=False, default="[{}]")
+  _interests = db.Column(db.String, default='[{}]')
   @property
   def interests(self):
     return json.loads(self._interests)
   @interests.setter
   def interests(self, value):
     self._interests = json.dumps(value)
+
+  _match_history = db.Column(db.String, default='{}')
+  @property
+  def match_history(self):
+    return json.loads(self._match_history)
+  @match_history.setter
+  def match_history(self, value, unlock=False):
+    # TODO(anthonymirand): add unlocking support
+    match_history = json.loads(self._match_history)
+    user_id = str(value)
+    match_history[user_id] = {}
+    match_history[user_id]['active'] = True
+    match_history[user_id]['profile'] = {}
+    self._match_history = json.dumps(match_history)
 
   created_at = db.Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
   updated_at = db.Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
@@ -70,6 +86,8 @@ class Profile(db.Model):
       'profile_picture': self.profile_picture,
       'gender': self.gender,
       'preferred_gender': self.preferred_gender,
+      'color': self.color,
+      'animal': self.animal,
       'interests': self.interests,
       'created_at': self.created_at,
       'updated_at': self.updated_at
