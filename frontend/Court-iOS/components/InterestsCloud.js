@@ -13,7 +13,7 @@ import InterestsItem from '../components/InterestsItem';
 export default class InterestsCloud extends React.Component {
   render() {
     const { interests, onAddInterest, onRemoveInterest, recommendations } = this.props;
-
+    console.log(recommendations);
     return (
       // Scroll View encompasing the results
       <View style={styles.outerView}>
@@ -23,7 +23,7 @@ export default class InterestsCloud extends React.Component {
               <InterestsItem
                 id={item.id}
                 showRemoveIcon={false}
-                selected={item.id in interests}
+                selected={!interests || item.id in interests}
                 title={item.title}
                 description={item.description}
                 imgUrl={item.imgUrl}
@@ -42,15 +42,15 @@ InterestsCloud.propTypes = {
   /**
   * Object containing the user's current selected interests
   */
-  interests: PropTypes.object.isRequired,
+  interests: PropTypes.object,
   /**
   * Callback function for when a user selects a new interest
   */
-  onAddInterest: PropTypes.func.isRequired,
+  onAddInterest: PropTypes.func,
   /**
   * Callback function for when a user removes an interest
   */
-  onRemoveInterest: PropTypes.func.isRequired,
+  onRemoveInterest: PropTypes.func,
   /**
   * List of recommended interests given a specific search
   */
