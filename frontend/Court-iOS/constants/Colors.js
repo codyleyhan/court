@@ -21,7 +21,7 @@ export default {
   nightSky: '#495867',
   lightBlue: '#8EB8E5',
   orange: '#EA8C55',
-  peach: '#FFB997',
+  peach: '#f7a38a',
   darkBlue: '#28536B',
   purple: '#8783D1',
   mauve: '#BD9391',

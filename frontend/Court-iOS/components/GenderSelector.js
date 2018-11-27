@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Icon } from 'expo';
+import { Icon, LinearGradient } from 'expo';
 
 import { Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Colors from '../constants/Colors';
@@ -32,14 +32,30 @@ export default class GenderSelector extends React.Component {
         // Selector
         <View style={styles.selector}>
           <TouchableOpacity onPress={() => this.genderSelected('male')}>
-            <Text style={this.state.selfSelected == 'male' ? styles.selected : styles.unselected}>
-              Male
-            </Text>
+            {this.state.selfSelected == 'male' ? (
+              <LinearGradient style={styles.selected} colors={['#FA709A', '#FAB870']} start={[0, 0.5]} end={[1, 0.5]}>
+                <Text style={styles.selectedText}>
+                  Male
+                </Text>
+              </LinearGradient>
+            ) : (
+              <Text style={styles.unselected}>
+                Male
+              </Text>
+            )}
           </TouchableOpacity>
           <TouchableOpacity onPress={() => this.genderSelected('female')}>
-            <Text style={this.state.selfSelected == 'female' ? styles.selected : styles.unselected}>
-              Female
-            </Text>
+            {this.state.selfSelected == 'female' ? (
+              <LinearGradient style={styles.selected} colors={['#FA709A', '#FAB870']} start={[0, 0.5]} end={[1, 0.5]}>
+                <Text style={styles.selectedText}>
+                  Female
+                </Text>
+              </LinearGradient>
+            ) : (
+              <Text style={styles.unselected}>
+                Female
+              </Text>
+            )}
           </TouchableOpacity>
         </View>
 
@@ -50,19 +66,43 @@ export default class GenderSelector extends React.Component {
             // Selector
             <View style={styles.selector}>
               <TouchableOpacity onPress={() => this.preferenceSelected('male')}>
-                <Text style={this.state.otherSelected == 'male' ? styles.selected : styles.unselected}>
-                  Males
-                </Text>
+                {this.state.otherSelected == 'male' ? (
+                  <LinearGradient style={styles.selected} colors={['#FA709A', '#FAB870']} start={[0, 0.5]} end={[1, 0.5]}>
+                    <Text style={styles.selectedText}>
+                      Males
+                    </Text>
+                  </LinearGradient>
+                ) : (
+                  <Text style={styles.unselected}>
+                    Males
+                  </Text>
+                )}
               </TouchableOpacity>
               <TouchableOpacity onPress={() => this.preferenceSelected('female')}>
-                <Text style={this.state.otherSelected == 'female' ? styles.selected : styles.unselected}>
-                  Females
-                </Text>
+                {this.state.otherSelected == 'female' ? (
+                  <LinearGradient style={styles.selected} colors={['#FA709A', '#FAB870']} start={[0, 0.5]} end={[1, 0.5]}>
+                    <Text style={styles.selectedText}>
+                      Females
+                    </Text>
+                  </LinearGradient>
+                ) : (
+                  <Text style={styles.unselected}>
+                    Females
+                  </Text>
+                )}
               </TouchableOpacity>
               <TouchableOpacity onPress={() => this.preferenceSelected('both')}>
-                <Text style={this.state.otherSelected == 'both' ? styles.selected : styles.unselected}>
-                  Both
-                </Text>
+                {this.state.otherSelected == 'both' ? (
+                  <LinearGradient style={styles.selected} colors={['#FA709A', '#FAB870']} start={[0, 0.5]} end={[1, 0.5]}>
+                    <Text style={styles.selectedText}>
+                      Both
+                    </Text>
+                  </LinearGradient>
+                ) : (
+                  <Text style={styles.unselected}>
+                    Both
+                  </Text>
+                )}
               </TouchableOpacity>
             </View>
           </View>
@@ -94,8 +134,9 @@ const styles = StyleSheet.create({
   promptText: {
     marginTop: 40,
     fontSize: 30,
-    color: 'white',
+    color: Colors.peach,
     marginBottom: 15,
+    fontFamily: 'orkney-bold',
   },
   selector: {
     flexDirection: 'row',
@@ -103,15 +144,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   selected: {
-    marginLeft: 15,
-    fontSize: 30,
-    color: Colors.teal,
-    backgroundColor: 'white',
-    borderWidth: 1,
-    borderColor: 'white',
-    borderRadius: 10,
-    overflow: 'hidden',
-    padding: 5,
     ...Platform.select({
       ios: {
         shadowColor: 'black',
@@ -123,15 +155,29 @@ const styles = StyleSheet.create({
         elevation: 20,
       },
     }),
+    marginLeft: 15,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.0)',
+    borderRadius: 25,
+    // overflow: 'hidden',
+  },
+  selectedText: {
+    fontSize: 30,
+    fontFamily: 'orkney-bold',
+    color: 'white',
+    paddingTop: 12,
+    paddingHorizontal: 20,
   },
   unselected: {
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.7)',
-    borderRadius: 10,
+    borderColor: Colors.peach,
+    fontFamily: 'orkney-bold',
+    borderRadius: 16,
     overflow: 'hidden',
-    padding: 5,
+    paddingTop: 8,
+    paddingHorizontal: 20,
     marginLeft: 15,
     fontSize: 20,
-    color: 'rgba(255, 255, 255, 0.7)',
+    color: Colors.peach,
   },
 });

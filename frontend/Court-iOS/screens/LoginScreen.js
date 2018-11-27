@@ -29,9 +29,9 @@ export default class LoginScreen extends React.Component {
     this.state = { isLoading: false };
   }
 
-  // componentDidMount() {
-  //   this.props.navigation.navigate('Interests', { user: { first_name: 'River', picture: { data: { url: "https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=723005941386300&height=300&width=300&ext=1544324078&hash=AeRlSN4NlLUXmWcm" } }} });
-  // }
+  componentDidMount() {
+    this.props.navigation.navigate('Setup', { user: { first_name: 'River', picture: { data: { url: "https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=723005941386300&height=300&width=300&ext=1544324078&hash=AeRlSN4NlLUXmWcm" } }} });
+  }
 
   async storeItems(response) {
     try {
