@@ -48,7 +48,7 @@ export default class InterestsItem extends React.Component {
           <LinearGradient style={showRemoveIcon ? styles.topSelectedWrapper : styles.selectedWrapper} colors={['#FA709A', '#FA709A']} start={[0, 0.5]} end={[1, 0.5]}>
             // Optional: add image preview here
             {imgUrl && (
-              <Avatar width={40} src={imgUrl} />
+              <Avatar width={40} imgURL={imgUrl} />
             )}
             <View style={styles.textWrapper}>
               <Text style={styles.selectedTitleText}>
@@ -76,7 +76,7 @@ export default class InterestsItem extends React.Component {
           <View style={styles.unselectedWrapper}>
             // Optional: add image preview here
             {imgUrl && (
-              <Avatar width={40} src={imgUrl} />
+              <Avatar width={40} imgURL={imgUrl} />
             )}
             <View style={styles.textWrapper}>
               <Text style={styles.unselectedTitleText}>

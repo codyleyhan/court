@@ -10,9 +10,10 @@ import Icons from '../constants/Icons';
 */
 export default class IconImage extends React.Component {
   render() {
-    const { size, avatar, color } = this.props;
+    const { size, avatar, color, showBorder } = this.props;
+    const borderStyle = showBorder ? {borderRadius: .5 * size, borderWidth: 3, borderColor: 'white'} : {};
     return (
-      <View style={{height: size, width: size, backgroundColor: color, justifyContent: 'center', alignItems: 'center'}}>
+      <View style={[{height: size, width: size, backgroundColor: color, justifyContent: 'center', alignItems: 'center'}, borderStyle]}>
         <Image
           style={{ width: .6 * size, height: .6 * size, tintColor: 'white' }}
           source={ Icons[avatar] }

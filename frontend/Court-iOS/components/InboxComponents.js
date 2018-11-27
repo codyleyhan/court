@@ -19,7 +19,7 @@ export class InboxItem extends React.Component {
       <TouchableOpacity activeOpacity={0.5} onPress={this.onPressChat}>
         <View style={styles.InboxCard}>
           <View style={styles.avatarWrapper}>
-            <Avatar isLocal={animalName && color ? true : false} width={65} src={imgUrl ? imgUrl : animalName} color={color ? color : null}/>
+            <Avatar width={65} imgURL={imgUrl} animalName={animalName} color={color}/>
           </View>
           <View style={styles.inboxTextWrapper}>
             <Text style={styles.nameStyle} numberOfLines={1}>{name}</Text>
