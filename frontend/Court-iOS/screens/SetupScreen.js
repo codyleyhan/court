@@ -38,7 +38,7 @@ export default class SetupScreen extends React.Component {
   handleContinueClick = (user) => {
     // Navigate to next screen, and submit user selections to API
     // TODO(river): submit these details to the backend
-    this.props.navigation.navigate('Interests', { user: user });
+    this.props.navigation.navigate('Interests', { user: user, genderSelection: { self: this.state.gender, other: this.state.preferred } });
   }
 
   render() {
@@ -86,7 +86,7 @@ export default class SetupScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.teal,
+    backgroundColor: 'white',
     flexDirection: 'column',
     alignItems: 'center',
   },
@@ -95,6 +95,7 @@ const styles = StyleSheet.create({
     height: 100,
     marginTop: 80,
     marginBottom: 50,
+    tintColor: Colors.teal,
   },
   userImage: {
     width: 100,
@@ -102,10 +103,12 @@ const styles = StyleSheet.create({
   },
   welcomeText: {
     fontSize: 40,
-    color: 'white',
+    color: Colors.teal,
+    fontFamily: 'orkney-medium',
   },
   subText: {
     fontSize: 20,
-    color: 'white',
+    color: Colors.teal,
+    fontFamily: 'orkney-regular',
   }
 });

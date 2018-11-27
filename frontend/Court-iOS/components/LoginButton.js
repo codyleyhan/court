@@ -1,9 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Icon } from 'expo';
+import { Icon, LinearGradient } from 'expo';
 
 import { Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Colors from '../constants/Colors';
+
+import { RegularText } from './StyledText';
 
 
 /**
@@ -18,16 +20,16 @@ export default class LoginButton extends React.Component {
         name="logo-facebook"
         size={30}
         style={{ marginRight: 15 }}
-        color={Colors.teal}
+        color='white'
       />
     );
 
     return (
       <TouchableOpacity onPress={onPress} activeOpacity={0.5}>
-        <View style={styles.loginButton}>
+        <LinearGradient colors={['#21BFAE', '#80D0C7']} start={[0,0.25]} end={[0.7,0.5]} style={styles.loginButton}>
           {showLogo && fbIcon}
           <Text style={styles.loginText}>{ text }</Text>
-        </View>
+        </LinearGradient>
       </TouchableOpacity>
     );
   }
@@ -47,15 +49,17 @@ const styles = StyleSheet.create({
       },
     }),
     backgroundColor: '#fff',
-    borderRadius: 10,
+    borderRadius: 30,
     padding: 15,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
   },
   loginText: {
-    color: Colors.teal,
+    color: 'white',
     fontSize: 20,
+    paddingTop: 6,
+    fontFamily: 'orkney-medium',
   }
 });
 
@@ -67,7 +71,7 @@ LoginButton.propTypes = {
   /**
   * Boolean indicating whether or not to show the facebook logo
   */
-  showLogo: PropTypes.bool.isRequired,
+  showLogo: PropTypes.bool,
   /**
   * Text to be rendered in button
   */

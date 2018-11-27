@@ -36,6 +36,10 @@ export default class App extends React.Component {
         // This is the font that we are using for our tab bar
         ...Icon.Ionicons.font,
         'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf'),
+        'orkney-regular': require('./assets/fonts/Orkney-Regular.otf'),
+        'orkney-light': require('./assets/fonts/Orkney-Light.otf'),
+        'orkney-medium': require('./assets/fonts/Orkney-Medium.otf'),
+        'orkney-bold': require('./assets/fonts/Orkney-Bold.otf'),
       }),
     ]);
   };

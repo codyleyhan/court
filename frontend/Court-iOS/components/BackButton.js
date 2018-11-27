@@ -19,7 +19,7 @@ export default class BackButton extends React.Component {
           <Icon.Ionicons
             name='ios-arrow-back'
             size={40}
-            color='white'
+            color={Colors.teal}
           />
         </TouchableOpacity>
       </View>
@@ -31,5 +31,5 @@ BackButton.propTypes = {
   /**
   * Stack of previously viewed screens
   */
-  navigation: PropTypes.instanceOf(StackNavigator).isRequired,
+  navigation: PropTypes.object.isRequired,
 }

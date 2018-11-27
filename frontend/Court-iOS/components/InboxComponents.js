@@ -14,12 +14,12 @@ export class InboxItem extends React.Component {
   }
 
   render() {
-    const { imgUrl, name, lastMessage, lastTime, percent} = this.props;
+    const { animalName, color, imgUrl, name, lastMessage, lastTime, percent} = this.props;
     return (
       <TouchableOpacity activeOpacity={0.5} onPress={this.onPressChat}>
         <View style={styles.InboxCard}>
           <View style={styles.avatarWrapper}>
-            <Avatar width={65} src={imgUrl}/>
+            <Avatar isLocal={animalName && color ? true : false} width={65} src={imgUrl ? imgUrl : animalName} color={color ? color : null}/>
           </View>
           <View style={styles.inboxTextWrapper}>
             <Text style={styles.nameStyle} numberOfLines={1}>{name}</Text>
@@ -39,7 +39,7 @@ InboxItem.propTypes = {
   /**
   * URL for the given user's profile picture
   */
-  imgUrl: PropTypes.string.isRequired,
+  imgUrl: PropTypes.string,
   /**
   * Name of the other user in the chat
   */
@@ -92,17 +92,21 @@ const styles = StyleSheet.create({
   },
   nameStyle: {
     fontSize: 25,
+    fontFamily: 'orkney-medium',
     color: '#21ACA5',
   },
   messageStyle: {
+    fontFamily: 'orkney-regular',
     fontSize: 15,
   },
   timeStyle: {
     paddingTop: 8,
+    fontFamily: 'orkney-light',
     color: 'grey',
   },
   percentStyle: {
     fontSize: 25,
+    fontFamily: 'orkney-medium',
     color: '#21ACA5',
   },
   contentContainer: {

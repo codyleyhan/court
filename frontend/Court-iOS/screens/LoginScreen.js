@@ -16,6 +16,7 @@ import { Transition } from 'react-navigation-fluid-transitions';
 import Authentication from '../constants/Authentication';
 import Colors from '../constants/Colors';
 import LoginButton from '../components/LoginButton';
+import { MediumText } from '../components/StyledText';
 import { logInWithFacebook } from '../utils/Login';
 
 export default class LoginScreen extends React.Component {
@@ -29,7 +30,7 @@ export default class LoginScreen extends React.Component {
   }
 
   // componentDidMount() {
-  //   this.props.navigation.navigate('Interests', { user: { first_name: 'River', picture: { data: { url: "https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=723005941386300&height=300&width=300&ext=1544324078&hash=AeRlSN4NlLUXmWcm" } }} });
+  //   this.props.navigation.navigate('Setup', { user: { first_name: 'River', picture: { data: { url: "https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=723005941386300&height=300&width=300&ext=1544324078&hash=AeRlSN4NlLUXmWcm" } }} });
   // }
 
   async storeItems(response) {
@@ -70,10 +71,10 @@ export default class LoginScreen extends React.Component {
           />
         </Transition>
         // Text Logo
-        <Text style={styles.logoText}>court</Text>
+        <MediumText style={styles.logoText}>court</MediumText>
         // Login Button
         {this.state.isLoading ?
-          <ActivityIndicator color='white' size='large' />
+          <ActivityIndicator color={Colors.teal} size='large' />
           : <LoginButton onPress={this.handleLoginPress} text="Continue with Facebook" showLogo={true}/>
         }
 
@@ -85,7 +86,7 @@ export default class LoginScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.teal,
+    backgroundColor: 'white',
     flexDirection: 'column',
     padding: 20,
     alignItems: 'center',
@@ -94,10 +95,11 @@ const styles = StyleSheet.create({
   logoImage: {
     width: 200,
     height: 200,
+    tintColor: Colors.teal,
   },
   logoText: {
     fontSize: 70,
-    color: 'white',
+    color: Colors.teal,
     marginTop: -20,
     marginBottom: 300,
   }

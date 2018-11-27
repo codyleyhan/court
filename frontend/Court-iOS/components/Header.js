@@ -35,6 +35,8 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     color: '#21ACA5',
+    fontFamily: 'orkney-medium',
+    paddingTop: 10,
     fontSize: 30,
     flex: 1,
     textAlign: 'center',

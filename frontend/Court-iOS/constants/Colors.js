@@ -1,7 +1,7 @@
 const tintColor = '#21ACA5';
 
 export default {
-  teal: '#21ACA5',
+  teal: '#21BFAE',
   tintColor,
   tabIconDefault: '#ccc',
   tabIconSelected: tintColor,
@@ -21,7 +21,7 @@ export default {
   nightSky: '#495867',
   lightBlue: '#8EB8E5',
   orange: '#EA8C55',
-  peach: '#FFB997',
+  peach: '#FA709A',
   darkBlue: '#28536B',
   purple: '#8783D1',
   mauve: '#BD9391',
