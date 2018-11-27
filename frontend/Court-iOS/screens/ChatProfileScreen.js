@@ -16,13 +16,25 @@ export default class SettingsScreen extends React.Component {
   };
 
   render() {
+    const { navigation } = this.props;
+    const chatName = navigation.getParam('chatName', 'Profile');
+    const profileInfo = navigation.getParam('profileInfo', {});
+
+    const profileIcon = (
+      <Avatar
+        isLocal={profileInfo.animalName && profileInfo.color ? true : false}
+        width={175} src={profileInfo.imgUrl ? profileInfo.imgUrl : profileInfo.animalName}
+        color={profileInfo.color ? profileInfo.color : null}
+      />
+    );
+
     return (
       <View style={styles.container}>
         // To Do: update header text to name
-        <Header text="River Mist" />
+        <Header text={chatName} showBack={true} navigation={this.props.navigation}/>
 
         <View style={styles.avatarWrapper}>
-            <Avatar width={175} isLocal={false} src='https://scontent-lax3-1.xx.fbcdn.net/v/t1.0-1/p320x320/45633486_724429254577302_7800013110386884608_n.jpg?_nc_cat=110&_nc_ht=scontent-lax3-1.xx&oh=047aee994e46263362c790eacf1d9488&oe=5C840353'/>
+            {profileIcon}
         </View>
 
       </View>
