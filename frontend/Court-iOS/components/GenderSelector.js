@@ -33,7 +33,7 @@ export default class GenderSelector extends React.Component {
         <View style={styles.selector}>
           <TouchableOpacity onPress={() => this.genderSelected('male')}>
             {this.state.selfSelected == 'male' ? (
-              <LinearGradient style={styles.selected} colors={['#FA709A', '#FAB870']} start={[0, 0.5]} end={[1, 0.5]}>
+              <LinearGradient style={styles.selected} colors={['#FA709A', '#FA709A']} start={[0, 0.5]} end={[1, 0.5]}>
                 <Text style={styles.selectedText}>
                   Male
                 </Text>
@@ -46,7 +46,7 @@ export default class GenderSelector extends React.Component {
           </TouchableOpacity>
           <TouchableOpacity onPress={() => this.genderSelected('female')}>
             {this.state.selfSelected == 'female' ? (
-              <LinearGradient style={styles.selected} colors={['#FA709A', '#FAB870']} start={[0, 0.5]} end={[1, 0.5]}>
+              <LinearGradient style={styles.selected} colors={['#FA709A', '#FA709A']} start={[0, 0.5]} end={[1, 0.5]}>
                 <Text style={styles.selectedText}>
                   Female
                 </Text>
@@ -67,7 +67,7 @@ export default class GenderSelector extends React.Component {
             <View style={styles.selector}>
               <TouchableOpacity onPress={() => this.preferenceSelected('male')}>
                 {this.state.otherSelected == 'male' ? (
-                  <LinearGradient style={styles.selected} colors={['#FA709A', '#FAB870']} start={[0, 0.5]} end={[1, 0.5]}>
+                  <LinearGradient style={styles.selected} colors={['#FA709A', '#FA709A']} start={[0, 0.5]} end={[1, 0.5]}>
                     <Text style={styles.selectedText}>
                       Males
                     </Text>
@@ -80,7 +80,7 @@ export default class GenderSelector extends React.Component {
               </TouchableOpacity>
               <TouchableOpacity onPress={() => this.preferenceSelected('female')}>
                 {this.state.otherSelected == 'female' ? (
-                  <LinearGradient style={styles.selected} colors={['#FA709A', '#FAB870']} start={[0, 0.5]} end={[1, 0.5]}>
+                  <LinearGradient style={styles.selected} colors={['#FA709A', '#FA709A']} start={[0, 0.5]} end={[1, 0.5]}>
                     <Text style={styles.selectedText}>
                       Females
                     </Text>
@@ -93,7 +93,7 @@ export default class GenderSelector extends React.Component {
               </TouchableOpacity>
               <TouchableOpacity onPress={() => this.preferenceSelected('both')}>
                 {this.state.otherSelected == 'both' ? (
-                  <LinearGradient style={styles.selected} colors={['#FA709A', '#FAB870']} start={[0, 0.5]} end={[1, 0.5]}>
+                  <LinearGradient style={styles.selected} colors={['#FA709A', '#FA709A']} start={[0, 0.5]} end={[1, 0.5]}>
                     <Text style={styles.selectedText}>
                       Both
                     </Text>

@@ -197,7 +197,7 @@ const styles = StyleSheet.create({
   },
   unselectedDescriptionText: {
     fontSize: 15,
-    color: 'rgba(247, 163, 138, 0.8)',
+    color: 'rgba(250, 112, 154, 0.8)',
   },
   selectedDescriptionText: {
     fontSize: 15,
