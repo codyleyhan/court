@@ -54,19 +54,15 @@ export default class ConfirmationScreen extends React.Component {
         </View>
         // Animation
         <LottieView
-          source={require('../assets/animations/simple_tick.json')}
+          source={require('../assets/animations/checked_done.json')}
           autoPlay
-          speed={0.7}
+          speed={0.5}
           loop={false}
           style={styles.animation}
         />
 
         <View style={styles.continueButton}>
-          <TouchableOpacity onPress={() => this.goNext()} activeOpacity={0.75}>
-            <Text style={styles.continueText}>
-              Go to Inbox
-            </Text>
-          </TouchableOpacity>
+          <LoginButton text="Go to Inbox" onPress={this.goNext} />
         </View>
       </View>
     );
@@ -76,7 +72,7 @@ export default class ConfirmationScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.teal,
+    backgroundColor: 'white',
     flexDirection: 'column',
     alignItems: 'center',
   },
@@ -85,23 +81,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     bottom: 25,
-    ...Platform.select({
-      ios: {
-        shadowColor: 'black',
-        shadowOffset: { height: 8 },
-        shadowOpacity: 0.15,
-        shadowRadius: 9,
-      },
-      android: {
-        elevation: 20,
-      },
-    }),
-    backgroundColor: '#fff',
-    borderRadius: 15,
-    padding: 15,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   continueText: {
     fontSize: 20,
@@ -113,15 +92,16 @@ const styles = StyleSheet.create({
   },
   welcomeText: {
     fontSize: 40,
-    color: 'white',
+    color: Colors.teal,
+    fontFamily: 'orkney-medium',
   },
   subText: {
     fontSize: 20,
-    color: 'white',
+    color: Colors.teal,
+    fontFamily: 'orkney-regular',
   },
   animation: {
-    marginTop: 50,
-    height: 200,
-    width: 200,
+    height: 500,
+    width: 500,
   }
 });
