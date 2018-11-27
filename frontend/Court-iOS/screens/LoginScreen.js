@@ -16,6 +16,7 @@ import { Transition } from 'react-navigation-fluid-transitions';
 import Authentication from '../constants/Authentication';
 import Colors from '../constants/Colors';
 import LoginButton from '../components/LoginButton';
+import { MediumText } from '../components/StyledText';
 import { logInWithFacebook } from '../utils/Login';
 
 export default class LoginScreen extends React.Component {
@@ -70,7 +71,7 @@ export default class LoginScreen extends React.Component {
           />
         </Transition>
         // Text Logo
-        <Text style={styles.logoText}>court</Text>
+        <MediumText style={styles.logoText}>court</MediumText>
         // Login Button
         {this.state.isLoading ?
           <ActivityIndicator color='white' size='large' />

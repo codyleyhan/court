@@ -5,6 +5,8 @@ import { Icon } from 'expo';
 import { Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Colors from '../constants/Colors';
 
+import { RegularText } from './StyledText';
+
 
 /**
 * Button that initiates facebook user authentication flow
@@ -47,7 +49,7 @@ const styles = StyleSheet.create({
       },
     }),
     backgroundColor: '#fff',
-    borderRadius: 10,
+    borderRadius: 20,
     padding: 15,
     flexDirection: 'row',
     alignItems: 'center',
@@ -56,6 +58,8 @@ const styles = StyleSheet.create({
   loginText: {
     color: Colors.teal,
     fontSize: 20,
+    paddingTop: 6,
+    fontFamily: 'orkney-medium',
   }
 });
 
