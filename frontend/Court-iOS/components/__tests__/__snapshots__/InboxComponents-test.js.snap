@@ -126,6 +126,7 @@ exports[`Renders Default InboxCard 1`] = `
         style={
           Object {
             "color": "#21ACA5",
+            "fontFamily": "orkney-medium",
             "fontSize": 25,
           }
         }
@@ -139,6 +140,7 @@ exports[`Renders Default InboxCard 1`] = `
         numberOfLines={1}
         style={
           Object {
+            "fontFamily": "orkney-regular",
             "fontSize": 15,
           }
         }
@@ -152,6 +154,7 @@ exports[`Renders Default InboxCard 1`] = `
         style={
           Object {
             "color": "grey",
+            "fontFamily": "orkney-light",
             "paddingTop": 8,
           }
         }
@@ -167,6 +170,7 @@ exports[`Renders Default InboxCard 1`] = `
         style={
           Object {
             "color": "#21ACA5",
+            "fontFamily": "orkney-medium",
             "fontSize": 25,
           }
         }

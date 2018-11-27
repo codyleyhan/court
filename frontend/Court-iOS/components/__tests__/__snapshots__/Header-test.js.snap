@@ -24,7 +24,9 @@ exports[`Renders Default Header 1`] = `
       Object {
         "color": "#21ACA5",
         "flex": 1,
+        "fontFamily": "orkney-medium",
         "fontSize": 30,
+        "paddingTop": 10,
         "textAlign": "center",
       }
     }

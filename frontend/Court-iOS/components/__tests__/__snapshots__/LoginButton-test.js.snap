@@ -26,12 +26,31 @@ exports[`Renders Default LoginButton 1`] = `
   testID={undefined}
   tvParallaxProperties={undefined}
 >
-  <View
+  <ExponentLinearGradient
+    colors={
+      Array [
+        4280401838,
+        4286632135,
+      ]
+    }
+    endPoint={
+      Array [
+        0.7,
+        0.5,
+      ]
+    }
+    locations={null}
+    startPoint={
+      Array [
+        0,
+        0.25,
+      ]
+    }
     style={
       Object {
         "alignItems": "center",
         "backgroundColor": "#fff",
-        "borderRadius": 10,
+        "borderRadius": 30,
         "flexDirection": "row",
         "justifyContent": "center",
         "padding": 15,
@@ -55,13 +74,15 @@ exports[`Renders Default LoginButton 1`] = `
       ellipsizeMode="tail"
       style={
         Object {
-          "color": "#21ACA5",
+          "color": "white",
+          "fontFamily": "orkney-medium",
           "fontSize": 20,
+          "paddingTop": 6,
         }
       }
     >
       Continue with Facebook
     </Text>
-  </View>
+  </ExponentLinearGradient>
 </View>
 `;

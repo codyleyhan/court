@@ -9,7 +9,7 @@ exports[`Renders Styled text 1`] = `
     Array [
       undefined,
       Object {
-        "fontFamily": "space-mono",
+        "fontFamily": "orkney-regular",
       },
     ]
   }
