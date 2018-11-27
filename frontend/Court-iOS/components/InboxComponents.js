@@ -8,9 +8,10 @@ import Avatar from '../components/Avatar';
 * Card in the user's inbox for each of their current chats
 */
 export class InboxItem extends React.Component {
-  onPressChat() {
+  onPressChat = () => {
+    const { animalName, color, imgUrl, name, lastMessage, lastTime, percent} = this.props;
     // This is where we should handle navigation to the chat screen
-
+    this.props.onPress(this.props.name, {animalName: animalName, color: color, imgUrl: imgUrl});
   }
 
   render() {

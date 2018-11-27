@@ -37,6 +37,7 @@ export default class LoginScreen extends React.Component {
     try {
       await AsyncStorage.setItem(Authentication.AUTH_USER, JSON.stringify(response.user));
       await AsyncStorage.setItem(Authentication.AUTH_TOKEN, response.token);
+      console.log(response.token);
     } catch (error) {
       // Error saving data
       alert('Error saving credentials', 'Please login again');
@@ -77,7 +78,6 @@ export default class LoginScreen extends React.Component {
           <ActivityIndicator color={Colors.teal} size='large' />
           : <LoginButton onPress={this.handleLoginPress} text="Continue with Facebook" showLogo={true}/>
         }
-
       </View>
     );
   }

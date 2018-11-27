@@ -21,6 +21,10 @@ export default class InboxScreen extends React.Component {
     header: null,
   };
 
+  onNavigateToChat = (name, profileInfo) => {
+    this.props.navigation.navigate('Chats', {chatName: name, profileInfo: profileInfo});
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -31,9 +35,9 @@ export default class InboxScreen extends React.Component {
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
           // Temp list for example messages
           // TODO(river): populate from an API call
-          <InboxItem imgUrl="https://heightline.com/wp-content/uploads/Justin-Roberts-640x427.jpg" name="Justin Roberts" lastMessage="I'm really into cooking in my free time!" lastTime="4:02 PM" percent="67"/>
-          <InboxItem animalName="panda" color={Colors.peach} name="Anonymous Panda" lastMessage="I Love to office so much it's so cool" lastTime="2:15 PM" percent="40"/>
-          <InboxItem animalName="sloth" color={Colors.mustard} name="Anonymous Sloth" lastMessage="This app is amazing, what are you doing?" lastTime="10:07 AM" percent="15"/>
+          <InboxItem onPress={this.onNavigateToChat} imgUrl="https://heightline.com/wp-content/uploads/Justin-Roberts-640x427.jpg" name="Justin Roberts" lastMessage="I'm really into cooking in my free time!" lastTime="4:02 PM" percent="67"/>
+          <InboxItem onPress={this.onNavigateToChat} animalName="panda" color={Colors.peach} name="Anonymous Panda" lastMessage="I Love to office so much it's so cool" lastTime="2:15 PM" percent="40"/>
+          <InboxItem onPress={this.onNavigateToChat} animalName="sloth" color={Colors.mustard} name="Anonymous Sloth" lastMessage="This app is amazing, what are you doing?" lastTime="10:07 AM" percent="15"/>
 
           // Add a message for new matches
           <Text style={{fontFamily: 'orkney-light', marginTop: 15, textAlign: 'center', color: 'grey'}}>Looking for more chats?</Text>
