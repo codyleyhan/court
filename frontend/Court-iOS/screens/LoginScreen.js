@@ -74,7 +74,7 @@ export default class LoginScreen extends React.Component {
         <MediumText style={styles.logoText}>court</MediumText>
         // Login Button
         {this.state.isLoading ?
-          <ActivityIndicator color='white' size='large' />
+          <ActivityIndicator color={Colors.teal} size='large' />
           : <LoginButton onPress={this.handleLoginPress} text="Continue with Facebook" showLogo={true}/>
         }
 
@@ -86,7 +86,7 @@ export default class LoginScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.teal,
+    backgroundColor: 'white',
     flexDirection: 'column',
     padding: 20,
     alignItems: 'center',
@@ -95,10 +95,11 @@ const styles = StyleSheet.create({
   logoImage: {
     width: 200,
     height: 200,
+    tintColor: Colors.teal,
   },
   logoText: {
     fontSize: 70,
-    color: 'white',
+    color: Colors.teal,
     marginTop: -20,
     marginBottom: 300,
   }
