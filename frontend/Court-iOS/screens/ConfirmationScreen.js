@@ -62,7 +62,7 @@ export default class ConfirmationScreen extends React.Component {
         />
 
         <View style={styles.continueButton}>
-          <LoginButton text="Go to Inbox" onPress={this.goNext} />
+          <LoginButton text="Go to Inbox" onPress={() => this.goNext()} />
         </View>
       </View>
     );
