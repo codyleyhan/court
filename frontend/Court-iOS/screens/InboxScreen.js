@@ -36,8 +36,8 @@ export default class InboxScreen extends React.Component {
           <InboxItem animalName="sloth" color={Colors.mustard} name="Anonymous Sloth" lastMessage="This app is amazing, what are you doing?" lastTime="10:07 AM" percent="15"/>
 
           // Add a message for new matches
-          <Text style={{marginTop: 15, textAlign: 'center', color: 'grey'}}>Looking for more chats?</Text>
-          <Text style={{textAlign: 'center', color: 'grey'}}>{"They'll show up here when you have a match."}</Text>
+          <Text style={{fontFamily: 'orkney-light', marginTop: 15, textAlign: 'center', color: 'grey'}}>Looking for more chats?</Text>
+          <Text style={{fontFamily: 'orkney-light', textAlign: 'center', color: 'grey'}}>{"They'll show up here when you have a match."}</Text>
         </ScrollView>
       </View>
     );

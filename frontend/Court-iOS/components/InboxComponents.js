@@ -92,17 +92,21 @@ const styles = StyleSheet.create({
   },
   nameStyle: {
     fontSize: 25,
+    fontFamily: 'orkney-medium',
     color: '#21ACA5',
   },
   messageStyle: {
+    fontFamily: 'orkney-regular',
     fontSize: 15,
   },
   timeStyle: {
     paddingTop: 8,
+    fontFamily: 'orkney-light',
     color: 'grey',
   },
   percentStyle: {
     fontSize: 25,
+    fontFamily: 'orkney-medium',
     color: '#21ACA5',
   },
   contentContainer: {
