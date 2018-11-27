@@ -7,7 +7,7 @@ import Colors from '../constants/Colors';
 import TabBarIcon from '../components/TabBarIcon';
 import InboxScreen from '../screens/InboxScreen';
 import LinksScreen from '../screens/LinksScreen';
-import SettingsScreen from '../screens/SettingsScreen';
+import ProfileScreen from '../screens/ProfileScreen';
 
 const HomeStack = createStackNavigator({
   Home: InboxScreen,
@@ -26,11 +26,11 @@ HomeStack.navigationOptions = {
   ),
 };
 
-const SettingsStack = createStackNavigator({
-  Settings: SettingsScreen,
+const ProfileStack = createStackNavigator({
+  Profile: ProfileScreen,
 });
 
-SettingsStack.navigationOptions = {
+ProfileStack.navigationOptions = {
   tabBarOptions: {
     activeTintColor: Colors.teal,
   },
@@ -45,5 +45,5 @@ SettingsStack.navigationOptions = {
 
 export default createBottomTabNavigator({
   HomeStack,
-  SettingsStack,
+  ProfileStack,
 });
