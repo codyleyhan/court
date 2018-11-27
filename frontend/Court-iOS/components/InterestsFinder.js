@@ -54,7 +54,7 @@ export default class InterestsFinder extends React.Component {
           <TextInput
             multiline={false}
             placeholder="The Office"
-            placeholderColor="rgba(255,255,255,0.)"
+            placeholderColor="rgba(255,255,255,0.5)"
             style={styles.textInput}
             onChangeText={(query) => this.handleQuery(query)}
             value={this.state.query}
@@ -62,7 +62,7 @@ export default class InterestsFinder extends React.Component {
           <Icon.Ionicons
             name='ios-search'
             size={35}
-            color='white'
+            color={Colors.peach}
           />
         </View>
         {
@@ -99,15 +99,30 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   textInputWrapper: {
+    ...Platform.select({
+      ios: {
+        shadowColor: 'black',
+        shadowOffset: { height: 8 },
+        shadowOpacity: 0.15,
+        shadowRadius: 9,
+      },
+      android: {
+        elevation: 20,
+      },
+    }),
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    borderBottomWidth: 1,
+    backgroundColor: 'white',
+    borderWidth: 1,
     borderColor: 'white',
+    borderRadius: 15,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
   },
   textInput: {
     fontSize: 30,
-    color: 'white',
+    color: Colors.peach,
     flex: 1,
   },
   results: {

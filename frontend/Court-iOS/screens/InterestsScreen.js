@@ -108,11 +108,7 @@ export default class InterestsScreen extends React.Component {
         <InterestsFinder interests={interests} onAddInterest={this.addInterest.bind(this)} onRemoveInterest={this.removeInterest.bind(this)} />
         {Object.keys(interests).length > 0 && (
           <View style={styles.continueButton}>
-            <TouchableOpacity onPress={() => this.goNext(user, genderSelection)} activeOpacity={0.75}>
-              <Text style={styles.continueText}>
-                Continue
-              </Text>
-            </TouchableOpacity>
+            <LoginButton text="Continue" onPress={() => this.goNext(user, genderSelection)} />
           </View>
         )}
       </View>
@@ -123,7 +119,7 @@ export default class InterestsScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.teal,
+    backgroundColor: 'white',
     flexDirection: 'column',
     alignItems: 'center',
   },
@@ -138,23 +134,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     bottom: 25,
-    ...Platform.select({
-      ios: {
-        shadowColor: 'black',
-        shadowOffset: { height: 8 },
-        shadowOpacity: 0.15,
-        shadowRadius: 9,
-      },
-      android: {
-        elevation: 20,
-      },
-    }),
-    backgroundColor: '#fff',
-    borderRadius: 15,
-    padding: 15,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   continueText: {
     fontSize: 20,
@@ -165,11 +144,13 @@ const styles = StyleSheet.create({
     height: 100,
   },
   welcomeText: {
-    fontSize: 40,
-    color: 'white',
+    fontSize: 35,
+    color: Colors.teal,
+    fontFamily: 'orkney-medium',
   },
   subText: {
     fontSize: 20,
-    color: 'white',
+    color: Colors.teal,
+    fontFamily: 'orkney-regular',
   }
 });
