@@ -189,18 +189,26 @@ const styles = StyleSheet.create({
   },
   unselectedTitleText: {
     fontSize: 20,
+    paddingTop: 5,
+    fontFamily: 'orkney-regular',
     color: Colors.peach,
   },
   selectedTitleText: {
     fontSize: 20,
+    paddingTop: 5,
+    fontFamily: 'orkney-regular',
     color: 'white',
   },
   unselectedDescriptionText: {
     fontSize: 15,
+    marginTop: -2,
+    fontFamily: 'orkney-light',
     color: 'rgba(250, 112, 154, 0.8)',
   },
   selectedDescriptionText: {
     fontSize: 15,
+    marginTop: -2,
+    fontFamily: 'orkney-light',
     color: 'white',
   }
 });

@@ -92,7 +92,7 @@ InterestsFinder.propTypes = {
 
 const styles = StyleSheet.create({
   outerView: {
-    marginVertical: 30,
+    marginVertical: 15,
     marginHorizontal: 20,
     flexDirection: 'column',
     alignItems: 'center',
@@ -122,6 +122,8 @@ const styles = StyleSheet.create({
   },
   textInput: {
     fontSize: 30,
+    paddingTop: 5,
+    fontFamily: 'orkney-medium',
     color: Colors.peach,
     flex: 1,
   },
