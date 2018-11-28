@@ -57,14 +57,17 @@ export default class ChatView extends React.Component {
   }
 
   renderAvatar = () => {
-    const {name, animalName, color, imgUrl} = this.props.profileInfo;
+    const { goToProfile, profileInfo } = this.props;
+    const {name, animalName, color, imgUrl} = profileInfo;
     return (
-      <Avatar
-        width={37}
-        imgURL={imgUrl}
-        color={color}
-        animalName={animalName}
-      />
+      <TouchableOpacity onPress={goToProfile} activeOpacity={0.75}>
+        <Avatar
+          width={37}
+          imgURL={imgUrl}
+          color={color}
+          animalName={animalName}
+        />
+      </TouchableOpacity>
     );
   }
 
@@ -118,11 +121,13 @@ export default class ChatView extends React.Component {
     );
   }
 
-  renderSend(props) {
+  renderSend = (props) => {
+    const { profileInfo } = this.props;
+    const styleColor = (profileInfo && profileInfo.color) ? profileInfo.color : Colors.peach;
     const sendButton = (
       <View style={{marginRight: 10, marginBottom: 5}}>
         <Mask shape={'circle'}>
-          <View style={styles.sendButton}>
+          <View style={[styles.sendButton, {backgroundColor: styleColor}]}>
             <Icon.Ionicons
               name='ios-send'
               size={35}
@@ -164,7 +169,6 @@ const styles = StyleSheet.create({
   sendButton: {
     width: 35,
     height: 35,
-    backgroundColor: Colors.peach,
     alignItems: 'center',
     paddingRight: 2,
     paddingTop: 2,

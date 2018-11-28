@@ -46,7 +46,7 @@ export default class ChatScreen extends React.Component {
         // Header bar
         <Header color={profileInfo.color} text={chatName} showBack={true} rightIcon={profileIcon} navigation={this.props.navigation}/>
         // Chats
-        <ChatView color={profileInfo.color} profileInfo={profileInfo}/>
+        <ChatView goToProfile={() => this.goToProfile(chatName, profileInfo)} color={profileInfo.color} profileInfo={profileInfo}/>
       </View>
     );
   }
