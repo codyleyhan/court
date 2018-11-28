@@ -4,6 +4,8 @@ import json
 from court.database import db
 from court.chats.models import thread_users
 
+SYSTEM_USER = 0 #: the ID associated with the court system
+
 class User(db.Model):
   """
   User is the model to map the database to an Object.

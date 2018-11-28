@@ -1,9 +1,7 @@
 from court.chats.models import Message, Thread
-from court.users.models import User
+from court.users.models import User, SYSTEM_USER
 from court.database import db
 from court.errors import AuthorizationError, NotFoundError
-
-SYSTEM_USER_ID = 0
 
 class ThreadService:
   """
@@ -82,7 +80,7 @@ class ThreadService:
     :return: true if the user is authorized to see the thread
     :rtype: bool
     """
-    if user_id == SYSTEM_USER_ID:
+    if user_id == SYSTEM_USER:
       return true
     for user in thread.users:
       if user_id == user.id:
