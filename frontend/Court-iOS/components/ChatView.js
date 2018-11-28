@@ -38,12 +38,14 @@ export default class ChatView extends React.Component {
     }))
   }
 
-  renderBubble(props) {
+  renderBubble = (props) => {
+    const { color } = this.props;
+    const styleColor = color ? color : Color.coral;
     return (
       <Bubble
         {...props}
         wrapperStyle={{
-          left: styles.leftBubble,
+          left: [styles.leftBubble, {backgroundColor: styleColor}],
           right: styles.rightBubble,
         }}
       />
@@ -148,7 +150,6 @@ const styles = StyleSheet.create({
         elevation: 15,
       },
     }),
-    backgroundColor: Colors.coral,
     marginBottom: 4,
   },
   rightBubble: {
