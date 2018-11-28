@@ -4,6 +4,7 @@ import { Icon } from 'expo';
 import { Bubble, Composer, InputToolbar, GiftedChat, MessageText, Send, Time } from 'react-native-gifted-chat'
 
 import { Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import Avatar from './Avatar';
 import Mask from 'react-native-mask';
 import Colors from '../constants/Colors';
 
@@ -20,7 +21,7 @@ export default class ChatView extends React.Component {
       messages: [
         {
           _id: 1,
-          text: 'I have hugeeeeee ballz!',
+          text: "Party Rock 👌😎👌😎👌😎📢is in the house tonight✨🏚️🏠🌙\n\n💯💯hit that MF like button🤜🤜🔴",
           createdAt: new Date(),
           user: {
             _id: 2,
@@ -32,10 +33,39 @@ export default class ChatView extends React.Component {
     })
   }
 
-  onSend(messages = []) {
+  onSend = (messages = []) => {
     this.setState(previousState => ({
       messages: GiftedChat.append(previousState.messages, messages),
-    }))
+    }));
+
+    // respond after a delay
+    setTimeout(() => {
+      responseMessages = [{
+        _id: 3,
+        text: "Me too, sounds good.",
+        createdAt: new Date(),
+        user: {
+          _id: 2,
+          name: this.props.profileInfo.name,
+          avatar: 'https://heightline.com/wp-content/uploads/Justin-Roberts-640x427.jpg',
+        },
+      }];
+      this.setState(previousState => ({
+        messages: GiftedChat.append(previousState.messages, responseMessages),
+      }));
+    }, 2000);
+  }
+
+  renderAvatar = () => {
+    const {name, animalName, color, imgUrl} = this.props.profileInfo;
+    return (
+      <Avatar
+        width={37}
+        imgURL={imgUrl}
+        color={color}
+        animalName={animalName}
+      />
+    );
   }
 
   renderBubble = (props) => {
@@ -114,6 +144,7 @@ export default class ChatView extends React.Component {
       <GiftedChat
         messages={this.state.messages}
         onSend={messages => this.onSend(messages)}
+        renderAvatar={this.renderAvatar}
         renderBubble={this.renderBubble}
         renderSend={this.renderSend}
         renderTime={this.renderTime}

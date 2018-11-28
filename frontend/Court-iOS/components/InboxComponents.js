@@ -11,7 +11,7 @@ export class InboxItem extends React.Component {
   onPressChat = () => {
     const { animalName, color, imgUrl, name, lastMessage, lastTime, percent} = this.props;
     // This is where we should handle navigation to the chat screen
-    this.props.onPress(this.props.name, {animalName: animalName, color: color, imgUrl: imgUrl});
+    this.props.onPress(this.props.name, {name: name, animalName: animalName, color: color, imgUrl: imgUrl});
   }
 
   render() {
