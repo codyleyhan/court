@@ -66,7 +66,7 @@ export default class SettingsScreen extends React.Component {
             <View style={styles.interestsPill}>
               <Text style={[{color: profileInfo.color, marginRight: 200}, styles.preferenceStyle]}>{'Interests:'}</Text>
               <View style={{marginBottom:30}}>
-                <InterestsCloud recommendations={recommendations} />
+                <InterestsCloud color={profileInfo.color} recommendations={recommendations} />
               </View>
             </View>
           </View>
