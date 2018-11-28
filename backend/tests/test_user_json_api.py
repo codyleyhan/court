@@ -38,6 +38,7 @@ def test_login(app, requests_mock):
     assert data['token'] == court_jwt
     assert data['user']['email'] == 'kfgzlneeuo_1541453454@fbnw.net'
     assert data['user']['id'] == '102773437400251'
+    assert not data['exists']
 
     with app.app_context():
       # user should now be in db
@@ -52,6 +53,7 @@ def test_login(app, requests_mock):
     assert data['token'] == court_jwt
     assert data['user']['email'] == 'kfgzlneeuo_1541453454@fbnw.net'
     assert data['user']['id'] == '102773437400251'
+    assert data['exists']
 
 def test_login_bad_token(app, requests_mock):
   facebook_token = 'mocksodoesntmatter'
