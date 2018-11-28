@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Icon, LinearGradient } from 'expo';
+import { Icon, Haptic, LinearGradient } from 'expo';
 
 import {  Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Colors from '../constants/Colors';
@@ -27,6 +27,7 @@ export default class InterestsItem extends React.Component {
     } else {
       // Add item
       if (onAddInterest) {
+        Haptic.impact('medium');
         onAddInterest(id, {title: title, description: description, imgUrl: imgUrl});
       }
     }

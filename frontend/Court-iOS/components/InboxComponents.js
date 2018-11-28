@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Haptic } from 'expo';
 
 import Avatar from '../components/Avatar';
 
@@ -12,6 +13,8 @@ export class InboxItem extends React.Component {
     const { animalName, color, imgUrl, name, lastMessage, lastTime, percent} = this.props;
     // This is where we should handle navigation to the chat screen
     this.props.onPress(this.props.name, {name: name, animalName: animalName, color: color, imgUrl: imgUrl});
+    // Provide Haptic Feedback
+    Haptic.impact('light');
   }
 
   render() {

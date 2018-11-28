@@ -11,6 +11,7 @@ import {
   View,
 } from 'react-native';
 
+import { Haptic } from 'expo';
 import { Transition } from 'react-navigation-fluid-transitions';
 
 import Authentication from '../constants/Authentication';
@@ -46,6 +47,7 @@ export default class LoginScreen extends React.Component {
 
   handleLoginPress = () => {
     // Handle pressing login here
+    Haptic.impact('light');
     this.setState({ isLoading: true });
     logInWithFacebook().then((response) => {
       console.log(response);
