@@ -35,7 +35,7 @@ export default class InboxScreen extends React.Component {
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
           // Temp list for example messages
           // TODO(river): populate from an API call
-          <InboxItem onPress={this.onNavigateToChat} imgUrl="https://heightline.com/wp-content/uploads/Justin-Roberts-640x427.jpg" name="Justin Roberts" lastMessage="I'm really into cooking in my free time!" lastTime="4:02 PM" percent="67"/>
+          <InboxItem onPress={this.onNavigateToChat} animalName="jellyfish" color={Colors.nightSky} imgUrl="https://heightline.com/wp-content/uploads/Justin-Roberts-640x427.jpg" name="Justin Roberts" lastMessage="I'm really into cooking in my free time!" lastTime="4:02 PM" percent="67"/>
           <InboxItem onPress={this.onNavigateToChat} animalName="panda" color={Colors.peach} name="Anonymous Panda" lastMessage="I Love to office so much it's so cool" lastTime="2:15 PM" percent="40"/>
           <InboxItem onPress={this.onNavigateToChat} animalName="sloth" color={Colors.mustard} name="Anonymous Sloth" lastMessage="This app is amazing, what are you doing?" lastTime="10:07 AM" percent="15"/>
 

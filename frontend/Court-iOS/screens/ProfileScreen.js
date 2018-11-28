@@ -28,6 +28,7 @@ export default class SettingsScreen extends React.Component {
         width={160} imgURL={profileInfo.imgURL}
         color={profileInfo.color}
         animalName={profileInfo.animalName}
+        showSubIcon={true}
       />
     );
 
@@ -44,8 +45,8 @@ export default class SettingsScreen extends React.Component {
           <Text style={[{marginTop: 20, color: profileInfo.color}, styles.nameStyle]}>{'Jessica Douma'}</Text>
         </View>
 
-        <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}> 
-          
+        <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+
           <View style={styles.pillWrapper}>
             <View style={styles.pill}>
               <Text style={[{color: profileInfo.color}, styles.preferenceStyle]}>{'Gender:'}</Text>
@@ -59,12 +60,12 @@ export default class SettingsScreen extends React.Component {
               <Text style={[{color: profileInfo.color}, styles.pillTextStyle]}>{'Male'}</Text>
             </View>
           </View>
-          
+
           <View style={styles.pillWrapper}>
             <View style={styles.interestsPill}>
               <Text style={[{color: profileInfo.color, marginRight: 200}, styles.preferenceStyle]}>{'Interests:'}</Text>
               <View style={{marginBottom:30}}>
-                <InterestsCloud recommendations={recommendations} /> 
+                <InterestsCloud recommendations={recommendations} />
               </View>
             </View>
           </View>

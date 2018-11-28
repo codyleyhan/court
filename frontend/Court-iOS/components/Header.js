@@ -14,12 +14,12 @@ import BackButton from './BackButton';
 */
 export default class Header extends React.Component {
   render() {
-    const { text, navigation, rightIcon, showBack } = this.props;
-
+    const { color, text, navigation, rightIcon, showBack } = this.props;
+    const styleColor = color ? color : Colors.teal;
     const backButton = (
       <TouchableOpacity onPress={() => navigation.pop()}>
         <Mask shape={'circle'}>
-          <View style={{width: 40, height: 40, backgroundColor: Colors.teal, alignItems: 'center', paddingRight: 3}}>
+          <View style={{width: 40, height: 40, backgroundColor: styleColor, alignItems: 'center', paddingRight: 3}}>
             <Icon.Ionicons
               name='ios-arrow-back'
               size={40}
@@ -31,9 +31,9 @@ export default class Header extends React.Component {
   );
 
     return (
-      <View style={styles.headerContainer}>
+      <View style={[styles.headerContainer, {borderBottomColor: styleColor}]}>
         {showBack && backButton}
-        <Text style={styles.headerTitle}>{text}</Text>
+        <Text style={[styles.headerTitle, {color: styleColor}]}>{text}</Text>
         {rightIcon}
       </View>
     );
@@ -48,12 +48,10 @@ const styles = StyleSheet.create({
     paddingBottom: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    borderBottomColor: '#21ACA5',
     borderBottomWidth: 2,
     backgroundColor: '#fff',
   },
   headerTitle: {
-    color: '#21ACA5',
     fontFamily: 'orkney-medium',
     paddingTop: 10,
     fontSize: 30,

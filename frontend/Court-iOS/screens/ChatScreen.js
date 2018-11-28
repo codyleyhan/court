@@ -21,17 +21,24 @@ export default class ChatScreen extends React.Component {
     header: null,
   };
 
+  goToProfile(name, profileInfo) {
+    this.props.navigation.navigate('ChatProfile', {name: name, profileInfo: profileInfo});
+  }
+
   render() {
     const { navigation } = this.props;
     const chatName = navigation.getParam('chatName', 'Messages');
     const profileInfo = navigation.getParam('profileInfo', {});
 
     const profileIcon = (
-      <Avatar
-        isLocal={profileInfo.animalName && profileInfo.color ? true : false}
-        width={40} src={profileInfo.imgUrl ? profileInfo.imgUrl : profileInfo.animalName}
-        color={profileInfo.color ? profileInfo.color : null}
-      />
+      <TouchableOpacity onPress={() => this.goToProfile(chatName, profileInfo)} activeOpacity={0.75}>
+        <Avatar
+          width={40}
+          imgURL={profileInfo.imgUrl}
+          color={profileInfo.color}
+          animalName={profileInfo.animalName}
+        />
+      </TouchableOpacity>
     );
 
     return (
