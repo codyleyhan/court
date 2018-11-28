@@ -3,6 +3,8 @@ from court.users.models import User
 from court.database import db
 from court.errors import AuthorizationError, NotFoundError
 
+SYSTEM_USER_ID = 0
+
 class ThreadService:
   """
   Handles all business logic for creating and managing user's chat threads.
@@ -69,7 +71,8 @@ class ThreadService:
 
   def user_is_in_thread(self, user_id, thread):
     """
-    Checks if a user is authorized to be in a thread.
+    Checks if a user is authorized to be in a thread. If the user id is the 
+    system user id, then it will return true.
 
     :param user_id: the user id being checked
     :type user_id: int
@@ -79,7 +82,8 @@ class ThreadService:
     :return: true if the user is authorized to see the thread
     :rtype: bool
     """
-    print(user_id)
+    if user_id == SYSTEM_USER_ID:
+      return true
     for user in thread.users:
       if user_id == user.id:
         return True
