@@ -23,15 +23,16 @@ export default class InterestsItem extends React.Component {
       // Remove item
       if (onRemoveInterest) {
         onRemoveInterest(id);
+        this.setState({ selected: !oldState.selected });
       }
     } else {
       // Add item
       if (onAddInterest) {
         Haptic.impact('medium');
         onAddInterest(id, {title: title, description: description, imgUrl: imgUrl});
+        this.setState({ selected: !oldState.selected });
       }
     }
-    this.setState({ selected: !oldState.selected });
   }
 
   render() {
