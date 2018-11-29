@@ -50,15 +50,17 @@ export class InboxItem extends React.Component {
   }
 }
 
+
+// TODO(Jessica): modify these to match new profile object
 InboxItem.propTypes = {
   /**
   * URL for the given user's profile picture
   */
-  imgUrl: PropTypes.string,
+  // imgUrl: PropTypes.string,
   /**
   * Name of the other user in the chat
   */
-  name: PropTypes.string.isRequired,
+  // name: PropTypes.string.isRequired,
   /**
   * The text of the last message sent in the chat
   */
@@ -70,7 +72,7 @@ InboxItem.propTypes = {
   /**
   * Percent of profile unlocked for the given user
   */
-  percent: PropTypes.string.isRequired,
+  // percent: PropTypes.string.isRequired,
 }
 
 const styles = StyleSheet.create({

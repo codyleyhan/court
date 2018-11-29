@@ -94,7 +94,7 @@ export default class InboxScreen extends React.Component {
             // Show match list
             <FadeWrapper visible={this.state.matches !== null && this.state.matches.length > 0} delay={300}>
               {this.state.matches && this.state.matches.map((val, index) => (
-                <InboxItem profile={val} onPress={this.onNavigateToChat} onLongPress={() => this.setModalVisible(true)} lastMessage="I'm really into cooking in my free time!" lastTime="4:02 PM"/>
+                <InboxItem key={val} profile={val} onPress={this.onNavigateToChat} onLongPress={() => this.setModalVisible(true)} lastMessage="I'm really into cooking in my free time!" lastTime="4:02 PM"/>
               ))}
               // Add a message for new matches
               <Text style={{fontFamily: 'orkney-light', marginTop: 15, textAlign: 'center', color: 'grey'}}>Looking for more chats?</Text>
