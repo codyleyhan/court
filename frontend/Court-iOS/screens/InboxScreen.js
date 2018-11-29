@@ -24,7 +24,6 @@ export default class InboxScreen extends React.Component {
   state = {
     showDeleteModal: false,
     matches: null,
-    showMatches: false,
   };
 
   static navigationOptions = {
@@ -82,17 +81,7 @@ export default class InboxScreen extends React.Component {
         // List of messages
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
             // Display loading for finding matches
-            // Show match list
-            // TODO(river): populate from an API call
-            <FadeWrapper visible={this.state.showMatches}>
-              {this.state.matches && this.state.matches.map((val, index) => (
-                <InboxItem profile={val} onPress={this.onNavigateToChat} onLongPress={() => this.setModalVisible(true)} lastMessage="I'm really into cooking in my free time!" lastTime="4:02 PM"/>
-              ))}
-              // Add a message for new matches
-              <Text style={{fontFamily: 'orkney-light', marginTop: 15, textAlign: 'center', color: 'grey'}}>Looking for more chats?</Text>
-              <Text style={{fontFamily: 'orkney-light', textAlign: 'center', color: 'grey'}}>{"They'll show up here when you have a match."}</Text>
-            </FadeWrapper>
-            <FadeWrapper visible={(this.state.matches === null || this.state.matches.length == 0)} callback={() => this.setState({ showMatches: true })}>
+            <FadeWrapper visible={(this.state.matches === null || this.state.matches.length == 0)} >
               <LottieView
                 source={require('../assets/animations/preloader.json')}
                 autoPlay
@@ -101,6 +90,15 @@ export default class InboxScreen extends React.Component {
                 style={styles.animation}
               />
               <Text style={{fontFamily: 'orkney-light', fontSize: 25, textAlign: 'center', color: 'grey'}}>Looking for matches...</Text>
+            </FadeWrapper>
+            // Show match list
+            <FadeWrapper visible={this.state.matches !== null && this.state.matches.length > 0} delay={300}>
+              {this.state.matches && this.state.matches.map((val, index) => (
+                <InboxItem profile={val} onPress={this.onNavigateToChat} onLongPress={() => this.setModalVisible(true)} lastMessage="I'm really into cooking in my free time!" lastTime="4:02 PM"/>
+              ))}
+              // Add a message for new matches
+              <Text style={{fontFamily: 'orkney-light', marginTop: 15, textAlign: 'center', color: 'grey'}}>Looking for more chats?</Text>
+              <Text style={{fontFamily: 'orkney-light', textAlign: 'center', color: 'grey'}}>{"They'll show up here when you have a match."}</Text>
             </FadeWrapper>
         </ScrollView>
         <AwesomeAlert

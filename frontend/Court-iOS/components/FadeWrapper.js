@@ -20,11 +20,9 @@ export default class FadeWrapper extends React.Component {
     Animated.timing(this._visibility, {
       toValue: nextProps.visible ? 1 : 0,
       duration: 300,
+      delay: nextProps.delay ? nextProps.delay : 0,
     }).start(() => {
       this.setState({ visible: nextProps.visible });
-      if (nextProps.callback) {
-        nextProps.callback();
-      }
     });
   }
 

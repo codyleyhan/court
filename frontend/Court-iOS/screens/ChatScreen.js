@@ -31,7 +31,7 @@ export default class ChatScreen extends React.Component {
     const { animal, color, first_name, last_name, profile_picture, percent_unlocked } = profileInfo;
     const displayName = first_name ? first_name + ' ' + last_name : 'Anonymous ' + animal.charAt(0).toUpperCase() + animal.slice(1);
     const profileIcon = (
-      <TouchableOpacity onPress={() => this.goToProfile(chatName, profileInfo)} activeOpacity={0.75}>
+      <TouchableOpacity onPress={() => this.goToProfile(displayName, profileInfo)} activeOpacity={0.75}>
         <Avatar
           width={40}
           imgURL={profile_picture}
