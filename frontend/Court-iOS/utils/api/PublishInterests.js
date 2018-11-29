@@ -1,25 +1,26 @@
 import Network from '../../constants/Network';
 import { getAuthToken } from './Authorization';
 
-export function publishInterests(genderSelection, interests) {
+export async function publishInterests(genderSelection, interests, color, animal) {
   // Make api call to publish a given user's interests
-  getAuthToken()
+  return getAuthToken()
     .then((token) => {
       // Got token
-      console.log(token);
-      fetch(Network.base_api_url + `users?gender=${genderSelection.self}&preferred_gender=${genderSelection.other}&interests=${interests}`, {
+      return fetch(Network.base_api_url + `users?gender=${genderSelection.self}&preferred_gender=${genderSelection.other}&interests=${JSON.stringify(interests)}&color=${color}&animal=${animal}`, {
         method: 'PUT',
-        headers: new Headers({'Authorization': token}), 
+        headers: new Headers({'Authorization': token}),
         })
         .then((response) => response.json())
         .then((responseJSON) => {
           return responseJSON;
         })
         .catch((error) => {
+          // Error in publishing
           return null;
         })
     })
     .catch(error => {
       // Error fetching token
+      return null;
     });
 }

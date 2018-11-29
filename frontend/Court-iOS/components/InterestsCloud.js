@@ -13,7 +13,7 @@ import InterestsItem from '../components/InterestsItem';
 export default class InterestsCloud extends React.Component {
   render() {
     const { color, interests, onAddInterest, onRemoveInterest, recommendations } = this.props;
-    console.log(recommendations);
+    
     return (
       // Scroll View encompasing the results
       <View style={styles.outerView}>

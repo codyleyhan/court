@@ -15,6 +15,7 @@ import { Haptic } from 'expo';
 import Mask from 'react-native-mask';
 
 import Colors from '../constants/Colors';
+import Icons from '../constants/Icons';
 
 import { publishInterests } from '../utils/api/PublishInterests';
 
@@ -48,10 +49,23 @@ export default class InterestsScreen extends React.Component {
 
   goNext(user, genderSelection) {
     Haptic.impact('light');
+    // Generate a random color/animal combination
+    var properties = Object.getOwnPropertyNames(Colors);
+    var index = Math.floor(Math.random() * properties.length);
+    const color = properties[index];
+    properties = Object.getOwnPropertyNames(Icons);
+    index = Math.floor(Math.random() * properties.length);
+    const animal = properties[index];
     // Publish interests to API, navigate to next page
-    // publishInterests(genderSelection, this.state.interests);
-    // TODO(rivmist): update the backend with these changes
-    this.props.navigation.navigate('Confirmation', {user: user});
+    publishInterests(genderSelection, this.state.interests, color, animal).then((response) => {
+      if (response !== null) {
+        console.log(response);
+        this.props.navigation.navigate('Confirmation', {user: user});
+      } else {
+        // Error
+        alert('Error publishing interests to server');
+      }
+    });
   }
 
   render() {
