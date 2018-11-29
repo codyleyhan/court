@@ -27,16 +27,16 @@ export default class ChatScreen extends React.Component {
 
   render() {
     const { navigation } = this.props;
-    const chatName = navigation.getParam('chatName', 'Messages');
     const profileInfo = navigation.getParam('profileInfo', {});
-
+    const { animal, color, first_name, last_name, profile_picture, percent_unlocked } = profileInfo;
+    const displayName = first_name ? first_name + ' ' + last_name : 'Anonymous ' + animal.charAt(0).toUpperCase() + animal.slice(1);
     const profileIcon = (
       <TouchableOpacity onPress={() => this.goToProfile(chatName, profileInfo)} activeOpacity={0.75}>
         <Avatar
           width={40}
-          imgURL={profileInfo.imgUrl}
-          color={profileInfo.color}
-          animalName={profileInfo.animalName}
+          imgURL={profile_picture}
+          color={Colors[color]}
+          animalName={animal}
         />
       </TouchableOpacity>
     );
@@ -44,9 +44,9 @@ export default class ChatScreen extends React.Component {
     return (
       <View style={styles.container}>
         // Header bar
-        <Header color={profileInfo.color} text={chatName} showBack={true} rightIcon={profileIcon} navigation={this.props.navigation}/>
+        <Header color={Colors[color]} text={displayName} showBack={true} rightIcon={profileIcon} navigation={this.props.navigation}/>
         // Chats
-        <ChatView goToProfile={() => this.goToProfile(chatName, profileInfo)} color={profileInfo.color} profileInfo={profileInfo}/>
+        <ChatView goToProfile={() => this.goToProfile(chatName, profileInfo)} color={Colors[color]} profileInfo={profileInfo}/>
       </View>
     );
   }
