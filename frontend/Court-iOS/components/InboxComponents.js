@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Haptic } from 'expo';
 
 import Avatar from '../components/Avatar';
 
@@ -8,15 +9,25 @@ import Avatar from '../components/Avatar';
 * Card in the user's inbox for each of their current chats
 */
 export class InboxItem extends React.Component {
-  onPressChat() {
+  onPressChat = () => {
+    const { animalName, color, imgUrl, name, lastMessage, lastTime, percent} = this.props;
     // This is where we should handle navigation to the chat screen
+    this.props.onPress(this.props.name, {name: name, animalName: animalName, color: color, imgUrl: imgUrl});
+    // Provide Haptic Feedback
+    Haptic.impact('light');
+  }
 
+  onLongPress = () => {
+    if (this.props.onLongPress) {
+      Haptic.impact('medium');
+      this.props.onLongPress();
+    }
   }
 
   render() {
     const { animalName, color, imgUrl, name, lastMessage, lastTime, percent} = this.props;
     return (
-      <TouchableOpacity activeOpacity={0.5} onPress={this.onPressChat}>
+      <TouchableOpacity activeOpacity={0.5} onPress={this.onPressChat} onLongPress={this.onLongPress}>
         <View style={styles.InboxCard}>
           <View style={styles.avatarWrapper}>
             <Avatar width={65} imgURL={imgUrl} animalName={animalName} color={color}/>
@@ -36,6 +47,14 @@ export class InboxItem extends React.Component {
 }
 
 InboxItem.propTypes = {
+  /**
+  * The string uri to fetch corresponding to a local uri
+  */
+  animalName: PropTypes.string,
+  /**
+  * Background color of icon image
+  */
+  color: PropTypes.string,
   /**
   * URL for the given user's profile picture
   */
@@ -91,7 +110,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   nameStyle: {
-    fontSize: 25,
+    fontSize: 22,
     fontFamily: 'orkney-medium',
     color: '#21ACA5',
   },
@@ -105,7 +124,7 @@ const styles = StyleSheet.create({
     color: 'grey',
   },
   percentStyle: {
-    fontSize: 25,
+    fontSize: 22,
     fontFamily: 'orkney-medium',
     color: '#21ACA5',
   },

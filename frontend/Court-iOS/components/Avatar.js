@@ -10,7 +10,7 @@ import IconImage from './IconImage';
 */
 export default class Avatar extends React.Component {
   render() {
-    const { width, imgURL, color, animalName } = this.props;
+    const { width, imgURL, color, animalName, showSubIcon } = this.props;
     const size = width;
 
     let mainAvatar = null;
@@ -20,7 +20,7 @@ export default class Avatar extends React.Component {
                         source={{ uri: imgURL }}
                      />);
     } else if (animalName && color) {
-      mainAvatar = ( <IconImage 
+      mainAvatar = ( <IconImage
                         avatar={ animalName }
                         size={ size }
                         color={ color }
@@ -33,8 +33,8 @@ export default class Avatar extends React.Component {
     }
 
     let subAvatar = null;
-    if (animalName && color && imgURL) {
-      subAvatar = ( <IconImage 
+    if (animalName && color && imgURL && showSubIcon) {
+      subAvatar = ( <IconImage
                         avatar={ animalName }
                         size={ .3 * size }
                         color={ color }
@@ -76,15 +76,20 @@ Avatar.propTypes = {
   */
   width: PropTypes.number.isRequired,
   /**
-  * Flag to specify loading local image
+  * The string uri to fetch that corrosponds to a web url
   */
-  isLocal: PropTypes.bool,
-  /**
-  * The string uri to fetch, either a web url, or local uri
-  */
-  src: PropTypes.string,
+  imgURL: PropTypes.string,
   /**
   * Background color of resulting image, if PNG
   */
   color: PropTypes.string,
+  /**
+  * The string uri to fetch corresponding to a local uri
+  */
+  animalName: PropTypes.string,
+  /**
+  * Displays the nested subicon 
+  */
+  showSubIcon: PropTypes.bool,
+  
 };

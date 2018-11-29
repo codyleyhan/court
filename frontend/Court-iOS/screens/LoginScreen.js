@@ -11,6 +11,7 @@ import {
   View,
 } from 'react-native';
 
+import { Haptic, WebBrowser } from 'expo';
 import { Transition } from 'react-navigation-fluid-transitions';
 
 import Authentication from '../constants/Authentication';
@@ -37,6 +38,7 @@ export default class LoginScreen extends React.Component {
     try {
       await AsyncStorage.setItem(Authentication.AUTH_USER, JSON.stringify(response.user));
       await AsyncStorage.setItem(Authentication.AUTH_TOKEN, response.token);
+      console.log(response.token);
     } catch (error) {
       // Error saving data
       alert('Error saving credentials', 'Please login again');
@@ -45,6 +47,7 @@ export default class LoginScreen extends React.Component {
 
   handleLoginPress = () => {
     // Handle pressing login here
+    Haptic.impact('light');
     this.setState({ isLoading: true });
     logInWithFacebook().then((response) => {
       console.log(response);
@@ -75,9 +78,23 @@ export default class LoginScreen extends React.Component {
         // Login Button
         {this.state.isLoading ?
           <ActivityIndicator color={Colors.teal} size='large' />
-          : <LoginButton onPress={this.handleLoginPress} text="Continue with Facebook" showLogo={true}/>
+          : (
+            <View>
+              <LoginButton onPress={this.handleLoginPress} text="Continue with Facebook" showLogo={true}/>
+              // Terms and Conditions
+              <Text style={{fontFamily: 'orkney-light', marginTop: 25, textAlign: 'center', color: 'grey'}}>{"By continuing, you agree to Court's"}</Text>
+              <Text style={{fontFamily: 'orkney-light', textAlign: 'center', color: 'grey', marginTop: 2}}>
+                <Text style={{fontFamily: 'orkney-bold'}} onPress={()=>WebBrowser.openBrowserAsync('https://termsfeed.com/legal/terms-of-use')}>
+                  {"Terms of Service "}
+                </Text>
+                 and
+               <Text style={{fontFamily: 'orkney-bold'}} onPress={()=>WebBrowser.openBrowserAsync('https://termsfeed.com/legal/privacy-policy')}>
+                  {" Privacy Policy"}
+               </Text>
+              </Text>
+            </View>
+          )
         }
-
       </View>
     );
   }
@@ -101,6 +118,6 @@ const styles = StyleSheet.create({
     fontSize: 70,
     color: Colors.teal,
     marginTop: -20,
-    marginBottom: 300,
+    marginBottom: 350,
   }
 });

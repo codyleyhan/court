@@ -465,7 +465,8 @@ user.</p>
 <dl class="method">
 <dt id="court.chats.thread_service.ThreadService.user_is_in_thread">
 <code class="descname">user_is_in_thread</code><span class="sig-paren">(</span><em>user_id</em>, <em>thread</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/chats/thread_service.html#ThreadService.user_is_in_thread"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.chats.thread_service.ThreadService.user_is_in_thread" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks if a user is authorized to be in a thread.</p>
+<dd><p>Checks if a user is authorized to be in a thread. If the user id is the 
+system user id, then it will return true.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -749,6 +750,12 @@ must be run in an flask application context to work.</p>
 
 </dd></dl>
 
+<dl class="data">
+<dt id="court.users.models.SYSTEM_USER">
+<code class="descclassname">court.users.models.</code><code class="descname">SYSTEM_USER</code><em class="property"> = 0</em><a class="headerlink" href="#court.users.models.SYSTEM_USER" title="Permalink to this definition">¶</a></dt>
+<dd><p>the ID associated with the court system</p>
+</dd></dl>
+
 <dl class="class">
 <dt id="court.users.models.User">
 <em class="property">class </em><code class="descclassname">court.users.models.</code><code class="descname">User</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/users/models.html#User"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.users.models.User" title="Permalink to this definition">¶</a></dt>
@@ -903,7 +910,8 @@ the arguments from the URL rule.</p>
         <span class="nt">&quot;width&quot;</span><span class="p">:</span> <span class="mi">320</span>
       <span class="p">}</span>
     <span class="p">}</span>
-  <span class="p">}</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;exists&quot;</span><span class="p">:</span> <span class="kc">true</span>
 <span class="p">}</span>
 </pre></div>
 </div>

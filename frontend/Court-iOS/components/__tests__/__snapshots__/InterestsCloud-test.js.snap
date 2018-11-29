@@ -153,3 +153,157 @@ exports[`Renders Default InterestsCloud 1`] = `
   </View>
 </View>
 `;
+
+exports[`Renders InterestsCloud w/ Custom Color 1`] = `
+<View
+  style={
+    Object {
+      "flexDirection": "row",
+      "flexWrap": "wrap",
+      "justifyContent": "center",
+      "paddingTop": 15,
+    }
+  }
+>
+  <View>
+    <View
+      accessibilityComponentType={undefined}
+      accessibilityLabel={undefined}
+      accessibilityTraits={undefined}
+      accessible={true}
+      collapsable={undefined}
+      hasTVPreferredFocus={undefined}
+      hitSlop={undefined}
+      isTVSelectable={true}
+      nativeID={undefined}
+      onLayout={undefined}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "opacity": 1,
+        }
+      }
+      testID={undefined}
+      tvParallaxProperties={undefined}
+    >
+      <View
+        style={
+          Object {
+            "alignItems": "center",
+            "borderColor": "#FA709A",
+            "borderRadius": 30,
+            "borderWidth": 1,
+            "flexDirection": "row",
+            "justifyContent": "center",
+            "margin": 5,
+            "paddingHorizontal": 10,
+            "paddingVertical": 5,
+          }
+        }
+      >
+        // Optional: add image preview here
+        <View
+          style={
+            Object {
+              "alignItems": "flex-start",
+              "flexDirection": "column",
+              "marginLeft": 5,
+            }
+          }
+        >
+          <Text
+            accessible={true}
+            allowFontScaling={true}
+            ellipsizeMode="tail"
+            style={
+              Object {
+                "color": "#FA709A",
+                "fontFamily": "orkney-regular",
+                "fontSize": 20,
+                "paddingTop": 5,
+              }
+            }
+          >
+            Interest Rec 1
+          </Text>
+        </View>
+      </View>
+    </View>
+  </View>
+  <View>
+    <View
+      accessibilityComponentType={undefined}
+      accessibilityLabel={undefined}
+      accessibilityTraits={undefined}
+      accessible={true}
+      collapsable={undefined}
+      hasTVPreferredFocus={undefined}
+      hitSlop={undefined}
+      isTVSelectable={true}
+      nativeID={undefined}
+      onLayout={undefined}
+      onResponderGrant={[Function]}
+      onResponderMove={[Function]}
+      onResponderRelease={[Function]}
+      onResponderTerminate={[Function]}
+      onResponderTerminationRequest={[Function]}
+      onStartShouldSetResponder={[Function]}
+      style={
+        Object {
+          "opacity": 1,
+        }
+      }
+      testID={undefined}
+      tvParallaxProperties={undefined}
+    >
+      <View
+        style={
+          Object {
+            "alignItems": "center",
+            "borderColor": "#FA709A",
+            "borderRadius": 30,
+            "borderWidth": 1,
+            "flexDirection": "row",
+            "justifyContent": "center",
+            "margin": 5,
+            "paddingHorizontal": 10,
+            "paddingVertical": 5,
+          }
+        }
+      >
+        // Optional: add image preview here
+        <View
+          style={
+            Object {
+              "alignItems": "flex-start",
+              "flexDirection": "column",
+              "marginLeft": 5,
+            }
+          }
+        >
+          <Text
+            accessible={true}
+            allowFontScaling={true}
+            ellipsizeMode="tail"
+            style={
+              Object {
+                "color": "#FA709A",
+                "fontFamily": "orkney-regular",
+                "fontSize": 20,
+                "paddingTop": 5,
+              }
+            }
+          >
+            Interest Rec 2
+          </Text>
+        </View>
+      </View>
+    </View>
+  </View>
+</View>
+`;

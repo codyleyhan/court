@@ -140,7 +140,7 @@
             
   <h1>Source code for court.chats.thread_service</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">court.chats.models</span> <span class="k">import</span> <span class="n">Message</span><span class="p">,</span> <span class="n">Thread</span>
-<span class="kn">from</span> <span class="nn">court.users.models</span> <span class="k">import</span> <span class="n">User</span>
+<span class="kn">from</span> <span class="nn">court.users.models</span> <span class="k">import</span> <span class="n">User</span><span class="p">,</span> <span class="n">SYSTEM_USER</span>
 <span class="kn">from</span> <span class="nn">court.database</span> <span class="k">import</span> <span class="n">db</span>
 <span class="kn">from</span> <span class="nn">court.errors</span> <span class="k">import</span> <span class="n">AuthorizationError</span><span class="p">,</span> <span class="n">NotFoundError</span>
 
@@ -210,7 +210,8 @@
 
 <div class="viewcode-block" id="ThreadService.user_is_in_thread"><a class="viewcode-back" href="../../../index.html#court.chats.thread_service.ThreadService.user_is_in_thread">[docs]</a>  <span class="k">def</span> <span class="nf">user_is_in_thread</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="n">thread</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Checks if a user is authorized to be in a thread.</span>
+<span class="sd">    Checks if a user is authorized to be in a thread. If the user id is the </span>
+<span class="sd">    system user id, then it will return true.</span>
 
 <span class="sd">    :param user_id: the user id being checked</span>
 <span class="sd">    :type user_id: int</span>
@@ -220,7 +221,8 @@
 <span class="sd">    :return: true if the user is authorized to see the thread</span>
 <span class="sd">    :rtype: bool</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">user_id</span> <span class="o">==</span> <span class="n">SYSTEM_USER</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">true</span>
     <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">thread</span><span class="o">.</span><span class="n">users</span><span class="p">:</span>
       <span class="k">if</span> <span class="n">user_id</span> <span class="o">==</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">True</span>

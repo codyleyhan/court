@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 
 import { Transition } from 'react-navigation-fluid-transitions';
+import { Haptic } from 'expo';
 import Mask from 'react-native-mask';
 
 import Authentication from '../constants/Authentication';
@@ -36,6 +37,7 @@ export default class SetupScreen extends React.Component {
   }
 
   handleContinueClick = (user) => {
+    Haptic.impact('light');
     // Navigate to next screen, and submit user selections to API
     // TODO(river): submit these details to the backend
     this.props.navigation.navigate('Interests', { user: user, genderSelection: { self: this.state.gender, other: this.state.preferred } });
