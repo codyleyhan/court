@@ -22,6 +22,9 @@ export default class FadeWrapper extends React.Component {
       duration: 300,
     }).start(() => {
       this.setState({ visible: nextProps.visible });
+      if (nextProps.callback) {
+        nextProps.callback();
+      }
     });
   }
 

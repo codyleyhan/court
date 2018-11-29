@@ -24,6 +24,7 @@ export default class InboxScreen extends React.Component {
   state = {
     showDeleteModal: false,
     matches: null,
+    showMatches: false,
   };
 
   static navigationOptions = {
@@ -34,8 +35,9 @@ export default class InboxScreen extends React.Component {
     matches = [];
     if (matchObject) {
       Object.keys(matchObject).map((value, index) => {
-        var tempMatch = matchObject[value];
+        var tempMatch = matchObject[value].profile;
         tempMatch.user_id = value;
+        tempMatch.percent_unlocked = matchObject[value].percent_unlocked;
         matches.push(tempMatch);
       });
     }
@@ -56,11 +58,6 @@ export default class InboxScreen extends React.Component {
         alert('Error querying matches');
       }
     });
-
-    // TODO: REMOVE!!!
-    setTimeout(() => {
-      this.setState({ matches: ['test'] });
-    }, 3000);
   }
 
   setModalVisible = (visible) => {
@@ -87,16 +84,15 @@ export default class InboxScreen extends React.Component {
             // Display loading for finding matches
             // Show match list
             // TODO(river): populate from an API call
-            <FadeWrapper visible={!(this.state.matches === null || this.state.matches.length == 0)}>
-              <InboxItem onPress={this.onNavigateToChat} onLongPress={() => this.setModalVisible(true)} animalName="jellyfish" color={Colors.nightSky} imgUrl="https://heightline.com/wp-content/uploads/Justin-Roberts-640x427.jpg" name="Justin Roberts" lastMessage="I'm really into cooking in my free time!" lastTime="4:02 PM" percent="67"/>
-              <InboxItem onPress={this.onNavigateToChat} onLongPress={() => this.setModalVisible(true)} animalName="panda" color={Colors.peach} name="Anonymous Panda" lastMessage="I Love to office so much it's so cool" lastTime="2:15 PM" percent="40"/>
-              <InboxItem onPress={this.onNavigateToChat} onLongPress={() => this.setModalVisible(true)} animalName="sloth" color={Colors.mustard} name="Anonymous Sloth" lastMessage="This app is amazing, what are you doing?" lastTime="10:07 AM" percent="15"/>
-
+            <FadeWrapper visible={this.state.showMatches}>
+              {this.state.matches && this.state.matches.map((val, index) => (
+                <InboxItem profile={val} onPress={this.onNavigateToChat} onLongPress={() => this.setModalVisible(true)} lastMessage="I'm really into cooking in my free time!" lastTime="4:02 PM"/>
+              ))}
               // Add a message for new matches
               <Text style={{fontFamily: 'orkney-light', marginTop: 15, textAlign: 'center', color: 'grey'}}>Looking for more chats?</Text>
               <Text style={{fontFamily: 'orkney-light', textAlign: 'center', color: 'grey'}}>{"They'll show up here when you have a match."}</Text>
             </FadeWrapper>
-            <FadeWrapper visible={(this.state.matches === null || this.state.matches.length == 0)}>
+            <FadeWrapper visible={(this.state.matches === null || this.state.matches.length == 0)} callback={() => this.setState({ showMatches: true })}>
               <LottieView
                 source={require('../assets/animations/preloader.json')}
                 autoPlay
