@@ -57,14 +57,14 @@ export default class ChatView extends React.Component {
 
   renderAvatar = () => {
     const { goToProfile, profileInfo } = this.props;
-    const {name, animalName, color, imgUrl} = profileInfo;
+    const { name, animal, color, profile_picture } = profileInfo;
     return (
       <TouchableOpacity onPress={goToProfile} activeOpacity={0.75}>
         <Avatar
           width={37}
-          imgURL={imgUrl}
-          color={color}
-          animalName={animalName}
+          imgURL={profile_picture}
+          color={Colors[color]}
+          animalName={animal}
         />
       </TouchableOpacity>
     );
@@ -122,7 +122,8 @@ export default class ChatView extends React.Component {
 
   renderSend = (props) => {
     const { profileInfo } = this.props;
-    const styleColor = (profileInfo && profileInfo.color) ? profileInfo.color : Colors.peach;
+    const { color } = profileInfo;
+    const styleColor = color ? Colors[color] : Colors.peach;
     const sendButton = (
       <View style={{marginRight: 10, marginBottom: 4}}>
         <Mask shape={'circle'}>
