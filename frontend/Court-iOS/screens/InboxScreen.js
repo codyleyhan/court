@@ -22,17 +22,32 @@ import { getMatches, deleteMatch } from '../utils/api/Matches';
 export default class InboxScreen extends React.Component {
   state = {
     showDeleteModal: false,
-    matches: [],
+    matches: null,
   };
 
   static navigationOptions = {
     header: null,
   };
 
+  parseMatches = (matchObject) => {
+    matches = [];
+    if (matchObject) {
+
+    }
+    return matches;
+  }
+
   constructor() {
     super();
     getMatches().then(response => {
-      console.log(response);
+      if (response && response.matches) {
+        // Got matches object
+        matches = this.parseMatches(response.matches);
+        this.setState({ matches: matches });
+      } else {
+        // Error querying API
+        alert('Error querying matches');
+      }
     });
   }
 
@@ -67,14 +82,23 @@ export default class InboxScreen extends React.Component {
         // List of messages
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
           // Temp list for example messages
-          <LottieView
-            source={require('../assets/animations/preloader.json')}
-            autoPlay
-            speed={0.75}
-            loop={true}
-            style={styles.animation}
-          />
-          <Text style={{fontFamily: 'orkney-light', fontSize: 25, textAlign: 'center', color: 'grey'}}>Looking for matches...</Text>
+          {(this.state.matches === null || this.state.matches.length == 0) ? (
+            // Display loading for finding matches
+            <View>
+              <LottieView
+                source={require('../assets/animations/preloader.json')}
+                autoPlay
+                speed={0.75}
+                loop={true}
+                style={styles.animation}
+              />
+              <Text style={{fontFamily: 'orkney-light', fontSize: 25, textAlign: 'center', color: 'grey'}}>Looking for matches...</Text>
+            </View>
+          ) : (
+            // Show match list
+            <Text style={{fontFamily: 'orkney-light', fontSize: 25, textAlign: 'center', color: 'grey'}}>HELL YEAH YOU HAVE MATCHES</Text>
+          )}
+
 
         </ScrollView>
         <AwesomeAlert

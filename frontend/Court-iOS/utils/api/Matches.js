@@ -6,6 +6,10 @@ export async function getMatches() {
   return getAuthToken()
     .then((token) => {
       // Got token
+      if (token == null) {
+        alert('Null token in API call');
+        return;
+      }
       return fetch(Network.base_api_url + 'matches', {
         method: 'GET',
         headers: new Headers({'Authorization': token}),
@@ -29,6 +33,10 @@ export async function deleteMatch(user_id) {
   // Make api call to fetch a user's matches
   return getAuthToken()
     .then((token) => {
+      if (token == null) {
+        alert('Null token in API call')
+        return;
+      }
       // Got token
       return fetch(Network.base_api_url + `matches/${user_id}`, {
         method: 'DELETE',
