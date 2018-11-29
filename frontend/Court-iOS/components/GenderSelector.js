@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Icon, LinearGradient } from 'expo';
+import { Icon, Haptic, LinearGradient } from 'expo';
 
 import { Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Colors from '../constants/Colors';
@@ -15,11 +15,13 @@ export default class GenderSelector extends React.Component {
   }
 
   genderSelected(gender) {
+    Haptic.impact('medium');
     this.setState({ selfSelected: gender });
     this.props.onGenderSelected(gender);
   }
 
   preferenceSelected(gender) {
+    Haptic.impact('medium');
     this.setState({ otherSelected: gender });
     this.props.onPreferenceSelected(gender);
   }

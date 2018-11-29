@@ -85,3 +85,89 @@ exports[`Renders Default InterestsItem 1`] = `
   </View>
 </View>
 `;
+
+exports[`Renders InterestsItem w/ Custom Color 1`] = `
+<View
+  accessibilityComponentType={undefined}
+  accessibilityLabel={undefined}
+  accessibilityTraits={undefined}
+  accessible={true}
+  collapsable={undefined}
+  hasTVPreferredFocus={undefined}
+  hitSlop={undefined}
+  isTVSelectable={true}
+  nativeID={undefined}
+  onLayout={undefined}
+  onResponderGrant={[Function]}
+  onResponderMove={[Function]}
+  onResponderRelease={[Function]}
+  onResponderTerminate={[Function]}
+  onResponderTerminationRequest={[Function]}
+  onStartShouldSetResponder={[Function]}
+  style={
+    Object {
+      "opacity": 1,
+    }
+  }
+  testID={undefined}
+  tvParallaxProperties={undefined}
+>
+  <View
+    style={
+      Object {
+        "alignItems": "center",
+        "borderColor": "#FA709A",
+        "borderRadius": 30,
+        "borderWidth": 1,
+        "flexDirection": "row",
+        "justifyContent": "center",
+        "margin": 5,
+        "paddingHorizontal": 10,
+        "paddingVertical": 5,
+      }
+    }
+  >
+    // Optional: add image preview here
+    <View
+      style={
+        Object {
+          "alignItems": "flex-start",
+          "flexDirection": "column",
+          "marginLeft": 5,
+        }
+      }
+    >
+      <Text
+        accessible={true}
+        allowFontScaling={true}
+        ellipsizeMode="tail"
+        style={
+          Object {
+            "color": "#FA709A",
+            "fontFamily": "orkney-regular",
+            "fontSize": 20,
+            "paddingTop": 5,
+          }
+        }
+      >
+        The Office
+      </Text>
+      <Text
+        accessible={true}
+        allowFontScaling={true}
+        ellipsizeMode="tail"
+        style={
+          Object {
+            "color": "rgba(250, 112, 154, 0.8)",
+            "fontFamily": "orkney-light",
+            "fontSize": 15,
+            "marginTop": -2,
+          }
+        }
+      >
+        American Sitcom
+      </Text>
+    </View>
+  </View>
+</View>
+`;

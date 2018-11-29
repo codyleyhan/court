@@ -9,8 +9,6 @@ from court.database import db
 from court.errors import AuthorizationError, NotFoundError, ValidationError
 from court.users.models import User, Profile
 
-# TODO(codyleyhan): Need to add tons of try catches
-
 class AuthService:
   """
   Handles all business logic for creating and managing user's chat threads.

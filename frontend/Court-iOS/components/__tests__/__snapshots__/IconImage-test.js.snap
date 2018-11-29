@@ -3,13 +3,16 @@
 exports[`Renders Default IconImage 1`] = `
 <View
   style={
-    Object {
-      "alignItems": "center",
-      "backgroundColor": "#000",
-      "height": 100,
-      "justifyContent": "center",
-      "width": 100,
-    }
+    Array [
+      Object {
+        "alignItems": "center",
+        "backgroundColor": "#000",
+        "height": 100,
+        "justifyContent": "center",
+        "width": 100,
+      },
+      Object {},
+    ]
   }
 >
   <Image

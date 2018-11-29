@@ -10,6 +10,7 @@ import {
   View,
 } from 'react-native';
 import LottieView from 'lottie-react-native';
+import { Haptic } from 'expo';
 
 import { Transition } from 'react-navigation-fluid-transitions';
 import Mask from 'react-native-mask';
@@ -25,6 +26,7 @@ export default class ConfirmationScreen extends React.Component {
   };
 
   goNext() {
+    Haptic.impact('light');
     this.props.navigation.navigate('App');
   }
 

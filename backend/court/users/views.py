@@ -84,7 +84,8 @@ class UserAPI(MethodView):
               "width": 320
             }
           }
-        }
+        },
+        "exists": true
       }
 
     :return: a Flask HTTP response with after a selected user's login flow.
