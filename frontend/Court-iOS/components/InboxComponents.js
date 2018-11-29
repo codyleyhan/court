@@ -17,10 +17,17 @@ export class InboxItem extends React.Component {
     Haptic.impact('light');
   }
 
+  onLongPress = () => {
+    if (this.props.onLongPress) {
+      Haptic.impact('medium');
+      this.props.onLongPress();
+    }
+  }
+
   render() {
     const { animalName, color, imgUrl, name, lastMessage, lastTime, percent} = this.props;
     return (
-      <TouchableOpacity activeOpacity={0.5} onPress={this.onPressChat}>
+      <TouchableOpacity activeOpacity={0.5} onPress={this.onPressChat} onLongPress={this.onLongPress}>
         <View style={styles.InboxCard}>
           <View style={styles.avatarWrapper}>
             <Avatar width={65} imgURL={imgUrl} animalName={animalName} color={color}/>
