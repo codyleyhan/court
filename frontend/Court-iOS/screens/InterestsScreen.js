@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 
 import { Transition } from 'react-navigation-fluid-transitions';
+import { Haptic } from 'expo';
 import Mask from 'react-native-mask';
 
 import Colors from '../constants/Colors';
@@ -46,6 +47,7 @@ export default class InterestsScreen extends React.Component {
   }
 
   goNext(user, genderSelection) {
+    Haptic.impact('light');
     // Publish interests to API, navigate to next page
     // publishInterests(genderSelection, this.state.interests);
     // TODO(rivmist): update the backend with these changes

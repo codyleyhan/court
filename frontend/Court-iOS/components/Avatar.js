@@ -10,7 +10,7 @@ import IconImage from './IconImage';
 */
 export default class Avatar extends React.Component {
   render() {
-    const { width, imgURL, color, animalName } = this.props;
+    const { width, imgURL, color, animalName, showSubIcon } = this.props;
     const size = width;
 
     let mainAvatar = null;
@@ -20,7 +20,7 @@ export default class Avatar extends React.Component {
                         source={{ uri: imgURL }}
                      />);
     } else if (animalName && color) {
-      mainAvatar = ( <IconImage 
+      mainAvatar = ( <IconImage
                         avatar={ animalName }
                         size={ size }
                         color={ color }
@@ -33,8 +33,8 @@ export default class Avatar extends React.Component {
     }
 
     let subAvatar = null;
-    if (animalName && color && imgURL) {
-      subAvatar = ( <IconImage 
+    if (animalName && color && imgURL && showSubIcon) {
+      subAvatar = ( <IconImage
                         avatar={ animalName }
                         size={ .3 * size }
                         color={ color }

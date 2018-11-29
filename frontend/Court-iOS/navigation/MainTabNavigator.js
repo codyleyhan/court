@@ -6,11 +6,15 @@ import Colors from '../constants/Colors';
 
 import TabBarIcon from '../components/TabBarIcon';
 import InboxScreen from '../screens/InboxScreen';
+import ChatScreen from '../screens/ChatScreen';
+import ChatProfileScreen from '../screens/ChatProfileScreen';
 import LinksScreen from '../screens/LinksScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 
 const HomeStack = createStackNavigator({
   Home: InboxScreen,
+  Chats: ChatScreen,
+  ChatProfile: ChatProfileScreen,
 });
 
 HomeStack.navigationOptions = {

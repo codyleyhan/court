@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Icon, LinearGradient } from 'expo';
+import { Icon, Haptic, LinearGradient } from 'expo';
 
 import {  Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Colors from '../constants/Colors';
@@ -21,10 +21,15 @@ export default class InterestsItem extends React.Component {
     const oldState = this.state;
     if (oldState.selected) {
       // Remove item
-      onRemoveInterest(id);
+      if (onRemoveInterest) {
+        onRemoveInterest(id);
+      }
     } else {
       // Add item
-      onAddInterest(id, {title: title, description: description, imgUrl: imgUrl});
+      if (onAddInterest) {
+        Haptic.impact('medium');
+        onAddInterest(id, {title: title, description: description, imgUrl: imgUrl});
+      }
     }
     this.setState({ selected: !oldState.selected });
   }
@@ -32,6 +37,7 @@ export default class InterestsItem extends React.Component {
   render() {
     const {
       id,
+      color,
       imgUrl,
       disableSelect,
       showRemoveIcon,
@@ -41,11 +47,11 @@ export default class InterestsItem extends React.Component {
     } = this.props;
 
     const { selected } = this.state;
-
+    const styleColor = color ? color : '#FA709A';
     return (
       <TouchableOpacity onPress={disableSelect ? null : this.toggleSelected.bind(this)} activeOpacity={0.75}>
         {selected ? (
-          <LinearGradient style={showRemoveIcon ? styles.topSelectedWrapper : styles.selectedWrapper} colors={['#FA709A', '#FA709A']} start={[0, 0.5]} end={[1, 0.5]}>
+          <View style={[showRemoveIcon ? styles.topSelectedWrapper : styles.selectedWrapper, {backgroundColor: styleColor}]} >
             // Optional: add image preview here
             {imgUrl && (
               <Avatar width={40} imgURL={imgUrl} />
@@ -71,7 +77,7 @@ export default class InterestsItem extends React.Component {
                 />
               </View>
             )}
-          </LinearGradient>
+          </View>
         ) : (
           <View style={styles.unselectedWrapper}>
             // Optional: add image preview here
