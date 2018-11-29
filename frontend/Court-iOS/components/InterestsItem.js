@@ -126,7 +126,7 @@ InterestsItem.propTypes = {
   */
   disableSelect: PropTypes.bool,
   /**
-  * Displays an dismiss icon on the right of the component
+  * Displays a dismiss icon on the right of the component
   */
   showRemoveIcon: PropTypes.bool,
   /**
@@ -141,6 +141,10 @@ InterestsItem.propTypes = {
   * Callback for removing a given interest (used in onPress handler for the removeIcon)
   */
   onRemoveInterest: PropTypes.func,
+  /**
+  * Callback for adding a given interest (used in onPress handler for the addIcon)
+  */
+  onAddInterest: PropTypes.func,
 }
 
 const styles = StyleSheet.create({

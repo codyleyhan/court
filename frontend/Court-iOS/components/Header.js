@@ -62,9 +62,17 @@ const styles = StyleSheet.create({
 
 Header.propTypes = {
   /**
+  * Specifies header color 
+  */
+  color: PropTypes.string,
+  /**
   * Text to be rendered in center of header
   */
   text: PropTypes.string.isRequired,
+  /**
+  * Stack of previously viewed screens - required when showBack == True
+  */
+  navigation: PropTypes.object,
   /**
   * Component to be rendered on left side of header
   */
@@ -73,4 +81,8 @@ Header.propTypes = {
   * Component to be rendered on right side of header
   */
   leftIcon: PropTypes.node,
+  /**
+  * Displays the back icon on the left side of the component
+  */
+  showBack: PropTypes.bool,
 }

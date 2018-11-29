@@ -127,7 +127,7 @@ exports[`Renders Default InboxCard 1`] = `
           Object {
             "color": "#21ACA5",
             "fontFamily": "orkney-medium",
-            "fontSize": 25,
+            "fontSize": 22,
           }
         }
       >
@@ -171,7 +171,7 @@ exports[`Renders Default InboxCard 1`] = `
           Object {
             "color": "#21ACA5",
             "fontFamily": "orkney-medium",
-            "fontSize": 25,
+            "fontSize": 22,
           }
         }
       >

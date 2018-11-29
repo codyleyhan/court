@@ -48,6 +48,14 @@ export class InboxItem extends React.Component {
 
 InboxItem.propTypes = {
   /**
+  * The string uri to fetch corresponding to a local uri
+  */
+  animalName: PropTypes.string,
+  /**
+  * Background color of icon image
+  */
+  color: PropTypes.string,
+  /**
   * URL for the given user's profile picture
   */
   imgUrl: PropTypes.string,
