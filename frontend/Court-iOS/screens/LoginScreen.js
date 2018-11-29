@@ -36,7 +36,7 @@ export default class LoginScreen extends React.Component {
 
   async storeItems(response) {
     try {
-      await AsyncStorage.setItem(Authentication.AUTH_USER, JSON.stringify(response.user));
+      await AsyncStorage.setItem(Authentication.AUTH_USER, JSON.stringify(response.profile));
       await AsyncStorage.setItem(Authentication.AUTH_TOKEN, response.token);
     } catch (error) {
       // Error saving data

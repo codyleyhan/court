@@ -47,6 +47,15 @@ export default class InterestsScreen extends React.Component {
     this.setState({ interests });
   }
 
+  async storeItems(user) {
+    try {
+      await AsyncStorage.setItem(Authentication.AUTH_USER, JSON.stringify(response.user));
+    } catch (error) {
+      // Error saving data
+      alert('Error saving intererests', 'Please try again');
+    }
+  }
+
   goNext(user, genderSelection) {
     Haptic.impact('light');
     // Generate a random color/animal combination
@@ -60,6 +69,8 @@ export default class InterestsScreen extends React.Component {
     publishInterests(genderSelection, this.state.interests, color, animal).then((response) => {
       if (response !== null) {
         console.log(response);
+        // Store items for later use
+        this.storeItems(response.profile);
         this.props.navigation.navigate('Confirmation', {user: user});
       } else {
         // Error
