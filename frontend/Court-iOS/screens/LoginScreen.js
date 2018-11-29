@@ -50,7 +50,11 @@ export default class LoginScreen extends React.Component {
     this.setState({ isLoading: true });
     logInWithFacebook().then((response) => {
       console.log(response);
-      if (response && response.success) {
+      if (response && response.success && response.exists) {
+        // User successfully logged in, but we should go to app instead of setup
+        this.storeItems(response);
+        this.props.navigation.navigate('App');
+      } else if (response && response.success) {
         // Store credentials
         this.storeItems(response);
         // Navigate to setup screen
