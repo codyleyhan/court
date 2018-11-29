@@ -98,6 +98,7 @@ def test_inactivate_match(app):
     matches_for_2 = match_service.get_current_matches()
     assert matches_for_2 == {}
 
+def test_inactivate_match_noop(app):
   with app.app_context():
     g.user_id = '1'
     auth_service = AuthService('secret', None, None)
@@ -192,6 +193,7 @@ def test_add_match_to_profile(app):
     assert len(matches_for_3) == 1
     assert matches_for_3['1'] == mock_matches_3['1']
 
+def test_add_match_to_profile_with_duplicate_match(app):
   with app.app_context():
     g.user_id = '1'
     auth_service = AuthService('secret', None, None)
@@ -231,7 +233,7 @@ def test_add_match_to_profile(app):
     assert len(matches_for_1) == 1
     assert matches_for_1['2'] == mock_matches_1['2']
 
-def test_unlock_next_profile_feature(app):
+def test_unlock_next_profile_feature_1(app):
   with app.app_context():
     g.user_id = '1'
     auth_service = AuthService('secret', None, None)
@@ -295,6 +297,7 @@ def test_unlock_next_profile_feature(app):
     matches_for_2 = match_service.get_current_matches()
     assert matches_for_2['1'] == mock_matches_2['1']
 
+def test_unlock_next_profile_feature_2(app):
   with app.app_context():
     g.user_id = '1'
     auth_service = AuthService('secret', None, None)

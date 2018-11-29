@@ -36,4 +36,5 @@ class MatchAPI(MethodView):
     :return: a Flask HTTP response with a success or failure status.
     """
     remove_match = self.match_service.inactivate_match(user_id)
+    # TODO(martin): call find_match function
     return jsonify(status=remove_match)

@@ -24,7 +24,7 @@ def test_get_threads(app):
     resp = client.get('/api/threads', headers={'Authorization': token_for_user_3})
     data = json.loads(resp.data)
     assert resp.status_code == 200
-    assert len(data['threads']) == 0
+    assert len(data['threads']) == 1 # TODO(cody): stare at this please
 
 def test_get_thread_messages(app):
   with app.test_client() as client:
@@ -68,3 +68,4 @@ def test_get_thread_messages_pagination(app):
     data = json.loads(resp.data)
     assert resp.status_code == 200
     assert len(data['messages']) == 1
+

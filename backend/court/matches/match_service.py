@@ -68,6 +68,7 @@ class MatchService:
 
     setattr(user, 'match_history', user_match_history)
     setattr(matched_user, 'match_history', matched_user_match_history)
+    self.db.session.commit()
 
     return True
 
@@ -133,6 +134,7 @@ class MatchService:
 
     setattr(user, 'match_history', user_match_history)
     setattr(matched_user, 'match_history', matched_user_match_history)
+    self.db.session.commit()
 
     return True
 
@@ -228,5 +230,6 @@ class MatchService:
 
     setattr(user, 'match_history', user_match_history)
     setattr(matched_user, 'match_history', matched_user_match_history)
+    self.db.session.commit()
 
     return (matched_user_percent_unlock, user_percent_unlock)
