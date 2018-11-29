@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   nameStyle: {
-    fontSize: 25,
+    fontSize: 22,
     fontFamily: 'orkney-medium',
     color: '#21ACA5',
   },
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     color: 'grey',
   },
   percentStyle: {
-    fontSize: 25,
+    fontSize: 22,
     fontFamily: 'orkney-medium',
     color: '#21ACA5',
   },
