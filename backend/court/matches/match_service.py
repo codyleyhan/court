@@ -32,7 +32,7 @@ class MatchService:
     if 'user_id' in g:
       user = self.user_store.query.get(g.user_id)
       g.user = user
-    matches = self.db.session.query(User).filter_by(id=g.user_id).first().profile.match_history
+    matches = self.db.session.query(Profile).filter_by(id=g.user_id).first().match_history
     active_matches = { k : v for (k, v) in matches.items() if v['active'] }
     return active_matches
 
@@ -46,10 +46,9 @@ class MatchService:
     if 'user_id' in g:
       user = self.user_store.query.get(g.user_id)
       g.user = user
-    match_to = self.db.session.query(User).filter_by(id=g.user_id).first().profile.match_history[user_id]
-    match_to['active'] = False
-    match_form = self.db.session.query(User).filter_by(id=user_id).first().profile.match_history[g.user_id]
-    match_from['active'] = False
+    match_to = self.db.session.query(Profile).filter_by(id=g.user_id).first().match_history[user_id]
+    match_from = self.db.session.query(Profile).filter_by(id=user_id).first().match_history[g.user_id]
+    match_to['active'], match_from['active'] = False, False
     return True
 
   # TODO: test & verify
@@ -64,11 +63,11 @@ class MatchService:
     if 'user_id' in g:
       user = self.user_store.query.get(g.user_id)
       g.user = user
-    match_history = self.db.session.query(User).filter_by(id=g.user_id).first().profile.match_history
+      match_history = self.db.session.query(Profile).filter_by(id=g.user_id).first().match_history
     if user_id in match_history.keys():
       return False
     else: # Create initial match
-      matched_user = self.db.session.query(User).filter_by(id=user_id).first().profile._asdict()
+      matched_user = self.db.session.query(Profile).filter_by(id=user_id).first()._asdict()
       match_history[user_id] = {
         'active': True,
         'percent_unlocked': 0,
@@ -97,10 +96,10 @@ class MatchService:
     if 'user_id' in g:
       user = self.user_store.query.get(g.user_id)
       g.user = user
-    matched_profile = self.db.session.query(User).filter_by(id=user_id).first().profile._asdict()
-    matched_info = self.db.session.query(User).filter_by(id=g.user_id).first().profile.match_history[user_id]
+    matched_profile = self.db.session.query(Profile).filter_by(id=user_id).first()._asdict()
+    matched_info = self.db.session.query(Profile).filter_by(id=g.user_id).first().match_history[user_id]
 
-    if len(matched_info['interests']) < len(matched_profile['interests']):
+    if len(matched_info['profile']['interests']) < len(matched_profile['interests']):
       # Continue unlocking interests
       interests_left = list(set(matched_profile['interests']) - set(matched_info_interests))
       selected_interest_key = interests_left[0]
@@ -118,9 +117,11 @@ class MatchService:
         profile_picture = matched_profile['profile_picture']
         matched_info['profile']['profile_picture'] = last_name
 
-    unlocked_amount = len(matched_info['profile']) + \
+    unlocked_amount = (1 if len(matched_info['profile']['first_name'])      != 0 else 0) + \
+                      (1 if len(matched_info['profile']['last_name'])       != 0 else 0) + \
+                      (1 if len(matched_info['profile']['profile_picture']) != 0 else 0) + \
                       len(matched_info['profile']['interests']) - 1
-    total_amount = len(matched_profile['interests']) + 3
+    total_amount = len(matched_profile['interests']) + 3 # (first_name, last_name, profile_picture)
     percent_unlocked = unlocked_amount // total_amount * 100
     matched_info['percent_unlocked'] = percent_unlocked
 

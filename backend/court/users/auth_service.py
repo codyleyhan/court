@@ -96,6 +96,18 @@ class AuthService:
     except:
       raise AuthorizationError()
 
+  def get_current_user_id(self):
+    """
+    Get user id of user in the current context.
+
+    :return: User object of the user in the current context, otherwise return None
+    :rtype: str
+    """
+    if 'user_id' in g:
+      return g.user_id
+
+    return None
+
   def get_current_user(self):
     """
     Get user object of user in the current context.
@@ -140,27 +152,14 @@ class AuthService:
     def _update_profile(profile, fields):
       fields['updated_at'] = dt.datetime.utcnow()
       for key, value in fields.items():
-        if key not in Profile.__table__.columns:
-          raise NotFoundError
+        # key not in Profile is a no-op
         setattr(profile, key, value)
       self.db.session.commit()
 
-    profile = get_current_user_profile()
+    profile = self.get_current_user_profile()
     if profile is not None:
       _update_profile(profile, fields)
       return profile
-
-    return None
-
-  def get_current_user_id(self):
-    """
-    Get user id of user in the current context.
-
-    :return: User object of the user in the current context, otherwise return None
-    :rtype: str
-    """
-    if 'user_id' in g:
-      return g.user_id
 
     return None
 

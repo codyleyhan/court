@@ -27,6 +27,8 @@ def seed_data(db_conn):
   :param db_conn: the db connection
   """
   db_conn.create_all()
+
+
   user1 = User()
   user1.id = 1
   user1.email = '1@ucla.edu'

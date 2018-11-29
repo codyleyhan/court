@@ -10,6 +10,11 @@ class User(db.Model):
   """
   __tablename__ = 'users'
 
+  def __init__(self, id=None, email='', profile=None):
+    self.id = id
+    self.email = email
+    self.profile = profile if not None else Profile(user_id=self.id)
+
   id = db.Column(db.BigInteger, primary_key=True)
   email = db.Column(db.String(128), unique=True, nullable=False)
   profile = db.relationship('Profile', backref='user', lazy=True, uselist=False)
@@ -33,8 +38,8 @@ class Profile(db.Model):
   """
   __tablename__ = 'profiles'
 
-  def __init__(self, id=None, first_name=None, last_name=None, profile_picture=None):
-    self.id = id
+  def __init__(self, user_id=0, first_name='', last_name='', profile_picture=''):
+    self.user_id = int(user_id)
     self.first_name = first_name
     self.last_name = last_name
     self.profile_picture = profile_picture
@@ -44,7 +49,7 @@ class Profile(db.Model):
   user_id = db.Column(db.BigInteger, db.ForeignKey('users.id'), nullable=False)
   first_name = db.Column(db.String(128), nullable=False)
   last_name = db.Column(db.String(128), nullable=False)
-  profile_picture = db.Column(db.String(512))
+  profile_picture = db.Column(db.String(512), default='')
 
   gender = db.Column(db.String(128), nullable=False, default='')
   preferred_gender = db.Column(db.String(128), nullable=False, default='') # M/F/Both
