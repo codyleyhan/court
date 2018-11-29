@@ -68,13 +68,16 @@ class MatchService:
     if user_id in match_history.keys():
       return False
     else: # Create initial match
+      matched_user = self.db.session.query(User).filter_by(id=user_id).first().profile._asdict()
       match_history[user_id] = {
         'active': True,
         'percent_unlocked': 0,
         'profile': {
+          'animal': matched_user['animal'],
+          'color': matched_user['color'],
           'first_name': '',
           'last_name': '',
-          'profile_picture': ''
+          'profile_picture': '',
           'interests': {}
         }
       }
@@ -98,27 +101,27 @@ class MatchService:
     matched_info = self.db.session.query(User).filter_by(id=g.user_id).first().profile.match_history[user_id]
 
     if len(matched_info['interests']) < len(matched_profile['interests']):
-      interests_left = list(set(matched_profile['interests'])-set(matched_info_interests))
+      # Continue unlocking interests
+      interests_left = list(set(matched_profile['interests']) - set(matched_info_interests))
       selected_interest_key = interests_left[0]
       selected_interest_value = matched_profile['interests'][selected_interest_key]
       matched_info['profile']['interests'][selected_interest] = selected_interest_value
-    else: # Start to unlock first_name, last_name, and profile_picture
+    else:
+      # Start to unlock first_name, last_name, and profile_picture
       if len(matched_info['profile']['first_name']) == 0:
         first_name = matched_profile['first_name']
         matched_info['profile']['first_name'] = first_name
       elif len(matched_info['profile']['last_name']) == 0:
         last_name = matched_profile['last_name']
         matched_info['profile']['last_name'] = last_name
-      elif len(matched_info['profile']['profile_picture']) == 0:
+      else: # len(matched_info['profile']['profile_picture']) == 0:
         profile_picture = matched_profile['profile_picture']
         matched_info['profile']['profile_picture'] = last_name
-      else:
-        raise NotFoundError
 
     unlocked_amount = len(matched_info['profile']) + \
                       len(matched_info['profile']['interests']) - 1
     total_amount = len(matched_profile['interests']) + 3
     percent_unlocked = unlocked_amount // total_amount * 100
-    matched_info['percenet_unlocked'] = percent_unlocked
+    matched_info['percent_unlocked'] = percent_unlocked
 
     return percent_unlocked
