@@ -1,5 +1,6 @@
 import 'react-native';
 import React from 'react';
+import Colors from '../../constants/Colors';
 import InterestsCloud from '../InterestsCloud';
 import renderer from 'react-test-renderer';
 
@@ -9,6 +10,23 @@ it('Renders Default InterestsCloud', () => {
   const recommendations = [{id: 'kgs://jsh12', title: 'Interest Rec 1'}, {id: 'kgs://3jh43', title: 'Interest Rec 2'}];
   const tree = renderer.create(
     <InterestsCloud
+      interests={interests}
+      recommendations={recommendations}
+      onAddInterest={mocks.onAddInterest}
+      onRemoveInterest={mocks.onRemoveInterest}
+    />
+  ).toJSON();
+
+  expect(tree).toMatchSnapshot();
+});
+
+it('Renders InterestsCloud w/ Custom Color', () => {
+  const mocks = { onAddInterest: jest.fn(), onRemoveInterest: jest.fn() };
+  const interests = {'kgs://12hv3': {title: 'The Office', description: 'American Sitcom', imgUrl: 'test.url'}};
+  const recommendations = [{id: 'kgs://jsh12', title: 'Interest Rec 1'}, {id: 'kgs://3jh43', title: 'Interest Rec 2'}];
+  const tree = renderer.create(
+    <InterestsCloud
+      color={Colors.merlot}
       interests={interests}
       recommendations={recommendations}
       onAddInterest={mocks.onAddInterest}

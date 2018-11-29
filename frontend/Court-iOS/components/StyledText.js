@@ -24,3 +24,10 @@ export class LightText extends React.Component {
     return <Text {...this.props} style={[this.props.style, { fontFamily: 'orkney-light' }]} />;
   }
 }
+
+StyledText.propTypes = {
+  /**
+  * Specifies render style for text
+  */
+  style: PropTypes.object,
+};
