@@ -135,25 +135,3 @@ class ProfileAPI(MethodView):
     profile = self.auth_service.update_current_user_profile(fields)
     return jsonify(profile=profile._asdict())
 
-class MatchAPI(MethodView):
-  """
-  Provides the view layer API for Matches.
-  """
-  def __init__(self, auth_service):
-    """
-    Creates a new MatchAPI object. Should be called with
-    MatchAPI.as_view('match_api', auth_service) to initialize.
-
-    :param auth_service: an AuthService instance
-    :type auth_service: court.users.auth_service.AuthService
-    """
-    self.auth_service = auth_service
-
-  def get(self):
-    """
-    Processes a HTTP GET request for the match REST API.
-
-    :return: a Flask HTTP response with a User's current matches.
-    """
-    matches = self.auth_service.get_current_matches()
-    return jsonify(matches=matches)

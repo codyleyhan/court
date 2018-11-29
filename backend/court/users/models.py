@@ -65,14 +65,8 @@ class Profile(db.Model):
   def match_history(self):
     return json.loads(self._match_history)
   @match_history.setter
-  def match_history(self, value, unlock=False):
-    # TODO(anthonymirand): add unlocking support
-    match_history = json.loads(self._match_history)
-    user_id = str(value)
-    match_history[user_id] = {}
-    match_history[user_id]['active'] = True
-    match_history[user_id]['profile'] = {}
-    self._match_history = json.dumps(match_history)
+  def match_history(self, value):
+    self._match_history = json.dumps(value)
 
   created_at = db.Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
   updated_at = db.Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)

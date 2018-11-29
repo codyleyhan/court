@@ -10,7 +10,9 @@ from court.database import db
 from court.sockets import socketio
 from court.errors import *
 from court.users.auth_service import AuthService
-from court.users.views import ProfileAPI, UserAPI, MatchAPI
+from court.users.views import ProfileAPI, UserAPI
+from court.matches.match_service import MatchService
+from court.matches.views import MatchAPI
 
 from court.match import Match
 
@@ -66,10 +68,8 @@ def add_routes(app, socketio):
   # register user views
   user_view = UserAPI.as_view('user_api', auth_service)
   profile_view = auth_service.login_required(ProfileAPI.as_view('profile_api', auth_service))
-  match_view = auth_service.login_required(MatchAPI.as_view('match_api', auth_service))
   app.add_url_rule('/api/users', view_func=user_view, methods=['POST'])
   app.add_url_rule('/api/users', view_func=profile_view, methods=['GET', 'PUT'])
-  app.add_url_rule('/api/matches', view_func=match_view, methods=['GET'])
 
   # register thread views
   thread_service = ThreadService()
@@ -78,6 +78,12 @@ def add_routes(app, socketio):
   app.add_url_rule('/api/threads', view_func=thread_view, methods=['GET'])
   app.add_url_rule('/api/threads/<int:thread_id>/messages', view_func=thread_message_view,
     methods=['GET'])
+
+  # register match views
+  match_service = MatchService()
+  match_view = auth_service.login_required(MatchAPI.as_view('match_api', match_service, auth_service))
+  app.add_url_rule('/api/matches', view_func=match_view, methods=['GET'])
+  app.add_url_rule('/api/matches/<int:user_id>', view_func=match_view, methods=['DELETE'])
 
   # register socket
   socketio.on_namespace(ThreadSockets(None, auth_service, thread_service, app.logger))

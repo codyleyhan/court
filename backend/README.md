@@ -36,4 +36,4 @@ make html
 |message_api  |GET               |/api/threads/<int:thread_id>/messages
 |user_api     |POST              |/api/users
 |profile_api  |GET, PUT          |/api/users
-|match_api    |GET               |/api/matches
+|match_api    |GET, DELETE       |/api/matches

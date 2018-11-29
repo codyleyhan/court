@@ -6,7 +6,7 @@ from functools import wraps
 import datetime as dt
 
 from court.database import db
-from court.errors import AuthorizationError, ValidationError
+from court.errors import AuthorizationError, NotFoundError, ValidationError
 from court.users.models import User, Profile
 
 # TODO(codyleyhan): Need to add tons of try catches
@@ -140,16 +140,13 @@ class AuthService:
     def _update_profile(profile, fields):
       fields['updated_at'] = dt.datetime.utcnow()
       for key, value in fields.items():
+        if key not in Profile.__table__.columns:
+          raise NotFoundError
         setattr(profile, key, value)
       self.db.session.commit()
 
-    # TODO(anthonymirand): try/catch valid fields
-    # TODO(anthonymirand): reuse other functions
-    user_id = self.get_current_user_id()
-    if 'user_id' in g:
-      user = self.user_store.query.get(g.user_id)
-      g.user = user
-      profile = self.db.session.query(User).filter_by(id=user_id).first().profile
+    profile = get_current_user_profile()
+    if profile is not None:
       _update_profile(profile, fields)
       return profile
 
@@ -166,23 +163,6 @@ class AuthService:
       return g.user_id
 
     return None
-
-  def get_current_matches(self):
-    """
-    Get matches list of user in the current context.
-
-    :return: Match dictionary of the user in the current context, otherwise return empty
-    :rtype: dict
-    """
-    user_id = self.get_current_user_id()
-    if 'user_id' in g:
-      user = self.user_store.query.get(g.user_id)
-      g.user = user
-      matches = self.db.session.query(User).filter_by(id=user_id).first().profile.match_history
-      active_matches = { k : v for (k, v) in matches.items() if v['active'] }
-      return active_matches
-
-    return {}
 
   def login_required(self, f):
     """
