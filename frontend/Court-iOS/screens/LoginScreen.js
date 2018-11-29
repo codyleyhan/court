@@ -61,8 +61,8 @@ export default class LoginScreen extends React.Component {
         this.props.navigation.navigate('Setup', { user: response.user });
       } else {
         alert('Login failed');
+        this.setState({ isLoading: false });
       }
-      this.setState({ isLoading: false });
     });
   }
 
