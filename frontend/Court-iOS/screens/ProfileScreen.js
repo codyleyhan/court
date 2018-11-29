@@ -6,8 +6,11 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
+import { Icon } from 'expo';
+import AwesomeAlert from 'react-native-awesome-alerts';
 
 import Avatar from '../components/Avatar';
 import Header from '../components/Header';
@@ -23,6 +26,7 @@ export default class SettingsScreen extends React.Component {
 
   state = {
     profileInfo: {},
+    showDeleteModal: false,
   };
 
   constructor() {
@@ -52,6 +56,19 @@ export default class SettingsScreen extends React.Component {
       });
     }
     return recommendations;
+  }
+
+  setModalVisible = (visible) => {
+    this.setState({ showDeleteModal: visible });
+  }
+
+  // Removes a current users information and auth token, redirects to login screen
+  logout = () => {
+    AsyncStorage.removeItem(Authentication.AUTH_USER).then(() => {
+      AsyncStorage.removeItem(Authentication.AUTH_TOKEN).then(() => {
+        this.props.navigation.navigate('Auth');
+      })
+    });
   }
 
   render() {
@@ -107,6 +124,45 @@ export default class SettingsScreen extends React.Component {
 
         </ScrollView>
 
+        // Logout button
+
+        <View style={[styles.logoutButton, {backgroundColor: Colors[color]}]}>
+          <TouchableOpacity onPress={() => this.setModalVisible(true)} activeOpacity={0.5}>
+            <Icon.Ionicons
+              name='ios-log-out'
+              size={25}
+              color='white'
+            />
+          </TouchableOpacity>
+        </View>
+
+        // Logout Confirmation Modal
+        <AwesomeAlert
+          show={this.state.showDeleteModal}
+          showProgress={false}
+          title="Logout?"
+          message="Your profile info and matches will be saved."
+          closeOnTouchOutside={true}
+          closeOnHardwareBackPress={false}
+          showCancelButton={true}
+          showConfirmButton={true}
+          cancelText="Cancel"
+          confirmText="Logout"
+          contentContainerStyle={styles.removeContainer}
+          titleStyle={styles.removeTitle}
+          messageStyle={styles.removeMessage}
+          cancelButtonStyle={styles.removeButton}
+          confirmButtonStyle={styles.removeButton}
+          cancelButtonTextStyle={styles.cancelButtonText}
+          confirmButtonTextStyle={styles.removeButtonText}
+          confirmButtonColor="#DD6B55"
+          onCancelPressed={() => {
+            this.setModalVisible(false);
+          }}
+          onConfirmPressed={() => {
+            this.logout();
+          }}
+        />
       </View>
     );
   }
@@ -199,5 +255,53 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginVertical: 8,
+  },
+  logoutButton: {
+    ...Platform.select({
+      ios: {
+        shadowColor: 'black',
+        shadowOffset: { height: 8 },
+        shadowOpacity: 0.15,
+        shadowRadius: 9,
+      },
+      android: {
+        elevation: 20,
+      },
+    }),
+    position: 'absolute',
+    top: 45,
+    right: 20,
+    width: 45,
+    height: 45,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 22.5,
+    paddingLeft: 4,
+    zIndex: 100,
+  },
+  removeContainer: {
+    borderRadius: 15,
+  },
+  removeButton: {
+    borderRadius: 15,
+    padding: 20,
+  },
+  removeTitle: {
+    fontFamily: 'orkney-medium',
+    fontSize: 30,
+  },
+  removeMessage: {
+    fontFamily: 'orkney-regular',
+    fontSize: 15,
+  },
+  removeButtonText: {
+    fontFamily: 'orkney-medium',
+    fontSize: 25,
+    paddingTop: 7,
+  },
+  cancelButtonText: {
+    fontFamily: 'orkney-medium',
+    fontSize: 25,
+    paddingTop: 7,
   },
 });
