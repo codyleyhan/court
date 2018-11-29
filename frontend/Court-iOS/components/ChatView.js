@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Icon } from 'expo';
+import { Icon, Haptic } from 'expo';
 import { Bubble, Composer, InputToolbar, GiftedChat, MessageText, Send, Time } from 'react-native-gifted-chat'
 
 import { Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
@@ -8,9 +8,6 @@ import Avatar from './Avatar';
 import Mask from 'react-native-mask';
 import Colors from '../constants/Colors';
 
-/**
-* Creates header with centered text, and optional left and right components
-*/
 export default class ChatView extends React.Component {
   state = {
     messages: [],
@@ -34,6 +31,7 @@ export default class ChatView extends React.Component {
   }
 
   onSend = (messages = []) => {
+    Haptic.impact('light');
     this.setState(previousState => ({
       messages: GiftedChat.append(previousState.messages, messages),
     }));
@@ -50,6 +48,7 @@ export default class ChatView extends React.Component {
           avatar: 'https://heightline.com/wp-content/uploads/Justin-Roberts-640x427.jpg',
         },
       }];
+      Haptic.impact('light');
       this.setState(previousState => ({
         messages: GiftedChat.append(previousState.messages, responseMessages),
       }));
@@ -125,7 +124,7 @@ export default class ChatView extends React.Component {
     const { profileInfo } = this.props;
     const styleColor = (profileInfo && profileInfo.color) ? profileInfo.color : Colors.peach;
     const sendButton = (
-      <View style={{marginRight: 10, marginBottom: 5}}>
+      <View style={{marginRight: 10, marginBottom: 4}}>
         <Mask shape={'circle'}>
           <View style={[styles.sendButton, {backgroundColor: styleColor}]}>
             <Icon.Ionicons
@@ -171,7 +170,7 @@ const styles = StyleSheet.create({
     height: 35,
     alignItems: 'center',
     paddingRight: 2,
-    paddingTop: 2,
+    paddingTop: 1,
   },
   leftBubble: {
     ...Platform.select({
