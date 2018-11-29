@@ -49,7 +49,6 @@ export default class LoginScreen extends React.Component {
     Haptic.impact('light');
     this.setState({ isLoading: true });
     logInWithFacebook().then((response) => {
-      console.log(response);
       if (response && response.success && response.exists) {
         // User successfully logged in, but we should go to app instead of setup
         this.storeItems(response);

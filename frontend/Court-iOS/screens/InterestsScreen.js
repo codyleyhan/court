@@ -68,7 +68,6 @@ export default class InterestsScreen extends React.Component {
     // Publish interests to API, navigate to next page
     publishInterests(genderSelection, this.state.interests, color, animal).then((response) => {
       if (response !== null) {
-        console.log(response);
         // Store items for later use
         this.storeItems(response.profile);
         this.props.navigation.navigate('Confirmation', {user: user});

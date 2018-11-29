@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  AsyncStorage,
   Image,
   Platform,
   ScrollView,
@@ -10,6 +11,8 @@ import {
 
 import Avatar from '../components/Avatar';
 import Header from '../components/Header';
+
+import Authentication from '../constants/Authentication';
 import Colors from '../constants/Colors';
 import InterestsCloud from '../components/InterestsCloud';
 
@@ -18,21 +21,53 @@ export default class SettingsScreen extends React.Component {
     header: null,
   };
 
+  state = {
+    profileInfo: {},
+  };
+
+  constructor() {
+    super();
+    this.getProfile();
+  }
+
+  getProfile = async () => {
+    try {
+      const profile = await AsyncStorage.getItem(Authentication.AUTH_USER);
+      this.setState({ profileInfo: JSON.parse(profile) });
+    } catch (error) {
+      // Error saving data
+      alert('Error loading profile', 'Please login again');
+      // TODO logout user here
+    }
+  }
+
+  // Parses a dict of interests into a list
+  parseInterests = (interests) => {
+    var recommendations = [];
+    if (interests) {
+      Object.keys(interests).map((key, index) => {
+        var tempInterests = interests[key];
+        tempInterests.id = key;
+        recommendations.push(tempInterests);
+      });
+    }
+    return recommendations;
+  }
+
   render() {
-    const { navigation } = this.props;
-    const chatName = navigation.getParam('chatName', 'Profile');
-    //const profileInfo = navigation.getParam('profileInfo', {});
-    const profileInfo = {imgURL: 'https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=1957294744324290&height=300&width=300&ext=1545942632&hash=AeTWXCxPFYgeBIRK', animalName:'sloth', color:Colors.merlot}
+    const { profileInfo } = this.state;
+    const { profile_picture, color, animal, interests, first_name, last_name, gender, preferred_gender } = profileInfo;
     const profileIcon = (
       <Avatar
-        width={160} imgURL={profileInfo.imgURL}
-        color={profileInfo.color}
-        animalName={profileInfo.animalName}
+        width={160}
+        imgURL={profile_picture}
+        color={Colors[color]}
+        animalName={animal}
         showSubIcon={true}
       />
     );
 
-    const recommendations = [{id: '1', title:'The Office', description:'US Sitcom'}, {id: '2', title:'Dog', description:'Animal'},{id: '3', title:'Marvel Comics', description:'Publishing company'},{id: '4', title:'United States mens national soccer team', description:'Soccer team'}];
+    const recommendations = this.parseInterests(interests);
 
     return (
       <View style={styles.container}>
@@ -41,31 +76,31 @@ export default class SettingsScreen extends React.Component {
           {profileIcon}
         </View>
 
-        <View style={[{borderBottomColor: profileInfo.color}, styles.nameContainer]}>
-          <Text style={[{marginTop: 20, color: profileInfo.color}, styles.nameStyle]}>{'Jessica Douma'}</Text>
+        <View style={[{borderBottomColor: Colors[color]}, styles.nameContainer]}>
+          <Text style={[{marginTop: 20, color: Colors[color]}, styles.nameStyle]}>{first_name + ' ' + last_name}</Text>
         </View>
 
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
 
           <View style={styles.pillWrapper}>
             <View style={styles.pill}>
-              <Text style={[{color: profileInfo.color}, styles.preferenceStyle]}>{'Gender:'}</Text>
-              <Text style={[{color: profileInfo.color}, styles.pillTextStyle]}>{'Female'}</Text>
+              <Text style={[{color: Colors[color]}, styles.preferenceStyle]}>{'Gender:'}</Text>
+              <Text style={[{color: Colors[color]}, styles.pillTextStyle]}>{gender}</Text>
             </View>
           </View>
 
           <View style={styles.pillWrapper}>
             <View style={styles.pill}>
-              <Text style={[{color: profileInfo.color}, styles.preferenceStyle]}>{'Preferred Gender:'}</Text>
-              <Text style={[{color: profileInfo.color}, styles.pillTextStyle]}>{'Male'}</Text>
+              <Text style={[{color: Colors[color]}, styles.preferenceStyle]}>{'Preferred Gender:'}</Text>
+              <Text style={[{color: Colors[color]}, styles.pillTextStyle]}>{preferred_gender}</Text>
             </View>
           </View>
 
           <View style={styles.pillWrapper}>
             <View style={styles.interestsPill}>
-              <Text style={[{color: profileInfo.color, marginRight: 200}, styles.preferenceStyle]}>{'Interests:'}</Text>
+              <Text style={[{color: Colors[color], marginRight: 200}, styles.preferenceStyle]}>{'Interests:'}</Text>
               <View style={{marginBottom:30}}>
-                <InterestsCloud color={profileInfo.color} recommendations={recommendations} />
+                <InterestsCloud color={Colors[color]} recommendations={recommendations} />
               </View>
             </View>
           </View>
