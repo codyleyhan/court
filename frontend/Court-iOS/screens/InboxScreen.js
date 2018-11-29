@@ -23,6 +23,7 @@ import { getMatches, deleteMatch } from '../utils/api/Matches';
 export default class InboxScreen extends React.Component {
   state = {
     showDeleteModal: false,
+    profileToDelete: null,
     matches: null,
   };
 
@@ -59,8 +60,9 @@ export default class InboxScreen extends React.Component {
     });
   }
 
-  setModalVisible = (visible) => {
-    this.setState({ showDeleteModal: visible });
+  setModalVisible = (visible, user_id) => {
+    console.log(user_id);
+    this.setState({ showDeleteModal: visible, profileToDelete: user_id });
   }
 
   onNavigateToChat = (name, profileInfo) => {
@@ -68,8 +70,23 @@ export default class InboxScreen extends React.Component {
   }
 
   removeMatch = () => {
-    // TODO: actually remove match here
-    this.setModalVisible(false);
+    deleteMatch(this.state.profileToDelete).then(response => {
+      console.log(response);
+      if (response && response.status) {
+        // Successful, remove from local matches
+        var oldMatches = this.state.matches;
+        const index = oldMatches.map((x) => {return x.user_id}).indexOf(this.state.profileToDelete);
+        console.log(this.state.profileToDelete);
+        if (index >= 0) {
+          oldMatches.splice(index, 1);
+          this.setState({showDeleteModal: false, showmatches: oldMatches, profileToDelete: null});
+        }
+      } else {
+        // error deleting
+        alert('Error removing match from server');
+        this.setModalVisible(false);
+      }
+    });
   }
 
   render() {
@@ -81,7 +98,7 @@ export default class InboxScreen extends React.Component {
         // List of messages
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
             // Display loading for finding matches
-            <FadeWrapper visible={(this.state.matches === null || this.state.matches.length == 0)} >
+            <FadeWrapper visible={this.state.matches === null} >
               <LottieView
                 source={require('../assets/animations/preloader.json')}
                 autoPlay
@@ -91,10 +108,16 @@ export default class InboxScreen extends React.Component {
               />
               <Text style={{fontFamily: 'orkney-light', fontSize: 25, textAlign: 'center', color: 'grey'}}>Looking for matches...</Text>
             </FadeWrapper>
+            // No matches
+            <FadeWrapper visible={this.state.matches !== null && this.state.matches.length == 0} delay={300}>
+              <Text style={{fontFamily: 'orkney-medium', marginTop: 100, fontSize: 35, textAlign: 'center', color: 'grey'}}>No matches...</Text>
+              <Text style={{marginTop: 50, fontSize: 100, textAlign: 'center'}}>😢</Text>
+              <Text style={{fontFamily: 'orkney-regular', marginTop: 50, fontSize: 20, textAlign: 'center', color: 'grey'}}>{"Don't worry, we'll keep looking.\nCome back later to check again!"}</Text>
+            </FadeWrapper>
             // Show match list
             <FadeWrapper visible={this.state.matches !== null && this.state.matches.length > 0} delay={300}>
               {this.state.matches && this.state.matches.map((val, index) => (
-                <InboxItem key={val} profile={val} onPress={this.onNavigateToChat} onLongPress={() => this.setModalVisible(true)} lastMessage="I'm really into cooking in my free time!" lastTime="4:02 PM"/>
+                <InboxItem key={val} profile={val} onPress={this.onNavigateToChat} onLongPress={() => this.setModalVisible(true, val.user_id)} lastMessage="I'm really into cooking in my free time!" lastTime="4:02 PM"/>
               ))}
               // Add a message for new matches
               <Text style={{fontFamily: 'orkney-light', marginTop: 15, textAlign: 'center', color: 'grey'}}>Looking for more chats?</Text>
