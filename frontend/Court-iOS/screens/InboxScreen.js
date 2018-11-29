@@ -33,6 +33,11 @@ export default class InboxScreen extends React.Component {
     this.props.navigation.navigate('Chats', {chatName: name, profileInfo: profileInfo});
   }
 
+  removeMatch = () => {
+    // TODO: actually remove match here
+    this.setModalVisible(false);
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -74,7 +79,7 @@ export default class InboxScreen extends React.Component {
             this.setModalVisible(false);
           }}
           onConfirmPressed={() => {
-            this.setModalVisible(false);
+            this.removeMatch();
           }}
         />
       </View>
