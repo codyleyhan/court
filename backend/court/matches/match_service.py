@@ -168,68 +168,52 @@ class MatchService:
     user_dict = user._asdict()
     matched_user_dict = matched_user._asdict()
 
-    # Unlock matched_user features for current user's match_history
-    if len(user_match_history[str(user_id)]['profile']['interests']) < len(matched_user_dict['interests']):
-      # Continue unlocking interests for matched_user
-      unlocked_interests = user_match_history[str(user_id)]['profile']['interests'].keys()
-      total_interests = matched_user_dict['interests'].keys()
-      interests_left = list(set(total_interests) - set(unlocked_interests))
-      selected_interest_key = interests_left[0]
-      selected_interest_value = matched_user_dict['interests'][selected_interest_key]
-      user_match_history[str(user_id)]['profile']['interests'][selected_interest_key] = selected_interest_value
-    else:
-      # Start to unlock first_name, last_name, and profile_picture for matched_user
-      if user_match_history[str(user_id)]['profile']['first_name'] == "":
-        first_name = matched_user_dict['first_name']
-        user_match_history[str(user_id)]['profile']['first_name'] = first_name
-      elif user_match_history[str(user_id)]['profile']['last_name'] == "":
-        last_name = matched_user_dict['last_name']
-        user_match_history[str(user_id)]['profile']['last_name'] = last_name
-      else: # user_match_history[str(user_id)]['profile']['profile_picture'] == "":
-        profile_picture = matched_user_dict['profile_picture']
-        user_match_history[str(user_id)]['profile']['profile_picture'] = profile_picture
+    def _unlock_next_interest(from_history, to_user_id, to_dict):
+      # Unlock to_user_id's features for from_{user}'s match_history
+      if len(from_history[str(to_user_id)]['profile']['interests']) < len(to_dict['interests']):
+        # Continue unlocking interests for to_user_id user
+        unlocked_interests = from_history[str(to_user_id)]['profile']['interests'].keys()
+        total_interests = to_dict['interests'].keys()
+        interests_left = list(set(total_interests) - set(unlocked_interests))
+        selected_interest_key = interests_left[0]
+        selected_interest_value = to_dict['interests'][selected_interest_key]
+        from_history[str(to_user_id)]['profile']['interests'][selected_interest_key] = selected_interest_value
+      else:
+        # Start to unlock first_name, last_name, and profile_picture for to_user_id user
+        if from_history[str(to_user_id)]['profile']['first_name'] == "":
+          first_name = to_dict['first_name']
+          from_history[str(to_user_id)]['profile']['first_name'] = first_name
+        elif from_history[str(to_user_id)]['profile']['last_name'] == "":
+          last_name = to_dict['last_name']
+          from_history[str(to_user_id)]['profile']['last_name'] = last_name
+        else: # from_history[str(to_user_id)]['profile']['profile_picture'] == "":
+          profile_picture = to_dict['profile_picture']
+          user_match_history[str(to_user_id)]['profile']['profile_picture'] = profile_picture
+      return from_history[str(to_user_id)]
 
-    # Unlock current user features for matched_user's match_history
-    if len(matched_user_match_history[str(g.user_id)]['profile']['interests']) < len(user_dict['interests']):
-      # Continue unlocking interests for current user
-      unlocked_interests = matched_user_match_history[str(g.user_id)]['profile']['interests'].keys()
-      total_interests = user_dict['interests'].keys()
-      interests_left = list(set(total_interests) - set(unlocked_interests))
-      selected_interest_key = interests_left[0]
-      selected_interest_value = user_dict['interests'][selected_interest_key]
-      matched_user_match_history[str(g.user_id)]['profile']['interests'][selected_interest_key] = selected_interest_value
-    else:
-      # Start to unlock first_name, last_name, and profile_picture for current user
-      if matched_user_match_history[str(g.user_id)]['profile']['first_name'] == "":
-        first_name = user_dict['first_name']
-        matched_user_match_history[str(g.user_id)]['profile']['first_name'] = first_name
-      elif matched_user_match_history[str(g.user_id)]['profile']['last_name'] == "":
-        last_name = user_dict['last_name']
-        matched_user_match_history[str(g.user_id)]['profile']['last_name'] = last_name
-      else: # matched_user_match_history[str(g.user_id)]['profile']['profile_picture'] == "":
-        profile_picture = user_dict['profile_picture']
-        matched_user_match_history[str(g.user_id)]['profile']['profile_picture'] = profile_picture
+    user_match_history[str(user_id)] = _unlock_next_interest(
+        user_match_history, str(user_id), matched_user_dict)
+    matched_user_match_history[str(g.user_id)] = _unlock_next_interest(
+        matched_user_match_history, str(g.user_id), user_dict)
 
-    # Compute unlocked percentage of matched_user
-    matched_user_unlocked = len(user_match_history[str(user_id)]['profile']['interests']) + \
-        (1 if user_match_history[str(user_id)]['profile']['first_name'] != "" else 0) + \
-        (1 if user_match_history[str(user_id)]['profile']['last_name'] != "" else 0) + \
-        (1 if user_match_history[str(user_id)]['profile']['profile_picture'] != "" else 0)
-    matched_user_total = len(matched_user_dict['interests']) + 3
-    matched_user_percent_unlock = int(float(matched_user_unlocked) / matched_user_total * 100)
-    user_match_history[str(user_id)]['percent_unlocked'] = matched_user_percent_unlock
+    def _compute_unlock_percentage(from_history, to_user_id, to_dict):
+      to_unlocked = len(from_history[str(to_user_id)]['profile']['interests']) + \
+          (1 if from_history[str(to_user_id)]['profile']['first_name'] != "" else 0) + \
+          (1 if from_history[str(to_user_id)]['profile']['last_name'] != "" else 0) + \
+          (1 if from_history[str(to_user_id)]['profile']['profile_picture'] != "" else 0)
+      # 3 is from first_name + last_name + profile_picture
+      to_total = len(to_dict['interests']) + 3
+      to_percent_unlock = int(float(to_unlocked) / to_total * 100)
+      return to_percent_unlock
 
-    # Compute unlocked percentage of current user
-    user_unlocked = len(matched_user_match_history[str(g.user_id)]['profile']['interests']) + \
-        (1 if matched_user_match_history[str(g.user_id)]['profile']['first_name'] != "" else 0) + \
-        (1 if matched_user_match_history[str(g.user_id)]['profile']['last_name'] != "" else 0) + \
-        (1 if matched_user_match_history[str(g.user_id)]['profile']['profile_picture'] != "" else 0)
-    user_total = len(user_dict['interests']) + 3
-    user_percent_unlock = int(float(user_unlocked) / user_total * 100)
-    matched_user_match_history[str(g.user_id)]['percent_unlocked'] = user_percent_unlock
+    user_match_history[str(user_id)]['percent_unlocked'] = _compute_unlock_percentage(
+        user_match_history, str(user_id), matched_user_dict)
+    matched_user_match_history[str(g.user_id)]['percent_unlocked'] = _compute_unlock_percentage(
+        matched_user_match_history, str(g.user_id), user_dict)
 
     setattr(user, 'match_history', user_match_history)
     setattr(matched_user, 'match_history', matched_user_match_history)
     self.db.session.commit()
 
-    return (matched_user_percent_unlock, user_percent_unlock)
+    return (user_match_history[str(user_id)]['percent_unlocked'],
+            matched_user_match_history[str(g.user_id)]['percent_unlocked'])
