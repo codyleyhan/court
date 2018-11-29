@@ -17,14 +17,24 @@ import Header from '../components/Header';
 
 import Colors from '../constants/Colors';
 
+import { getMatches, deleteMatch } from '../utils/api/Matches';
+
 export default class InboxScreen extends React.Component {
   state = {
     showDeleteModal: false,
+    matches: [],
   };
 
   static navigationOptions = {
     header: null,
   };
+
+  constructor() {
+    super();
+    getMatches().then(response => {
+      console.log(response);
+    });
+  }
 
   setModalVisible = (visible) => {
     this.setState({ showDeleteModal: visible });
