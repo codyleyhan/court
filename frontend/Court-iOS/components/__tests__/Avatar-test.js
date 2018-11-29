@@ -29,7 +29,7 @@ it('Renders Icon Image', () => {
 });
 
 it('Renders Nested Avatar', () => {
-  const tree = renderer.create(<Avatar width={200} imgURL={"https://heightline.com/wp-content/uploads/Justin-Roberts-640x427.jpg"} animalName={"sloth"} color={"merlot"}/>).toJSON();
+  const tree = renderer.create(<Avatar width={200} imgURL={"https://heightline.com/wp-content/uploads/Justin-Roberts-640x427.jpg"} animalName={"sloth"} color={Colors.merlot}/>).toJSON();
 
   expect(tree).toMatchSnapshot();
 });

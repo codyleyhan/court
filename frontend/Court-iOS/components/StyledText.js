@@ -1,5 +1,6 @@
 import React from 'react';
 import { Text } from 'react-native';
+import PropTypes from 'prop-types';
 
 export class RegularText extends React.Component {
   render() {
@@ -25,7 +26,28 @@ export class LightText extends React.Component {
   }
 }
 
-StyledText.propTypes = {
+RegularText.propTypes = {
+  /**
+  * Specifies render style for text
+  */
+  style: PropTypes.object,
+};
+
+MediumText.propTypes = {
+  /**
+  * Specifies render style for text
+  */
+  style: PropTypes.object,
+};
+
+BoldText.propTypes = {
+  /**
+  * Specifies render style for text
+  */
+  style: PropTypes.object,
+};
+
+LightText.propTypes = {
   /**
   * Specifies render style for text
   */
