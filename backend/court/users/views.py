@@ -94,11 +94,11 @@ class UserAPI(MethodView):
     if access_token is None:
       raise AuthorizationError()
     # create a new user
-    token, user, exists = self.auth_service.login(access_token)
+    token, profile, exists = self.auth_service.login(access_token)
     return jsonify({
       'success': True,
       'token': token,
-      'user': user,
+      'profile': profile,
       'exists': exists
     })
 

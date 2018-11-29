@@ -77,8 +77,9 @@ class AuthService:
     g.user_id = int(user.id)
 
     token = jwt.encode(token_data, self.secret, algorithm='HS256')
+    profile = self.db.session.query(Profile).filter_by(user_id=facebook_user_data['id']).first()._asdict()
 
-    return token, facebook_user_data, exists
+    return token, profile, exists
 
   def validate_token(self, token):
     """
@@ -137,7 +138,7 @@ class AuthService:
     if 'user_id' in g:
       user = self.user_store.query.get(g.user_id)
       g.user = user
-      profile = self.db.session.query(User).filter_by(id=user_id).first().profile
+      profile = self.db.session.query(Profile).filter_by(user_id=user_id).first()
       return profile
 
     return None
@@ -153,13 +154,17 @@ class AuthService:
       fields['updated_at'] = dt.datetime.utcnow()
       for key, value in fields.items():
         # key not in Profile is a no-op
+        if key == 'interests': value = json.dumps(value)
         setattr(profile, key, value)
       self.db.session.commit()
 
-    profile = self.get_current_user_profile()
-    if profile is not None:
-      _update_profile(profile, fields)
-      return profile
+    if 'user_id' in g:
+      user = self.user_store.query.get(g.user_id)
+      g.user = user
+      profile = self.get_current_user_profile()
+      if profile is not None:
+        _update_profile(profile, fields)
+        return profile
 
     return None
 

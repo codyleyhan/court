@@ -52,18 +52,18 @@ class Profile(db.Model):
   profile_picture = db.Column(db.String(512), default='')
 
   gender = db.Column(db.String(128), nullable=False, default='')
-  preferred_gender = db.Column(db.String(128), nullable=False, default='') # M/F/Both
+  preferred_gender = db.Column(db.String(128), nullable=False, default='') # Male/Female/Both
   color = db.Column(db.String(128), nullable=False, default='')
   animal = db.Column(db.String(128), nullable=False, default='')
   # TODO(anthonymirand): add age/age range/location
 
-  _interests = db.Column(db.String, default='[{}]')
+  _interests = db.Column(db.String, default='{}')
   @property
   def interests(self):
     return json.loads(self._interests)
   @interests.setter
   def interests(self, value):
-    self._interests = json.dumps(value)
+    self._interests = value
 
   _match_history = db.Column(db.String, default='{}')
   @property

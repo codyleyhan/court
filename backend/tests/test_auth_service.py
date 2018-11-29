@@ -69,7 +69,7 @@ def test_get_current_user_profile(app):
       'preferred_gender': 'Female',
       'color': '',
       'animal': '',
-      'interests': [{'interest1': 'value1'}],
+      'interests': {'interest1': 'value1'},
       'created_at': 0,
       'updated_at': 0
     }
@@ -92,7 +92,7 @@ def test_update_current_user_profile(app):
     'preferred_gender': 'Female',
     'color': '',
     'animal': '',
-    'interests': [{'interest1': 'value1'}, {'interest2': 'value2'}],
+    'interests': {'interest1': 'value1', 'interest2': 'value2'},
     'created_at': 0,
     'updated_at': 0
   }
@@ -103,7 +103,7 @@ def test_update_current_user_profile(app):
     old_profile = service.get_current_user_profile()._asdict()
 
     fields = {'first_name' : 'Tim',
-              'interests': [{'interest1': 'value1'}, {'interest2': 'value2'}]}
+              'interests': {'interest1': 'value1', 'interest2': 'value2'}}
     new_profile = service.update_current_user_profile(fields)._asdict()
 
     assert new_profile is not old_profile and \
@@ -124,7 +124,7 @@ def test_update_current_user_profile(app):
 
     fields = {'thisisnotavalidkey' : 'thisisnotavalidvalue',
               'first_name': 'Tim',
-              'interests': [{'interest1': 'value1'}, {'interest2': 'value2'}]}
+              'interests': {'interest1': 'value1', 'interest2': 'value2'}}
     new_profile = service.update_current_user_profile(fields)._asdict()
 
     assert new_profile is not old_profile and \
