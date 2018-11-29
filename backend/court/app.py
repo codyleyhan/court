@@ -103,3 +103,19 @@ def add_routes(app, socketio):
     return jsonify({
       'results': m.match()
     })
+
+  @app.route('/api/force_match/<int:user_id>')
+  def force_match(user_id):
+    fake_interest = { 'fake_interest_key': 'fake_interest_value' }
+    success = match_service.add_match_to_profile(user_id, fake_interest)
+    return jsonify({
+      'success': success
+    })
+
+  @app.route('/api/force_unlock/<int:user_id>')
+  def force_unlock(user_id):
+    a, b = match_service.unlock_next_profile_feature(user_id)
+    return jsonify({
+      'matched_user_unlock': a,
+      'current_user_unlock': b
+    })
