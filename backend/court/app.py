@@ -11,6 +11,8 @@ from court.sockets import socketio
 from court.errors import *
 from court.users.auth_service import AuthService
 from court.users.views import ProfileAPI, UserAPI
+from court.matches.match_service import MatchService
+from court.matches.views import MatchAPI
 
 from court.match import Match
 
@@ -67,8 +69,7 @@ def add_routes(app, socketio):
   user_view = UserAPI.as_view('user_api', auth_service)
   profile_view = auth_service.login_required(ProfileAPI.as_view('profile_api', auth_service))
   app.add_url_rule('/api/users', view_func=user_view, methods=['POST'])
-  app.add_url_rule('/api/users', view_func=profile_view, methods=['PUT'])
-  app.add_url_rule('/api/users/<int:user_id>', view_func=profile_view, methods=['GET'])
+  app.add_url_rule('/api/users', view_func=profile_view, methods=['GET', 'PUT'])
 
   # register thread views
   thread_service = ThreadService()
@@ -77,6 +78,12 @@ def add_routes(app, socketio):
   app.add_url_rule('/api/threads', view_func=thread_view, methods=['GET'])
   app.add_url_rule('/api/threads/<int:thread_id>/messages', view_func=thread_message_view,
     methods=['GET'])
+
+  # register match views
+  match_service = MatchService()
+  match_view = auth_service.login_required(MatchAPI.as_view('match_api', match_service, auth_service))
+  app.add_url_rule('/api/matches', view_func=match_view, methods=['GET'])
+  app.add_url_rule('/api/matches/<int:user_id>', view_func=match_view, methods=['DELETE'])
 
   # register socket
   socketio.on_namespace(ThreadSockets(None, auth_service, thread_service, app.logger))
@@ -87,12 +94,28 @@ def add_routes(app, socketio):
   @app.route('/')
   def health_check():
     return jsonify({
-      "health": "ok"
+      'health': 'ok'
     })
-  
+
   @app.route('/match')
   def match_check():
     m = Match()
     return jsonify({
-      "results": m.match()
-    })  
+      'results': m.match()
+    })
+
+  @app.route('/api/force_match/<int:user_id>')
+  def force_match(user_id):
+    fake_interest = { 'fake_interest_key': 'fake_interest_value' }
+    success = match_service.add_match_to_profile(user_id, fake_interest)
+    return jsonify({
+      'success': success
+    })
+
+  @app.route('/api/force_unlock/<int:user_id>')
+  def force_unlock(user_id):
+    a, b = match_service.unlock_next_profile_feature(user_id)
+    return jsonify({
+      'matched_user_unlock': a,
+      'current_user_unlock': b
+    })

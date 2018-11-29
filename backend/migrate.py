@@ -10,5 +10,6 @@ config = ProductionConfig if env == 'production' else DevelopmentConfig
 app = create_app(config=config)
 
 if __name__ == '__main__':
+  db.drop_all(app=app)
   db.create_all(app=app)
 

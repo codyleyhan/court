@@ -95,11 +95,11 @@ class UserAPI(MethodView):
     if access_token is None:
       raise AuthorizationError()
     # create a new user
-    token, user, exists = self.auth_service.login(access_token)
+    token, profile, exists = self.auth_service.login(access_token)
     return jsonify({
       'success': True,
       'token': token,
-      'user': user,
+      'profile': profile,
       'exists': exists
     })
 
@@ -110,7 +110,7 @@ class ProfileAPI(MethodView):
   def __init__(self, auth_service):
     """
     Creates a new ProfileAPI object. Should be called with
-    ProfileAPI.as_view('user_api', auth_service) to initialize.
+    ProfileAPI.as_view('profile_api', auth_service) to initialize.
 
     :param auth_service: an AuthService instance
     :type auth_service: court.users.auth_service.AuthService
@@ -135,3 +135,4 @@ class ProfileAPI(MethodView):
     fields = request.args.to_dict(flat=True)
     profile = self.auth_service.update_current_user_profile(fields)
     return jsonify(profile=profile._asdict())
+

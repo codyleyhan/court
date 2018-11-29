@@ -6,7 +6,7 @@ from functools import wraps
 import datetime as dt
 
 from court.database import db
-from court.errors import AuthorizationError, ValidationError
+from court.errors import AuthorizationError, NotFoundError, ValidationError
 from court.users.models import User, Profile
 
 class AuthService:
@@ -75,8 +75,9 @@ class AuthService:
     g.user_id = int(user.id)
 
     token = jwt.encode(token_data, self.secret, algorithm='HS256')
+    profile = self.db.session.query(Profile).filter_by(user_id=facebook_user_data['id']).first()._asdict()
 
-    return token, facebook_user_data, exists
+    return token, profile, exists
 
   def validate_token(self, token):
     """
@@ -93,6 +94,18 @@ class AuthService:
       g.user_id = data['id']
     except:
       raise AuthorizationError()
+
+  def get_current_user_id(self):
+    """
+    Get user id of user in the current context.
+
+    :return: User object of the user in the current context, otherwise return None
+    :rtype: str
+    """
+    if 'user_id' in g:
+      return g.user_id
+
+    return None
 
   def get_current_user(self):
     """
@@ -123,7 +136,7 @@ class AuthService:
     if 'user_id' in g:
       user = self.user_store.query.get(g.user_id)
       g.user = user
-      profile = self.db.session.query(User).filter_by(id=user_id).first().profile
+      profile = self.db.session.query(Profile).filter_by(user_id=user_id).first()
       return profile
 
     return None
@@ -138,29 +151,18 @@ class AuthService:
     def _update_profile(profile, fields):
       fields['updated_at'] = dt.datetime.utcnow()
       for key, value in fields.items():
+        # key not in Profile is a no-op
+        if key == 'interests': value = json.dumps(value)
         setattr(profile, key, value)
       self.db.session.commit()
 
-    # TODO(anthonymirand): try/catch valid fields
-    user_id = self.get_current_user_id()
     if 'user_id' in g:
       user = self.user_store.query.get(g.user_id)
       g.user = user
-      profile = self.db.session.query(User).filter_by(id=user_id).first().profile
-      _update_profile(profile, fields)
-      return profile
-
-    return None
-
-  def get_current_user_id(self):
-    """
-    Get user id of user in the current context.
-
-    :return: User object of the user in the current context, otherwise return None
-    :rtype: str
-    """
-    if 'user_id' in g:
-      return g.user_id
+      profile = self.get_current_user_profile()
+      if profile is not None:
+        _update_profile(profile, fields)
+        return profile
 
     return None
 
