@@ -13,6 +13,7 @@ import LottieView from 'lottie-react-native';
 
 import { MonoText } from '../components/StyledText';
 import { InboxItem } from '../components/InboxComponents';
+import FadeWrapper from '../components/FadeWrapper';
 import Header from '../components/Header';
 
 import Colors from '../constants/Colors';
@@ -32,8 +33,13 @@ export default class InboxScreen extends React.Component {
   parseMatches = (matchObject) => {
     matches = [];
     if (matchObject) {
-
+      Object.keys(matchObject).map((value, index) => {
+        var tempMatch = matchObject[value];
+        tempMatch.user_id = value;
+        matches.push(tempMatch);
+      });
     }
+    console.log(matches);
     return matches;
   }
 
@@ -42,6 +48,7 @@ export default class InboxScreen extends React.Component {
     getMatches().then(response => {
       if (response && response.matches) {
         // Got matches object
+        console.log(response.matches);
         matches = this.parseMatches(response.matches);
         this.setState({ matches: matches });
       } else {
@@ -49,6 +56,11 @@ export default class InboxScreen extends React.Component {
         alert('Error querying matches');
       }
     });
+
+    // TODO: REMOVE!!!
+    setTimeout(() => {
+      this.setState({ matches: ['test'] });
+    }, 3000);
   }
 
   setModalVisible = (visible) => {
@@ -64,15 +76,6 @@ export default class InboxScreen extends React.Component {
     this.setModalVisible(false);
   }
 
-  // TODO(river): populate from an API call
-  // <InboxItem onPress={this.onNavigateToChat} onLongPress={() => this.setModalVisible(true)} animalName="jellyfish" color={Colors.nightSky} imgUrl="https://heightline.com/wp-content/uploads/Justin-Roberts-640x427.jpg" name="Justin Roberts" lastMessage="I'm really into cooking in my free time!" lastTime="4:02 PM" percent="67"/>
-  // <InboxItem onPress={this.onNavigateToChat} onLongPress={() => this.setModalVisible(true)} animalName="panda" color={Colors.peach} name="Anonymous Panda" lastMessage="I Love to office so much it's so cool" lastTime="2:15 PM" percent="40"/>
-  // <InboxItem onPress={this.onNavigateToChat} onLongPress={() => this.setModalVisible(true)} animalName="sloth" color={Colors.mustard} name="Anonymous Sloth" lastMessage="This app is amazing, what are you doing?" lastTime="10:07 AM" percent="15"/>
-  //
-  // // Add a message for new matches
-  // <Text style={{fontFamily: 'orkney-light', marginTop: 15, textAlign: 'center', color: 'grey'}}>Looking for more chats?</Text>
-  // <Text style={{fontFamily: 'orkney-light', textAlign: 'center', color: 'grey'}}>{"They'll show up here when you have a match."}</Text>
-
   render() {
     return (
       <View style={styles.container}>
@@ -81,10 +84,19 @@ export default class InboxScreen extends React.Component {
 
         // List of messages
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-          // Temp list for example messages
-          {(this.state.matches === null || this.state.matches.length == 0) ? (
             // Display loading for finding matches
-            <View>
+            // Show match list
+            // TODO(river): populate from an API call
+            <FadeWrapper visible={!(this.state.matches === null || this.state.matches.length == 0)}>
+              <InboxItem onPress={this.onNavigateToChat} onLongPress={() => this.setModalVisible(true)} animalName="jellyfish" color={Colors.nightSky} imgUrl="https://heightline.com/wp-content/uploads/Justin-Roberts-640x427.jpg" name="Justin Roberts" lastMessage="I'm really into cooking in my free time!" lastTime="4:02 PM" percent="67"/>
+              <InboxItem onPress={this.onNavigateToChat} onLongPress={() => this.setModalVisible(true)} animalName="panda" color={Colors.peach} name="Anonymous Panda" lastMessage="I Love to office so much it's so cool" lastTime="2:15 PM" percent="40"/>
+              <InboxItem onPress={this.onNavigateToChat} onLongPress={() => this.setModalVisible(true)} animalName="sloth" color={Colors.mustard} name="Anonymous Sloth" lastMessage="This app is amazing, what are you doing?" lastTime="10:07 AM" percent="15"/>
+
+              // Add a message for new matches
+              <Text style={{fontFamily: 'orkney-light', marginTop: 15, textAlign: 'center', color: 'grey'}}>Looking for more chats?</Text>
+              <Text style={{fontFamily: 'orkney-light', textAlign: 'center', color: 'grey'}}>{"They'll show up here when you have a match."}</Text>
+            </FadeWrapper>
+            <FadeWrapper visible={(this.state.matches === null || this.state.matches.length == 0)}>
               <LottieView
                 source={require('../assets/animations/preloader.json')}
                 autoPlay
@@ -93,13 +105,7 @@ export default class InboxScreen extends React.Component {
                 style={styles.animation}
               />
               <Text style={{fontFamily: 'orkney-light', fontSize: 25, textAlign: 'center', color: 'grey'}}>Looking for matches...</Text>
-            </View>
-          ) : (
-            // Show match list
-            <Text style={{fontFamily: 'orkney-light', fontSize: 25, textAlign: 'center', color: 'grey'}}>HELL YEAH YOU HAVE MATCHES</Text>
-          )}
-
-
+            </FadeWrapper>
         </ScrollView>
         <AwesomeAlert
           show={this.state.showDeleteModal}
