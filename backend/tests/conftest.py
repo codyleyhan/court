@@ -88,6 +88,17 @@ def seed_data(db_conn):
   user3_profile.interests = '{"interest3":"value3"}'
   user3.profile = user3_profile
 
+  user4 = User()
+  user4.id = 4
+  user4.email = '4@ucla.edu'
+  user4_profile = Profile()
+  user4_profile.first_name = 'Joe'
+  user4_profile.last_name = 'Bruin'
+  user4_profile.gender = 'Male'
+  user4_profile.preferred_gender = 'Female'
+  user4_profile.interests = json.dumps({'interest3':'value3'})
+  user4.profile = user4_profile
+
 
   thread = Thread()
   thread.users.append(user1)
@@ -96,6 +107,7 @@ def seed_data(db_conn):
   db_conn.session.add(user1)
   db_conn.session.add(user2)
   db_conn.session.add(user3)
+  db_conn.session.add(user4)
   db_conn.session.add(thread)
 
   message1 = Message(1, 1, 'oldest message')
