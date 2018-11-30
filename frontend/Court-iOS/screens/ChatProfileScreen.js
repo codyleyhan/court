@@ -36,7 +36,6 @@ export default class SettingsScreen extends React.Component {
     const chatName = navigation.getParam('name', 'Profile');
     const profileInfo = navigation.getParam('profileInfo', {});
     const { animal, color, first_name, last_name, profile_picture, percent_unlocked, interests, gender, preferred_gender } = profileInfo;
-
     const profileIcon = (
       <Avatar
         width={175}

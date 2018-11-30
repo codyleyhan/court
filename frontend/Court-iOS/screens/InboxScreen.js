@@ -2,6 +2,7 @@ import React from 'react';
 import {
   Image,
   Platform,
+  RefreshControl,
   ScrollView,
   StyleSheet,
   Text,
@@ -25,6 +26,7 @@ export default class InboxScreen extends React.Component {
     showDeleteModal: false,
     profileToDelete: null,
     matches: null,
+    refreshing: false,
   };
 
   static navigationOptions = {
@@ -59,8 +61,15 @@ export default class InboxScreen extends React.Component {
     //   }
     // });
     setTimeout(() => {
-      this.setState({ matches: [{user_id: 123, first_name: "Jason", last_name: "Roberts", animal:'deer', color:'blue', interests: {}}] });
-    }, 2000);
+      this.setState({ matches: [{user_id: 123, first_name: "Jason", last_name: "Roberts", animal:'deer', color:'blue', interests: {}, percent_unlocked: 14, gender: 'Male', preferred_gender: 'Female'}] });
+    }, 1500);
+  }
+
+  _onRefresh = () => {
+    this.setState({refreshing: true});
+    setTimeout(() => {
+      this.setState({ refreshing: false, matches: [{user_id: 123, first_name: "Jason", last_name: "Roberts", animal:'deer', color:'blue', interests: {}, percent_unlocked: 14, gender: 'Male', preferred_gender: 'Female'}] });
+    }, 1500);
   }
 
   setModalVisible = (visible, user_id) => {
@@ -99,7 +108,19 @@ export default class InboxScreen extends React.Component {
         <Header text="Chats" />
 
         // List of messages
-        <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+        <ScrollView
+          style={styles.container}
+          contentContainerStyle={styles.contentContainer}
+          // Handles refreshing a list of matches
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this._onRefresh}
+              tintColor={Colors.teal}
+              title={'Getting your matches...'}
+            />
+          }
+          >
             // Display loading for finding matches
             <FadeWrapper visible={this.state.matches === null} >
               <LottieView
