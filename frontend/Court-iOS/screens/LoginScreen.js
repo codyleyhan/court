@@ -27,17 +27,20 @@ export default class LoginScreen extends React.Component {
 
   constructor(props) {
     super(props);
+    AsyncStorage.getItem(Authentication.AUTH_TOKEN).then((token) => {
+      if (token !== null) {
+        this.props.navigation.navigate('App');
+      }
+    });
     this.state = { isLoading: false };
   }
-
-  // componentDidMount() {
-  //   this.props.navigation.navigate('Setup', { user: { first_name: 'River', picture: { data: { url: "https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=723005941386300&height=300&width=300&ext=1544324078&hash=AeRlSN4NlLUXmWcm" } }} });
-  // }
 
   async storeItems(response) {
     try {
       await AsyncStorage.setItem(Authentication.AUTH_USER, JSON.stringify(response.profile));
       await AsyncStorage.setItem(Authentication.AUTH_TOKEN, response.token);
+      console.log(response.profile.first_name);
+      console.log(response.token);
     } catch (error) {
       // Error saving data
       alert('Error saving credentials', 'Please login again');

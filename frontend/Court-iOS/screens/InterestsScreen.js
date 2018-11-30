@@ -133,7 +133,7 @@ export default class InterestsScreen extends React.Component {
           </View>
         )}
         <InterestsFinder interests={interests} onAddInterest={this.addInterest.bind(this)} onRemoveInterest={this.removeInterest.bind(this)} />
-        {Object.keys(interests).length > 0 && (
+        {Object.keys(interests).length > 2 && (
           <View style={styles.continueButton}>
             <LoginButton text="Continue" onPress={() => this.goNext(user, genderSelection)} />
           </View>

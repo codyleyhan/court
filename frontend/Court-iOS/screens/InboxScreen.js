@@ -46,29 +46,40 @@ export default class InboxScreen extends React.Component {
     return matches;
   }
 
+  fetchMatches = () => {
+    getMatches().then(response => {
+      if (response && response.matches) {
+        // Got matches object
+        matches = this.parseMatches(response.matches);
+        this.setState({ matches: matches });
+      } else {
+        // Error querying API
+        alert('Error querying matches');
+      }
+    });
+  }
+
   constructor() {
     super();
-    // getMatches().then(response => {
-    //   if (response && response.matches) {
-    //     // Got matches object
-    //     console.log(response.matches);
-    //     matches = this.parseMatches(response.matches);
-    //     this.setState({ matches: matches });
-    //   } else {
-    //     // Error querying API
-    //     alert('Error querying matches');
-    //   }
-    // });
-    setTimeout(() => {
-      this.setState({ matches: [{user_id: 123, first_name: "Jason", last_name: "Roberts", animal:'deer', color:'blue', interests: {}, percent_unlocked: 14, gender: 'Male', preferred_gender: 'Female'}] });
-    }, 1500);
+    this.fetchMatches();
+    // setTimeout(() => {
+    //   this.setState({ matches: [{user_id: 123, first_name: "Jason", last_name: "Roberts", animal:'deer', color:'blue', interests: {}, percent_unlocked: 14, gender: 'Male', preferred_gender: 'Female'}] });
+    // }, 1500);
   }
 
   _onRefresh = () => {
     this.setState({refreshing: true});
-    setTimeout(() => {
-      this.setState({ refreshing: false, matches: [{user_id: 123, first_name: "Jason", last_name: "Roberts", animal:'deer', color:'blue', interests: {}, percent_unlocked: 14, gender: 'Male', preferred_gender: 'Female'}] });
-    }, 1500);
+    getMatches().then(response => {
+      if (response && response.matches) {
+        // Got matches object
+        matches = this.parseMatches(response.matches);
+        this.setState({ matches: matches, refreshing: false });
+      } else {
+        // Error querying API
+        alert('Error querying matches');
+        this.setState({refreshing: false});
+      }
+    });
   }
 
   setModalVisible = (visible, user_id) => {
