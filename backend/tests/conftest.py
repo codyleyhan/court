@@ -7,11 +7,10 @@ from court.chats.models import Thread, Message
 from court.config import TestingConfig
 from court.app import create_app
 
-@pytest.yield_fixture(scope='function')
+@pytest.fixture
 def app():
   app = create_app(TestingConfig)
   with app.app_context():
-    db.create_all()
     seed_data(db)
     yield app
     db.drop_all()
@@ -22,6 +21,8 @@ def seed_data(db_conn):
 
   :param db_conn: the db connection
   """
+  db_conn.create_all()
+
   user1 = User()
   user1.id = 1
   user1.email = '1@ucla.edu'

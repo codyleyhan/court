@@ -62,7 +62,6 @@ class AuthService:
                         facebook_user_data['last_name'],
                         facebook_user_data['picture']['data']['url'])
       user.profile = profile
-      # TODO(codyleyhan) tons of exception handling
       self.db.session.add(user)
       self.db.session.add(profile)
       self.db.session.commit()
