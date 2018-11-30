@@ -364,3 +364,74 @@ def test_unlock_next_profile_feature_2(app):
     g.user_id = '2'
     matches_for_2 = match_service.get_current_matches()
     assert matches_for_2['1'] == mock_matches_2['1']
+
+def test_find_match(app):
+  with app.app_context():
+    g.user_id = '1'
+    auth_service = AuthService('secret')
+    match_service = MatchService()
+
+    fields = {'interests': {'interest1': 'value1'}}
+    auth_service.update_current_user_profile(fields)._asdict()
+    
+    g.user_id = '3'
+    fields = {'interests': {'interest1': 'value1'}}
+    auth_service.update_current_user_profile(fields)._asdict()
+
+    g.user_id = '1'
+
+    # Check user 1 and user 3 are currently not matched
+    matches_for_1 = match_service.get_current_matches()
+    assert '3' not in matches_for_1.keys()
+    g.user_id = '3'
+    matches_for_3 = match_service.get_current_matches()
+    assert '1' not in matches_for_3.keys()
+    g.user_id = '1'
+
+    find_match_for_1 = match_service.find_match(1, 1)
+    assert (3, 'interest1') in find_match_for_1
+
+    '''
+    # Check user 3 got added as an active match for user 1
+    mock_matches_1 = {
+      '3': {
+        'active': True,
+        'percent_unlocked': 25,
+        'profile': {
+          'animal': '',
+          'color': '',
+          'gender': 'Female',
+          'preferred_gender': 'Male',
+          'first_name': '',
+          'last_name': '',
+          'profile_picture': '',
+          'interests': { 'test_key' : 'test_val' }
+        }
+      }
+    }
+    matches_for_1 = match_service.get_current_matches()
+    assert len(matches_for_1) == 2
+    assert matches_for_1['3'] == mock_matches_1['3']
+
+    # Check user 1 got added as an active match for user 3
+    mock_matches_3 = {
+      '1': {
+        'active': True,
+        'percent_unlocked': 25,
+        'profile': {
+          'animal': '',
+          'color': '',
+          'gender': 'Male',
+          'preferred_gender': 'Female',
+          'first_name': '',
+          'last_name': '',
+          'profile_picture': '',
+          'interests': { 'test_key' : 'test_val' }
+        }
+      }
+    }
+    g.user_id = '3'
+    matches_for_3 = match_service.get_current_matches()
+    assert len(matches_for_3) == 1
+    assert matches_for_3['1'] == mock_matches_3['1']
+    '''
