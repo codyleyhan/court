@@ -52,12 +52,13 @@ export default class LoginScreen extends React.Component {
       if (response && response.success && response.exists) {
         // User successfully logged in, but we should go to app instead of setup
         this.storeItems(response);
-        this.props.navigation.navigate('App');
+        // this.props.navigation.navigate('App');
+        this.props.navigation.navigate('Setup', { user: response.profile });
       } else if (response && response.success) {
         // Store credentials
         this.storeItems(response);
         // Navigate to setup screen
-        this.props.navigation.navigate('Setup', { user: response.user });
+        this.props.navigation.navigate('Setup', { user: response.profile });
       } else {
         alert('Login failed');
         this.setState({ isLoading: false });

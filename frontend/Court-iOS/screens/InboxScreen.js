@@ -47,17 +47,20 @@ export default class InboxScreen extends React.Component {
 
   constructor() {
     super();
-    getMatches().then(response => {
-      if (response && response.matches) {
-        // Got matches object
-        console.log(response.matches);
-        matches = this.parseMatches(response.matches);
-        this.setState({ matches: matches });
-      } else {
-        // Error querying API
-        alert('Error querying matches');
-      }
-    });
+    // getMatches().then(response => {
+    //   if (response && response.matches) {
+    //     // Got matches object
+    //     console.log(response.matches);
+    //     matches = this.parseMatches(response.matches);
+    //     this.setState({ matches: matches });
+    //   } else {
+    //     // Error querying API
+    //     alert('Error querying matches');
+    //   }
+    // });
+    setTimeout(() => {
+      this.setState({ matches: [{user_id: 123, first_name: "Jason", last_name: "Roberts", animal:'deer', color:'blue', interests: {}}] });
+    }, 2000);
   }
 
   setModalVisible = (visible, user_id) => {

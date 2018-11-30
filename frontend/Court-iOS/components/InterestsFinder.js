@@ -27,7 +27,7 @@ export default class InterestsFinder extends React.Component {
     if (query !== '') {
       queryGoogleKG(query).then((result) => {
         // Another search happened before the response was done; cancel.
-        if (countBefore !== this.searchCount) {
+        if (countBefore !== this.searchCount || !result) {
           return
         }
         for (var i = 0; i < result.length && i < 10; i++) {

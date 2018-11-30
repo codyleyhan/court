@@ -14,6 +14,7 @@ import { Transition } from 'react-navigation-fluid-transitions';
 import { Haptic } from 'expo';
 import Mask from 'react-native-mask';
 
+import Authentication from '../constants/Authentication';
 import Colors from '../constants/Colors';
 import Icons from '../constants/Icons';
 
@@ -47,11 +48,12 @@ export default class InterestsScreen extends React.Component {
     this.setState({ interests });
   }
 
-  async storeItems(user) {
+  async storeItems(profile) {
     try {
-      await AsyncStorage.setItem(Authentication.AUTH_USER, JSON.stringify(response.user));
+      await AsyncStorage.setItem(Authentication.AUTH_USER, JSON.stringify(profile));
     } catch (error) {
       // Error saving data
+      console.log(error);
       alert('Error saving intererests', 'Please try again');
     }
   }
@@ -67,6 +69,7 @@ export default class InterestsScreen extends React.Component {
     const animal = properties[index];
     // Publish interests to API, navigate to next page
     publishInterests(genderSelection, this.state.interests, color, animal).then((response) => {
+      console.log(response);
       if (response !== null) {
         // Store items for later use
         this.storeItems(response.profile);
@@ -83,7 +86,7 @@ export default class InterestsScreen extends React.Component {
     const user = this.props.navigation.getParam('user', null);
     const genderSelection = this.props.navigation.getParam('genderSelection', null);
     const user_name = user.first_name;
-    const profile_url = user.picture.data.url;
+    const profile_url = user.profile_picture;
     const remove = this.removeInterest.bind(this);
     return (
       <View style={styles.container}>

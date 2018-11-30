@@ -49,6 +49,7 @@ export default class SettingsScreen extends React.Component {
   parseInterests = (interests) => {
     var recommendations = [];
     if (interests) {
+      interests = JSON.parse(interests);
       Object.keys(interests).map((key, index) => {
         var tempInterests = interests[key];
         tempInterests.id = key;
@@ -74,6 +75,7 @@ export default class SettingsScreen extends React.Component {
   render() {
     const { profileInfo } = this.state;
     const { profile_picture, color, animal, interests, first_name, last_name, gender, preferred_gender } = profileInfo;
+    console.log(interests);
     const profileIcon = (
       <Avatar
         width={160}
@@ -85,6 +87,7 @@ export default class SettingsScreen extends React.Component {
     );
 
     const recommendations = this.parseInterests(interests);
+    console.log(recommendations);
 
     return (
       <View style={styles.container}>
