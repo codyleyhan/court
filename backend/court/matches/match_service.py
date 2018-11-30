@@ -219,18 +219,21 @@ class MatchService:
     return (user_match_history[str(user_id)]['percent_unlocked'],
             matched_user_match_history[str(g.user_id)]['percent_unlocked'])
 
-  def find_match(self, num_matches, user_id):
+  def find_match(self, user_id, num_matches):
     profiles = self.db.session.query(Profile)
     N = len(profiles.all())
     pairs = [[None for y in range(N)] for x in range(N)]
     user_ids = []
     preferences = {}
     matches = {}
+    user_profile = None
 
     # creates a grid of number of common interests between users
     i = 0
     for profile1 in profiles.order_by(Profile.created_at):
       j = 0
+      if profile1.user_id == user_id:
+        user_profile = profile1
       user_ids.append(profile1.user_id)
       for profile2 in profiles.order_by(Profile.created_at):
         if pairs[j][i] != None:
@@ -271,14 +274,6 @@ class MatchService:
               pairs[match[1]][i] = None
               break
 
-    return matches[user_id]
+    user_matches = map(lambda x: (x[0], { x[1] : user_profile.interests[x[1]] }), matches[user_id])
 
-
-
-
-
-
-
-
-
-
+    return list(user_matches)
