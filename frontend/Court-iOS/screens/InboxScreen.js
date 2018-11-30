@@ -43,7 +43,6 @@ export default class InboxScreen extends React.Component {
         matches.push(tempMatch);
       });
     }
-    console.log(matches);
     return matches;
   }
 
@@ -73,7 +72,6 @@ export default class InboxScreen extends React.Component {
   }
 
   setModalVisible = (visible, user_id) => {
-    console.log(user_id);
     this.setState({ showDeleteModal: visible, profileToDelete: user_id });
   }
 
@@ -83,12 +81,10 @@ export default class InboxScreen extends React.Component {
 
   removeMatch = () => {
     deleteMatch(this.state.profileToDelete).then(response => {
-      console.log(response);
       if (response && response.status) {
         // Successful, remove from local matches
         var oldMatches = this.state.matches;
         const index = oldMatches.map((x) => {return x.user_id}).indexOf(this.state.profileToDelete);
-        console.log(this.state.profileToDelete);
         if (index >= 0) {
           oldMatches.splice(index, 1);
           this.setState({showDeleteModal: false, showmatches: oldMatches, profileToDelete: null});

@@ -13,7 +13,6 @@ export async function logInWithFacebook() {
       behavior: 'web',
     });
     if (type === 'success') {
-      console.log('Token: '+token);
       // Pass token to backend to complete login
       const loginResult = await loginRequest(token);
       return loginResult;

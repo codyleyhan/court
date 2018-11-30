@@ -75,7 +75,6 @@ export default class SettingsScreen extends React.Component {
   render() {
     const { profileInfo } = this.state;
     const { profile_picture, color, animal, interests, first_name, last_name, gender, preferred_gender } = profileInfo;
-    console.log(interests);
     const profileIcon = (
       <Avatar
         width={160}
@@ -87,7 +86,6 @@ export default class SettingsScreen extends React.Component {
     );
 
     const recommendations = this.parseInterests(interests);
-    console.log(recommendations);
 
     return (
       <View style={styles.container}>

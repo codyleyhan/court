@@ -53,7 +53,6 @@ export default class InterestsScreen extends React.Component {
       await AsyncStorage.setItem(Authentication.AUTH_USER, JSON.stringify(profile));
     } catch (error) {
       // Error saving data
-      console.log(error);
       alert('Error saving intererests', 'Please try again');
     }
   }
@@ -69,7 +68,6 @@ export default class InterestsScreen extends React.Component {
     const animal = properties[index];
     // Publish interests to API, navigate to next page
     publishInterests(genderSelection, this.state.interests, color, animal).then((response) => {
-      console.log(response);
       if (response !== null) {
         // Store items for later use
         this.storeItems(response.profile);
