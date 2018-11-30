@@ -125,6 +125,17 @@ class AuthService:
 
     return None
 
+  def get_user_for_user_id(self, user_id):
+    """
+    Get user object of a user with a specified user_id.
+    Used for testing and debugging.
+
+    :return: User object of the user with a specified user_id, otherwise return None
+    :rtype: court.users.model.User
+    """
+    user = self.db.session.query(User).filter_by(id=user_id).first()
+    return user
+
   def get_current_user_profile(self):
     """
     Get profile object of user in the current context.

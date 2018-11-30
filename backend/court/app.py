@@ -78,10 +78,11 @@ def add_routes(app, socketio):
   app.add_url_rule('/api/threads', view_func=thread_view, methods=['GET'])
   app.add_url_rule('/api/threads/<int:thread_id>/messages', view_func=thread_message_view,
     methods=['GET'])
+  app.add_url_rule('/api/threads/<int:user_id>', view_func=thread_message_view, methods=['DELETE'])
 
   # register match views
   match_service = MatchService()
-  match_view = auth_service.login_required(MatchAPI.as_view('match_api', match_service, auth_service))
+  match_view = auth_service.login_required(MatchAPI.as_view('match_api', match_service, auth_service, thread_service))
   app.add_url_rule('/api/matches', view_func=match_view, methods=['GET'])
   app.add_url_rule('/api/matches/<int:user_id>', view_func=match_view, methods=['DELETE'])
 
@@ -106,16 +107,29 @@ def add_routes(app, socketio):
 
   @app.route('/api/force_match/<int:user_id>')
   def force_match(user_id):
-    fake_interest = { 'fake_interest_key': 'fake_interest_value' }
-    success = match_service.add_match_to_profile(user_id, fake_interest)
-    return jsonify({
-      'success': success
-    })
+    user1 = auth_service.get_current_user()
+    user2 = auth_service.get_user_for_user_id(user_id)
+    user1_dict = user1.profile._asdict()
+    user2_dict = user2.profile._asdict()
+    user1_interests = set(user1_dict['interests'].keys())
+    user2_interests = set(user2_dict['interests'].keys())
+    shared_interests = user1_interests.intersection(user2_interests)
+    if len(shared_interests) == 0:
+      return jsonify(success=False)
+    shared_interest_key = shared_interests.pop()
+    interest = { shared_interest_key :
+                 user1_dict['interests'][shared_interest_key] }
+    success = match_service.add_match_to_profile(user_id, interest, force=True)
+    thread = thread_service.create_thread(user1, user2, force=True)
+    return jsonify(success=success and thread is not None)
+
+  @app.route('/api/force_match_delete/<int:user_id>')
+  def force_match_delete(user_id):
+    delete_match = match_service.inactivate_match(user_id, purge=True)
+    delete_thread = thread_service.delete_thread(user_id, purge=True)
+    return jsonify(status=delete_match and delete_thread)
 
   @app.route('/api/force_unlock/<int:user_id>')
   def force_unlock(user_id):
-    a, b = match_service.unlock_next_profile_feature(user_id)
-    return jsonify({
-      'matched_user_unlock': a,
-      'current_user_unlock': b
-    })
+    match, user = match_service.unlock_next_profile_feature(user_id)
+    return jsonify(matched_user_unlock=match, current_user_unlock=user)

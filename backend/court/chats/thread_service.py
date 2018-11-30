@@ -22,7 +22,7 @@ class ThreadService:
     self.db = db_conn
 
 
-  def create_thread(self, user_1, user_2):
+  def create_thread(self, user_1, user_2, force=False):
     """
     Creates and persists a new chat thread between the users passed.
 
@@ -30,12 +30,19 @@ class ThreadService:
     :type user_1: court.users.models.User
     :param user_2: is a User object
     :type user_2: court.users.models.User
+    :param force: optional argument to override previous thread with user
+    :type force: boolean
 
     :return: returns a Thread object with the two users associated
     :rtype: court.chats.models.Thread
     """
     if user_1 is None or user_2 is None:
       raise RuntimeError()
+
+    if not force:
+      threads = self.db.session.query(Thread).filter(Thread.users.any(id=user_1.id)).all()
+      if threads is not None and len(threads) != 0:
+        return None
 
     thread = Thread()
 
@@ -69,7 +76,7 @@ class ThreadService:
 
   def user_is_in_thread(self, user_id, thread):
     """
-    Checks if a user is authorized to be in a thread. If the user id is the 
+    Checks if a user is authorized to be in a thread. If the user id is the
     system user id, then it will return true.
 
     :param user_id: the user id being checked
@@ -139,3 +146,27 @@ class ThreadService:
     self.db.session.commit()
 
     return message
+
+  def delete_thread(self, user_id, purge=False):
+    """
+    Deletes a thread to a specified user_id
+
+    :param user_id: the specified user id
+    :type user_id: int
+    :param purge: optional argument to mark thread inactive or delete from database
+    :type purge: boolean
+    :return: whether the thread was successfully deleted or not
+    :rtype: boolean
+    """
+    threads = self.db.session.query(Thread).filter(Thread.users.any(id=user_id)).all()
+    if threads is None or len(threads) == 0:
+      return False
+
+    for thread in threads:
+      if purge:
+        self.db.session.delete(thread)
+      else:
+        setattr(thread, 'is_active', False)
+    self.db.session.commit()
+
+    return True
