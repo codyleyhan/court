@@ -364,3 +364,37 @@ def test_unlock_next_profile_feature_2(app):
     g.user_id = '2'
     matches_for_2 = match_service.get_current_matches()
     assert matches_for_2['1'] == mock_matches_2['1']
+
+def test_find_match(app):
+  with app.app_context():
+    g.user_id = '3'
+    auth_service = AuthService('secret')
+    match_service = MatchService()
+
+    # Check user 3 and user 4 are currently not matched
+    matches_for_3 = match_service.get_current_matches()
+    assert '4' not in matches_for_3.keys()
+    g.user_id = '4'
+    matches_for_4 = match_service.get_current_matches()
+    assert '3' not in matches_for_4.keys()
+    g.user_id = '3'
+
+    find_match_for_3 = match_service.find_match(3, 1)
+    match_result = (4, { 'interest3' : 'value3' })
+    assert len(find_match_for_3) == 1
+    assert match_result in find_match_for_3
+
+    created_match = match_service.add_match_to_profile(match_result[0], match_result[1])
+    assert created_match == True
+
+    # Check user 4 got added as an active match for user 3
+    matches_for_3 = match_service.get_current_matches()
+    assert len(matches_for_3) == 1
+    assert matches_for_3['4']['profile']['interests'] == { 'interest3' : 'value3' }
+
+    # Check user 3 got added as an active match for user 4
+    g.user_id = '4'
+    matches_for_4 = match_service.get_current_matches()
+    assert len(matches_for_4) == 1
+    assert matches_for_4['3']['profile']['interests'] == { 'interest3' : 'value3' }
+
