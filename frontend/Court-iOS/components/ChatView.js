@@ -249,7 +249,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'green',
   }
 });
-goToProfile, profileInfo 
+
 ChatView.propTypes = {
   /**
   * Background color of received messages
@@ -258,7 +258,7 @@ ChatView.propTypes = {
   /**
   * Text to be rendered in chat bubble
   */
-  messages: PropTypes.arrayOf(messages),
+  messages: PropTypes.arrayOf(Object),
   /**
   * Callback function back to navigation to route user to the selected user's profile page
   */
