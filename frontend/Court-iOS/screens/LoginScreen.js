@@ -60,6 +60,8 @@ export default class LoginScreen extends React.Component {
         this.storeItems(response);
         // Navigate to setup screen
         this.props.navigation.navigate('Setup', { user: response.profile });
+      } else if (response === 'cancelled') {
+        this.setState({ isLoading: false });
       } else {
         alert('Login failed');
         this.setState({ isLoading: false });

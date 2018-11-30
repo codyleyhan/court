@@ -19,7 +19,7 @@ export async function logInWithFacebook() {
     } else {
       // type === 'cancel'
       console.log('Login cancelled');
-      return null;
+      return 'cancelled';
     }
   } catch ({ message }) {
     alert(`Facebook Login Error: ${message}`);
