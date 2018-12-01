@@ -56,7 +56,7 @@ export default class InboxScreen extends React.Component {
 
   handleNewMessage = (message, currentUserID) => {
     const userid = message.user_id;
-    if (this.state.messages) {
+    if (this.state.messages && userid !== currentUserID) {
       // User in our current matches
       let oldMessages = this.state.messages;
       oldMessages[userid].push({
@@ -145,12 +145,13 @@ export default class InboxScreen extends React.Component {
           }
         });
         // Now fetch messages for each thread
-        let messages = {};
+        let messages = this.state.messages;
         Object.keys(threads).map((userid, index) => {
           getMessages(threads[userid]).then(response => {
             if (response && response.messages) {
               const parsedMessages = this.parseMessages(response.messages);
               messages[userid] = parsedMessages;
+              this.setState({ messages: messages });
             } else {
               alert('Error querying messages');
             }
@@ -158,7 +159,7 @@ export default class InboxScreen extends React.Component {
         });
         // Now iniaite chat connections for each match
         this.connectSocket(currentUserID);
-        this.setState({ threads: threads, matches: matches, messages: messages });
+        this.setState({ threads: threads, matches: matches });
       } else {
         // Error querying API
         alert('Error querying threads');
@@ -265,8 +266,8 @@ export default class InboxScreen extends React.Component {
           }
           >
             // Display loading for finding matches
-            {this.state.matches === null ? (
-              <FadeWrapper visible={this.state.matches === null} >
+
+              <FadeWrapper visible={this.state.matches === null || Object.keys(this.state.messages).length !== this.state.matches.length} >
                 <LottieView
                   source={require('../assets/animations/preloader.json')}
                   autoPlay
@@ -276,25 +277,31 @@ export default class InboxScreen extends React.Component {
                 />
                 <Text style={{fontFamily: 'orkney-light', fontSize: 25, textAlign: 'center', color: 'grey'}}>Looking for matches...</Text>
               </FadeWrapper>
-            ) : (
+
               // No matches
               <View>
-                <FadeWrapper visible={this.state.matches !== null && this.state.matches.length == 0} delay={300}>
+                <FadeWrapper visible={this.state.matches !== null && this.state.matches.length == 0 } delay={300}>
                   <Text style={{fontFamily: 'orkney-medium', marginTop: 100, fontSize: 35, textAlign: 'center', color: 'grey'}}>No matches...</Text>
                   <Text style={{marginTop: 50, fontSize: 100, textAlign: 'center'}}>😢</Text>
                   <Text style={{fontFamily: 'orkney-regular', marginTop: 50, fontSize: 20, textAlign: 'center', color: 'grey'}}>{"Don't worry, we'll keep looking.\nCome back later to check again!"}</Text>
                 </FadeWrapper>
                 // Show match list
-                <FadeWrapper visible={this.state.matches !== null && this.state.matches.length > 0} delay={300}>
+                <FadeWrapper visible={this.state.matches !== null && this.state.matches.length > 0 && Object.keys(this.state.messages).length > 0} delay={200}>
                   {this.state.matches && this.state.matches.map((val, index) => (
-                    <InboxItem key={val} profile={val} onPress={this.onNavigateToChat} onLongPress={() => this.setModalVisible(true, val.user_id)} getLastMessage={() => this.getMostRecentMessage(val.user_id)}/>
+                    <InboxItem
+                      key={index}
+                      profile={val}
+                      onPress={this.onNavigateToChat}
+                      onLongPress={() => this.setModalVisible(true, val.user_id)}
+                      lastMessage={this.getMostRecentMessage(val.user_id)}
+                    />
                   ))}
                   // Add a message for new matches
                   <Text style={{fontFamily: 'orkney-light', marginTop: 15, textAlign: 'center', color: 'grey'}}>Looking for more chats?</Text>
                   <Text style={{fontFamily: 'orkney-light', textAlign: 'center', color: 'grey'}}>{"They'll show up here when you have a match."}</Text>
                 </FadeWrapper>
               </View>
-            )}
+
         </ScrollView>
         <AwesomeAlert
           show={this.state.showDeleteModal}

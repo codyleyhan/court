@@ -56,7 +56,7 @@ export default class ChatScreen extends React.Component {
         />
         // Chats
         <ChatView
-          goToProfile={() => this.goToProfile(chatName, profileInfo)}
+          goToProfile={() => this.goToProfile(displayName, profileInfo)}
           color={Colors[color]}
           profileInfo={profileInfo}
           messages={messages}

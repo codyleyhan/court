@@ -160,6 +160,17 @@ export default class ChatView extends React.Component {
     );
   }
 
+  renderFooter = (props) => {
+    return (
+      null
+      // <View style={styles.footerContainer}>
+      //   <Text style={styles.footerText}>
+      //     {"You've unlocked a new interest!"}
+      //   </Text>
+      // </View>
+    );
+  }
+
   render() {
     return (
       <GiftedChat
@@ -171,6 +182,7 @@ export default class ChatView extends React.Component {
         renderTime={this.renderTime}
         renderMessageText={this.renderMessageText}
         renderComposer={this.renderComposer}
+        renderFooter={this.renderFooter}
         minInputToolbarHeight={40}
         bottomOffset={76}
         user={{
@@ -182,6 +194,18 @@ export default class ChatView extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  footerContainer: {
+    marginTop: 5,
+    marginLeft: 10,
+    marginRight: 10,
+    marginBottom: 10,
+  },
+  footerText: {
+    fontSize: 14,
+    fontFamily: 'orkney-medium',
+    color: '#aaa',
+    textAlign: 'center',
+  },
   sendButton: {
     width: 35,
     height: 35,

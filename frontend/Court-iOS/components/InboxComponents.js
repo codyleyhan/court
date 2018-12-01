@@ -12,6 +12,7 @@ import Colors from '../constants/Colors';
 * Card in the user's inbox for each of their current chats
 */
 export class InboxItem extends React.Component {
+
   onPressChat = () => {
     const { profile, name } = this.props;
     // This is where we should handle navigation to the chat screen
@@ -28,10 +29,10 @@ export class InboxItem extends React.Component {
   }
 
   render() {
-    const { profile, getLastMessage } = this.props;
-    const lastMessage = getLastMessage();
+    const { profile, lastMessage } = this.props;
+    // const lastMessage = getLastMessage();
     const { text, createdAt } = lastMessage;
-    const date = Date(createdAt);
+    const date = moment(createdAt);
     let formattedDate = moment(date).format('lll');
     const { animal, color, first_name, last_name, profile_picture, percent_unlocked } = profile;
     const displayName = first_name ? first_name + ' ' + last_name : 'Anonymous ' + animal.charAt(0).toUpperCase() + animal.slice(1);;
