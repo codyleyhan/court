@@ -286,6 +286,14 @@ class MatchService:
               pairs[match[1]][i] = None
               break
 
-    user_matches = map(lambda x: (x[0], { x[1] : user_profile.interests[x[1]] }), matches[user_id])
+    def _format_matches(user_profile, match_id, common_interest):
+      description = ''
+      if common_interest != '':
+        description = user_profile.interests[common_interest]
+      return (match_id, { common_interest : description })
 
-    return list(user_matches)
+    user_matches = list(map(lambda x: _format_matches(user_profile, x[0], x[1]), matches[user_id]))
+    for user_match in user_matches:
+      success = self.add_match_to_profile(user_match[0], user_match[1])
+
+    return user_matches
