@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  AsyncStorage,
   Image,
   Platform,
   RefreshControl,
@@ -17,9 +18,13 @@ import { InboxItem } from '../components/InboxComponents';
 import FadeWrapper from '../components/FadeWrapper';
 import Header from '../components/Header';
 
+import Authentication from '../constants/Authentication';
+import Network from '../constants/Network';
 import Colors from '../constants/Colors';
 
 import { getMatches, deleteMatch } from '../utils/api/Matches';
+
+const io = require('socket.io-client');
 
 export default class InboxScreen extends React.Component {
   state = {
@@ -61,6 +66,43 @@ export default class InboxScreen extends React.Component {
 
   constructor() {
     super();
+    // TEST SOCKETS
+    AsyncStorage.getItem(Authentication.AUTH_TOKEN).then((auth_token) => {
+      if (auth_token !== null) {
+        this.socket = io(Network.base_socket_url, {
+          transports: ['websocket'],
+          query: { token: auth_token },
+        });
+        socket.on('connect', () => {
+          console.log('Socket connected');
+          this.setState({ connected: true });
+        });
+        socket.on('connect_error', (error) => {
+          console.log('Socket connect error');
+          console.log(error);
+        });
+        socket.on('connect_timeout', (error) => {
+          console.log('Socket timeout error');
+          console.log(error);
+        });
+        socket.on('error', (error) => {
+          console.log('Socket error');
+          console.log(error);
+        });
+        socket.on('disconnect', (reason) => {
+          console.log('Socket disconnected');
+          console.log(reason);
+        });
+        socket.on('new_message', (message) => {
+          console.log(message);
+        });
+        socket.emit('message', {
+          body: 'test message for socket testing',
+          thread: 2,
+        });
+      }
+    });
+
     this.fetchMatches();
     // setTimeout(() => {
     //   this.setState({ matches: [{user_id: 123, first_name: "Jason", last_name: "Roberts", animal:'deer', color:'blue', interests: {}, percent_unlocked: 14, gender: 'Male', preferred_gender: 'Female'}] });
