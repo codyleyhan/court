@@ -21,7 +21,7 @@ class User(db.Model):
   email = db.Column(db.String(128), unique=True, nullable=False)
   profile = db.relationship('Profile', backref='user', lazy=True, uselist=False)
   threads = db.relationship('Thread', secondary=thread_users,
-    back_populates="users")
+    back_populates='users')
 
   created_at = db.Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
   updated_at = db.Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
@@ -46,7 +46,6 @@ class Profile(db.Model):
     self.last_name = last_name
     self.profile_picture = profile_picture
 
-  # TODO(anthonymirand): replace all Profile.id with Profile.user_id (fb_id)
   id = db.Column(db.Integer, primary_key=True)
   user_id = db.Column(db.BigInteger, db.ForeignKey('users.id'), nullable=False)
   first_name = db.Column(db.String(128), nullable=False)
@@ -62,10 +61,15 @@ class Profile(db.Model):
   _interests = db.Column(db.String, default='{}')
   @property
   def interests(self):
-    return json.loads(self._interests)
+    value = json.loads(self._interests)
+    if (type(value) is str):
+      value = json.loads(value)
+    return value
   @interests.setter
   def interests(self, value):
-    self._interests = value
+    if (type(value) is str):
+      value = json.loads(value)
+    self._interests = json.dumps(value)
 
   _match_history = db.Column(db.String, default='{}')
   @property

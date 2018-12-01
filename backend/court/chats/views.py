@@ -12,7 +12,7 @@ class MessageAPI(MethodView):
   """
   def __init__(self, thread_service, auth_service):
     """
-    Creates a new MessageAPI object.  Should be called with 
+    Creates a new MessageAPI object.  Should be called with
     MessageAPI.as_view(url, thread_service, auth_service) to initialize.
 
     :param thread_service: a ThreadService instance
@@ -69,14 +69,23 @@ class MessageAPI(MethodView):
     messages = self.thread_service.get_messages(user_id, thread_id, first, after_id, before_id)
 
     return jsonify(messages=messages)
-  
+
+  def delete(self, user_id):
+    """
+    Processes a HTTP DELETE request for the thread REST API.
+
+    :return: a Flask HTTP response if the user's thread was deleted
+    """
+    status = self.thread_service.delete_thread(user_id)
+    return jsonify(status=status)
+
 class ThreadAPI(MethodView):
   """
   Provides the view layer API for threads
   """
   def __init__(self, auth_service):
     """
-    Creates a new ThreadAPI object.  Should be called with 
+    Creates a new ThreadAPI object.  Should be called with
     ThreadAPI.as_view(url, auth_service) to initialize.
 
     :param auth_service: an AuthService instance
@@ -95,7 +104,7 @@ class ThreadAPI(MethodView):
       GET localhost:8000/api/threads
 
     Example response:
-    
+
     .. code-block:: json
 
       {
@@ -120,6 +129,5 @@ class ThreadAPI(MethodView):
     :return: a Flask HTTP response of all users threads
     """
     user = self.auth_service.get_current_user()
+    return jsonify(threads=[thread for thread in user.threads if thread.is_active])
 
-    return jsonify(threads=user.threads)
-    

@@ -31,7 +31,7 @@ def seed_data(db_conn):
   user1_profile.last_name = 'Bruin'
   user1_profile.gender = 'Male'
   user1_profile.preferred_gender = 'Female'
-  user1_profile.interests = json.dumps({'interest1':'value1'})
+  user1_profile.interests = '{"interest1":"value1"}'
   user1_profile.match_history = {
     '2': {
       'active': True,
@@ -58,7 +58,7 @@ def seed_data(db_conn):
   user2_profile.last_name = 'Bruin'
   user2_profile.gender = 'Female'
   user2_profile.preferred_gender = 'Male'
-  user2_profile.interests = json.dumps({'interest2':'value2'})
+  user2_profile.interests = '{"interest2":"value2"}'
   user2_profile.match_history = {
     '1': {
       'active': True,
@@ -85,7 +85,7 @@ def seed_data(db_conn):
   user3_profile.last_name = 'Bruin'
   user3_profile.gender = 'Female'
   user3_profile.preferred_gender = 'Male'
-  user3_profile.interests = json.dumps({'interest3':'value3'})
+  user3_profile.interests = '{"interest3":"value3"}'
   user3.profile = user3_profile
 
   user4 = User()

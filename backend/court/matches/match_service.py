@@ -41,12 +41,16 @@ class MatchService:
 
     return {}
 
-  def inactivate_match(self, user_id):
+  def inactivate_match(self, user_id, purge=False):
     """
     Inactivates a match to and from the user in the current context and a specified user.
 
+    Also triggers the message thread to be deleted from thread_service.
+
     :param user_id: user id of the match to the user in the current context
     :type user_id: int
+    :param purge: optional argument to mark match inactive or delete from database
+    :type purge: boolean
 
     :return: Whether or not a match was successfully deleted
     :rtype: bool
@@ -64,8 +68,12 @@ class MatchService:
        str(g.user_id) not in matched_user_match_history.keys():
        return False
 
-    user_match_history[str(user_id)]['active'] = False
-    matched_user_match_history[str(g.user_id)]['active'] = False
+    if purge:
+      del user_match_history[str(user_id)]
+      del matched_user_match_history[str(g.user_id)]
+    else:
+      user_match_history[str(user_id)]['active'] = False
+      matched_user_match_history[str(g.user_id)]['active'] = False
 
     setattr(user, 'match_history', user_match_history)
     setattr(matched_user, 'match_history', matched_user_match_history)
@@ -73,7 +81,7 @@ class MatchService:
 
     return True
 
-  def add_match_to_profile(self, user_id, matched_interest):
+  def add_match_to_profile(self, user_id, matched_interest, force=False):
     """
     Adds a match for the user in the current context with a specified user.
     If a match has not previously been made then return True, else False.
@@ -82,6 +90,8 @@ class MatchService:
     :type user_id: int
     :param matched_interest:  one interest that the matched user and user in the current context have in common
     :type matched_interest: key value of interest in common
+    :param force: optional argument to override previous match with user
+    :type force: boolean
 
     :return: Whether a new match was successfully made
     :rtype: bool
@@ -95,9 +105,10 @@ class MatchService:
     user_match_history = user.match_history
     matched_user_match_history = matched_user.match_history
 
-    if str(user_id) in user.match_history.keys() or \
-       str(g.user_id) in matched_user.match_history.keys():
-      return False
+    if not force:
+      if str(user_id) in user.match_history.keys() or \
+         str(g.user_id) in matched_user.match_history.keys():
+        return False
 
     user_dict = user._asdict()
     matched_user_dict = matched_user._asdict()
@@ -169,8 +180,9 @@ class MatchService:
     user_dict = user._asdict()
     matched_user_dict = matched_user._asdict()
 
-    def _unlock_next_interest(from_history, to_user_id, to_dict):
+    def _unlock_next_feature(from_history, to_user_id, to_dict):
       # Unlock to_user_id's features for from_{user}'s match_history
+      print(type(to_dict['interests'])); print(to_dict['interests'])
       if len(from_history[str(to_user_id)]['profile']['interests']) < len(to_dict['interests']):
         # Continue unlocking interests for to_user_id user
         unlocked_interests = from_history[str(to_user_id)]['profile']['interests'].keys()
@@ -192,9 +204,9 @@ class MatchService:
           user_match_history[str(to_user_id)]['profile']['profile_picture'] = profile_picture
       return from_history[str(to_user_id)]
 
-    user_match_history[str(user_id)] = _unlock_next_interest(
+    user_match_history[str(user_id)] = _unlock_next_feature(
         user_match_history, str(user_id), matched_user_dict)
-    matched_user_match_history[str(g.user_id)] = _unlock_next_interest(
+    matched_user_match_history[str(g.user_id)] = _unlock_next_feature(
         matched_user_match_history, str(g.user_id), user_dict)
 
     def _compute_unlock_percentage(from_history, to_user_id, to_dict):

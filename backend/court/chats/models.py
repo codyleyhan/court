@@ -27,7 +27,7 @@ class Thread(db.Model):
   updated_at = db.Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
 
   def __repr__(self):
-    return '<Thread %d %r %d>' % (self.id, self.is_active, self.updated_at)
+    return '<Thread %d %r %r>' % (self.id, self.is_active, self.updated_at)
 
   def _asdict(self):
     return {
