@@ -15,3 +15,6 @@ test:
 migrate:
 	python migrate.py
 
+gen-cov:
+	pytest --cov-report html:../docs/cov --cov=court tests
+
