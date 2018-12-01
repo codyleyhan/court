@@ -379,6 +379,7 @@ def test_find_match_1(app):
     assert '3' not in matches_for_4.keys()
     g.user_id = '3'
 
+    # Check users 3 and 4 got matched on interest3
     find_match_for_3 = match_service.find_match(3, 1)
     match_result = (4, { 'interest3' : 'value3' })
     assert len(find_match_for_3) == 1
@@ -417,6 +418,9 @@ def test_find_match_2(app):
     assert len(find_match_for_3) == 2
 
     # Check users 1 and 4 got added as an active match for user 3
+    # User 4 is matched based on the shared interest3
+    # User 1 is matched even without common interests because it is the only 
+    # other user in the database satisying user 3's gender preferences
     matches_for_3 = match_service.get_current_matches()
     assert len(matches_for_3) == 2
     assert matches_for_3['4']['profile']['interests'] == { 'interest3' : 'value3' }

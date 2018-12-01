@@ -232,6 +232,17 @@ class MatchService:
             matched_user_match_history[str(g.user_id)]['percent_unlocked'])
 
   def find_match(self, user_id, num_matches):
+    """
+    Computes and returns matches for a given user
+
+    :param user_id: user id of the match to the user in the current context
+    :type user_id: int
+    :param num_matches: number of matches that should be computed
+    :type num_matches: int
+
+    :return: List of tuples containing and int and a key value of a common interest
+    :rtype: list(tuple(int, { key : value }))
+    """
     profiles = self.db.session.query(Profile)
     N = len(profiles.all())
     pairs = [[None for y in range(N)] for x in range(N)]
