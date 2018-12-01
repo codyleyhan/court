@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Haptic } from 'expo';
+import moment from 'moment';
 
 import Avatar from '../components/Avatar';
 
@@ -27,8 +28,11 @@ export class InboxItem extends React.Component {
   }
 
   render() {
-    const { profile, lastMessage } = this.props;
+    const { profile, getLastMessage } = this.props;
+    const lastMessage = getLastMessage();
     const { text, createdAt } = lastMessage;
+    const date = Date(createdAt);
+    let formattedDate = moment(date).format('lll');
     const { animal, color, first_name, last_name, profile_picture, percent_unlocked } = profile;
     const displayName = first_name ? first_name + ' ' + last_name : 'Anonymous ' + animal.charAt(0).toUpperCase() + animal.slice(1);;
     return (
@@ -44,7 +48,7 @@ export class InboxItem extends React.Component {
             ) : (
               <View>
                 <Text style={styles.messageStyle} numberOfLines={1}>{text}</Text>
-                <Text style={styles.timeStyle}>{createdAt}</Text>
+                <Text style={styles.timeStyle}>{formattedDate}</Text>
               </View>
             )}
           </View>
@@ -75,7 +79,7 @@ InboxItem.propTypes = {
   /**
   * The time that the last message was sent
   */
-  
+
   /**
   * Percent of profile unlocked for the given user
   */
@@ -127,9 +131,10 @@ const styles = StyleSheet.create({
   messageStyle: {
     fontFamily: 'orkney-regular',
     fontSize: 15,
+    paddingTop: 3
   },
   timeStyle: {
-    paddingTop: 8,
+    paddingTop: 6,
     fontFamily: 'orkney-light',
     color: 'grey',
   },

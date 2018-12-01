@@ -56,9 +56,10 @@ export default class InboxScreen extends React.Component {
 
   handleNewMessage = (message, currentUserID) => {
     const userid = message.user_id;
-    if (this.state.messages[userid] || userid === currentUserID) {
+    if (this.state.messages) {
       // User in our current matches
-      this.state.messages[userid].push({
+      let oldMessages = this.state.messages;
+      oldMessages[userid].push({
         _id: message.id,
         text: message.body,
         createdAt: message.created_at,
@@ -66,6 +67,7 @@ export default class InboxScreen extends React.Component {
           _id: message.user_id,
         },
       });
+      this.setState({ messages: oldMessages });
     }
   }
 
@@ -104,8 +106,7 @@ export default class InboxScreen extends React.Component {
         // Got matches object
         matches = this.parseMatches(response.matches);
         // Now setup chats
-        this.setupThreads(userid);
-        this.setState({ matches: matches });
+        this.setupThreads(userid, matches);
       } else {
         // Error querying API
         alert('Error querying matches');
@@ -128,16 +129,20 @@ export default class InboxScreen extends React.Component {
     return newMessages;
   }
 
-  setupThreads = (currentUserID) => {
+  setupThreads = (currentUserID, matches) => {
     // Fetch a structure a user's threads
     getThreads().then(response => {
-      if (response && response.threads && response.threads.length > 0) {
+      if (response && response.threads) {
         // Got threads
         // Now destructure and format
         let threads = {};
         response.threads.map((thread, index) => {
           // Create mapping from userid to thread_id
-          threads[thread.users[1].id] = thread.id;
+          if (thread.users[0].id !== currentUserID) {
+            threads[thread.users[0].id] = thread.id;
+          } else {
+            threads[thread.users[1].id] = thread.id;
+          }
         });
         // Now fetch messages for each thread
         let messages = {};
@@ -153,7 +158,8 @@ export default class InboxScreen extends React.Component {
         });
         // Now iniaite chat connections for each match
         this.connectSocket(currentUserID);
-        this.setState({ threads: threads, messages: messages });
+        console.log(threads);
+        this.setState({ threads: threads, matches: matches, messages: messages });
       } else {
         // Error querying API
         alert('Error querying threads');
@@ -161,18 +167,26 @@ export default class InboxScreen extends React.Component {
     });
   }
 
-  constructor() {
-    super();
-    // Fetch a users matches
+  componentDidMount() {
+    this._sub = this.props.navigation.addListener(
+      'didFocus',
+      this._componentFocused
+    );
+    this._componentFocused();
+  }
+
+  componentWillUnmount() {
+    this._sub.remove();
+  }
+
+  _componentFocused = () => {
     AsyncStorage.getItem(Authentication.AUTH_USER, null).then(profile => {
       if (profile) {
+        profile = JSON.parse(profile);
         this.currentUserID = profile.user_id;
         this.fetchMatches(profile.user_id);
       }
-    })
-    // setTimeout(() => {
-    //   this.setState({ matches: [{user_id: 123, first_name: "Jason", last_name: "Roberts", animal:'deer', color:'blue', interests: {}, percent_unlocked: 14, gender: 'Male', preferred_gender: 'Female'}] });
-    // }, 1500);
+    });
   }
 
   _onRefresh = () => {
@@ -195,6 +209,7 @@ export default class InboxScreen extends React.Component {
   }
 
   onNavigateToChat = (name, profileInfo) => {
+    this.socket.disconnect();
     this.props.navigation.navigate('Chats', { chatName: name, profileInfo: profileInfo, messages: this.state.messages[profileInfo.user_id], currentUserID: this.currentUserID, thread_id: this.state.threads[profileInfo.user_id] });
   }
 
@@ -252,31 +267,36 @@ export default class InboxScreen extends React.Component {
           }
           >
             // Display loading for finding matches
-            <FadeWrapper visible={this.state.matches === null} >
-              <LottieView
-                source={require('../assets/animations/preloader.json')}
-                autoPlay
-                speed={0.75}
-                loop={true}
-                style={styles.animation}
-              />
-              <Text style={{fontFamily: 'orkney-light', fontSize: 25, textAlign: 'center', color: 'grey'}}>Looking for matches...</Text>
-            </FadeWrapper>
-            // No matches
-            <FadeWrapper visible={this.state.matches !== null && this.state.matches.length == 0} delay={300}>
-              <Text style={{fontFamily: 'orkney-medium', marginTop: 100, fontSize: 35, textAlign: 'center', color: 'grey'}}>No matches...</Text>
-              <Text style={{marginTop: 50, fontSize: 100, textAlign: 'center'}}>😢</Text>
-              <Text style={{fontFamily: 'orkney-regular', marginTop: 50, fontSize: 20, textAlign: 'center', color: 'grey'}}>{"Don't worry, we'll keep looking.\nCome back later to check again!"}</Text>
-            </FadeWrapper>
-            // Show match list
-            <FadeWrapper visible={this.state.matches !== null && this.state.matches.length > 0} delay={300}>
-              {this.state.matches && this.state.matches.map((val, index) => (
-                <InboxItem key={val} profile={val} onPress={this.onNavigateToChat} onLongPress={() => this.setModalVisible(true, val.user_id)} lastMessage={this.getMostRecentMessage(val.user_id)}/>
-              ))}
-              // Add a message for new matches
-              <Text style={{fontFamily: 'orkney-light', marginTop: 15, textAlign: 'center', color: 'grey'}}>Looking for more chats?</Text>
-              <Text style={{fontFamily: 'orkney-light', textAlign: 'center', color: 'grey'}}>{"They'll show up here when you have a match."}</Text>
-            </FadeWrapper>
+            {this.state.matches === null ? (
+              <FadeWrapper visible={this.state.matches === null} >
+                <LottieView
+                  source={require('../assets/animations/preloader.json')}
+                  autoPlay
+                  speed={0.75}
+                  loop={true}
+                  style={styles.animation}
+                />
+                <Text style={{fontFamily: 'orkney-light', fontSize: 25, textAlign: 'center', color: 'grey'}}>Looking for matches...</Text>
+              </FadeWrapper>
+            ) : (
+              // No matches
+              <View>
+                <FadeWrapper visible={this.state.matches !== null && this.state.matches.length == 0} delay={300}>
+                  <Text style={{fontFamily: 'orkney-medium', marginTop: 100, fontSize: 35, textAlign: 'center', color: 'grey'}}>No matches...</Text>
+                  <Text style={{marginTop: 50, fontSize: 100, textAlign: 'center'}}>😢</Text>
+                  <Text style={{fontFamily: 'orkney-regular', marginTop: 50, fontSize: 20, textAlign: 'center', color: 'grey'}}>{"Don't worry, we'll keep looking.\nCome back later to check again!"}</Text>
+                </FadeWrapper>
+                // Show match list
+                <FadeWrapper visible={this.state.matches !== null && this.state.matches.length > 0} delay={300}>
+                  {this.state.matches && this.state.matches.map((val, index) => (
+                    <InboxItem key={val} profile={val} onPress={this.onNavigateToChat} onLongPress={() => this.setModalVisible(true, val.user_id)} getLastMessage={() => this.getMostRecentMessage(val.user_id)}/>
+                  ))}
+                  // Add a message for new matches
+                  <Text style={{fontFamily: 'orkney-light', marginTop: 15, textAlign: 'center', color: 'grey'}}>Looking for more chats?</Text>
+                  <Text style={{fontFamily: 'orkney-light', textAlign: 'center', color: 'grey'}}>{"They'll show up here when you have a match."}</Text>
+                </FadeWrapper>
+              </View>
+            )}
         </ScrollView>
         <AwesomeAlert
           show={this.state.showDeleteModal}

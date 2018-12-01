@@ -26,8 +26,6 @@ export default class ChatView extends React.Component {
   }
 
   handleNewMessage = (message) => {
-    console.log('New Message');
-    console.log(message);
     this.setState(previousState => ({
       messages: GiftedChat.append(previousState.messages, [{
           _id: message.id,
@@ -71,9 +69,6 @@ export default class ChatView extends React.Component {
         thread: this.thread_id,
       });
     }
-    this.setState(previousState => ({
-      messages: GiftedChat.append(previousState.messages, messages),
-    }));
   }
 
   renderAvatar = () => {
@@ -179,7 +174,7 @@ export default class ChatView extends React.Component {
         minInputToolbarHeight={40}
         bottomOffset={76}
         user={{
-          _id: 1,
+          _id: this.props.currentUserID,
         }}
       />
     )

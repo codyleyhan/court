@@ -16,6 +16,7 @@
     "@expo/samples": "2.1.1",
     "expo": "^30.0.1",
     "lottie-react-native": "^2.5.10",
+    "moment": "^2.22.2",
     "react": "16.3.1",
     "react-docgen": "^2.21.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-30.0.0.tar.gz",
