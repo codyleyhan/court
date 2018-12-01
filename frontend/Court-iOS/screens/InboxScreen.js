@@ -158,7 +158,6 @@ export default class InboxScreen extends React.Component {
         });
         // Now iniaite chat connections for each match
         this.connectSocket(currentUserID);
-        console.log(threads);
         this.setState({ threads: threads, matches: matches, messages: messages });
       } else {
         // Error querying API
@@ -169,7 +168,7 @@ export default class InboxScreen extends React.Component {
 
   componentDidMount() {
     this._sub = this.props.navigation.addListener(
-      'didFocus',
+      'willFocus',
       this._componentFocused
     );
     this._componentFocused();
@@ -180,13 +179,17 @@ export default class InboxScreen extends React.Component {
   }
 
   _componentFocused = () => {
-    AsyncStorage.getItem(Authentication.AUTH_USER, null).then(profile => {
-      if (profile) {
-        profile = JSON.parse(profile);
-        this.currentUserID = profile.user_id;
-        this.fetchMatches(profile.user_id);
-      }
-    });
+    if (this.currentUserID) {
+      this.fetchMatches(this.currentUserID);
+    } else {
+      AsyncStorage.getItem(Authentication.AUTH_USER, null).then(profile => {
+        if (profile) {
+          profile = JSON.parse(profile);
+          this.currentUserID = profile.user_id;
+          this.fetchMatches(profile.user_id);
+        }
+      });
+    }
   }
 
   _onRefresh = () => {
@@ -235,13 +238,8 @@ export default class InboxScreen extends React.Component {
   getMostRecentMessage = (userid) => {
     const userMessages = this.state.messages[userid];
     let lastMessage = {text: '', createdAt: ''};
-    let maxID = 0;
-    for (x in userMessages) {
-      const message = userMessages[x];
-      if (message._id >= maxID) {
-        maxID = message._id;
-        lastMessage = message;
-      }
+    if (userMessages && userMessages.length > 0) {
+      lastMessage = userMessages[0];
     }
     return lastMessage;
   }
