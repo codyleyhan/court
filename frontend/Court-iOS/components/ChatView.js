@@ -3,56 +3,77 @@ import PropTypes from 'prop-types';
 import { Icon, Haptic } from 'expo';
 import { Bubble, Composer, InputToolbar, GiftedChat, MessageText, Send, Time } from 'react-native-gifted-chat'
 
-import { Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { AsyncStorage, Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Avatar from './Avatar';
 import Mask from 'react-native-mask';
+import Authentication from '../constants/Authentication';
+import Network from '../constants/Network';
 import Colors from '../constants/Colors';
+
+const io = require('socket.io-client');
 
 export default class ChatView extends React.Component {
   state = {
     messages: [],
   }
 
-  componentWillMount() {
-    this.setState({
-      messages: [
-        {
-          _id: 1,
-          text: "Party Rock 👌😎👌😎👌😎📢is in the house tonight✨🏚️🏠🌙\n\n💯💯hit that MF like button🤜🤜🔴",
-          createdAt: new Date(),
+  constructor(props) {
+    super(props);
+    this.thread_id = props.thread_id;
+    this.currentUserID = props.currentUserID;
+    this.setUpSocket();
+    this.state = { messages: props.messages };
+  }
+
+  handleNewMessage = (message) => {
+    console.log('New Message');
+    console.log(message);
+    this.setState(previousState => ({
+      messages: GiftedChat.append(previousState.messages, [{
+          _id: message.id,
+          text: message.body,
+          createdAt: message.created_at,
           user: {
-            _id: 2,
-            name: 'Justin Roberts',
-            avatar: 'https://heightline.com/wp-content/uploads/Justin-Roberts-640x427.jpg',
+            _id: message.user_id,
           },
-        },
-      ],
-    })
+        }]),
+    }));
+  }
+
+  setUpSocket = () => {
+    // Fetch auth token, connect to a socket
+    AsyncStorage.getItem(Authentication.AUTH_TOKEN).then((auth_token) => {
+      if (auth_token !== null) {
+        this.socket = io(Network.base_socket_url, {
+          transports: ['websocket'],
+          query: { token: auth_token },
+        });
+        this.socket.on('connect', () => {
+          // Join thread
+          this.socket.emit('join', {
+            thread: this.thread_id,
+          });
+        });
+        this.socket.on('new_message', (message) => {
+          this.handleNewMessage(message);
+        });
+      }
+    });
   }
 
   onSend = (messages = []) => {
     Haptic.impact('light');
+    // Send over socket
+    for (x in messages) {
+      // Emitting message object
+      this.socket.emit('message', {
+        body: messages[x].text,
+        thread: this.thread_id,
+      });
+    }
     this.setState(previousState => ({
       messages: GiftedChat.append(previousState.messages, messages),
     }));
-
-    // respond after a delay
-    setTimeout(() => {
-      responseMessages = [{
-        _id: 3,
-        text: "Me too, sounds good.",
-        createdAt: new Date(),
-        user: {
-          _id: 2,
-          name: this.props.profileInfo.name,
-          avatar: 'https://heightline.com/wp-content/uploads/Justin-Roberts-640x427.jpg',
-        },
-      }];
-      Haptic.impact('light');
-      this.setState(previousState => ({
-        messages: GiftedChat.append(previousState.messages, responseMessages),
-      }));
-    }, 2000);
   }
 
   renderAvatar = () => {

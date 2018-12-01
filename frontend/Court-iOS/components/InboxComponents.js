@@ -12,9 +12,9 @@ import Colors from '../constants/Colors';
 */
 export class InboxItem extends React.Component {
   onPressChat = () => {
-    const { profile, lastMessage, lastTime} = this.props;
+    const { profile, name } = this.props;
     // This is where we should handle navigation to the chat screen
-    this.props.onPress(this.props.name, profile);
+    this.props.onPress(name, profile);
     // Provide Haptic Feedback
     Haptic.impact('light');
   }
@@ -71,11 +71,11 @@ InboxItem.propTypes = {
   /**
   * The text of the last message sent in the chat
   */
-  lastMessage: PropTypes.string.isRequired,
+  lastMessage: PropTypes.object.isRequired,
   /**
   * The time that the last message was sent
   */
-  lastTime: PropTypes.string.isRequired,
+  
   /**
   * Percent of profile unlocked for the given user
   */

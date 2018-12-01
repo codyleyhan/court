@@ -166,7 +166,8 @@ export default class InboxScreen extends React.Component {
     // Fetch a users matches
     AsyncStorage.getItem(Authentication.AUTH_USER, null).then(profile => {
       if (profile) {
-          this.fetchMatches(profile.user_id);
+        this.currentUserID = profile.user_id;
+        this.fetchMatches(profile.user_id);
       }
     })
     // setTimeout(() => {
@@ -194,7 +195,7 @@ export default class InboxScreen extends React.Component {
   }
 
   onNavigateToChat = (name, profileInfo) => {
-    this.props.navigation.navigate('Chats', {chatName: name, profileInfo: profileInfo});
+    this.props.navigation.navigate('Chats', { chatName: name, profileInfo: profileInfo, messages: this.state.messages[profileInfo.user_id], currentUserID: this.currentUserID, thread_id: this.state.threads[profileInfo.user_id] });
   }
 
   removeMatch = () => {
@@ -220,7 +221,8 @@ export default class InboxScreen extends React.Component {
     const userMessages = this.state.messages[userid];
     let lastMessage = {text: '', createdAt: ''};
     let maxID = 0;
-    for (message in userMessages) {
+    for (x in userMessages) {
+      const message = userMessages[x];
       if (message._id >= maxID) {
         maxID = message._id;
         lastMessage = message;

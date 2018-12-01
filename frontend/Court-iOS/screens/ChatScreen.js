@@ -28,6 +28,9 @@ export default class ChatScreen extends React.Component {
   render() {
     const { navigation } = this.props;
     const profileInfo = navigation.getParam('profileInfo', {});
+    const messages = navigation.getParam('messages', []);
+    const currentUserID = navigation.getParam('currentUserID', null);
+    const thread_id = navigation.getParam('thread_id', null);
     const { animal, color, first_name, last_name, profile_picture, percent_unlocked } = profileInfo;
     const displayName = first_name ? first_name + ' ' + last_name : 'Anonymous ' + animal.charAt(0).toUpperCase() + animal.slice(1);
     const profileIcon = (
@@ -44,9 +47,22 @@ export default class ChatScreen extends React.Component {
     return (
       <View style={styles.container}>
         // Header bar
-        <Header color={Colors[color]} text={displayName} showBack={true} rightIcon={profileIcon} navigation={this.props.navigation}/>
+        <Header
+          color={Colors[color]}
+          text={displayName}
+          showBack={true}
+          rightIcon={profileIcon}
+          navigation={this.props.navigation}
+        />
         // Chats
-        <ChatView goToProfile={() => this.goToProfile(chatName, profileInfo)} color={Colors[color]} profileInfo={profileInfo}/>
+        <ChatView
+          goToProfile={() => this.goToProfile(chatName, profileInfo)}
+          color={Colors[color]}
+          profileInfo={profileInfo}
+          messages={messages}
+          currentUserID={currentUserID}
+          thread_id={thread_id}
+        />
       </View>
     );
   }
