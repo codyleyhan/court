@@ -87,7 +87,7 @@ def add_routes(app, socketio):
   app.add_url_rule('/api/matches/<int:user_id>', view_func=match_view, methods=['DELETE'])
 
   # register socket
-  socketio.on_namespace(ThreadSockets(None, auth_service, thread_service, app.logger))
+  socketio.on_namespace(ThreadSockets(None, auth_service, thread_service, match_service, app.logger))
   @socketio.on_error_default
   def handle_socket_error(e):
     emit('error', e.to_dict())

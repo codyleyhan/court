@@ -147,6 +147,32 @@ class ThreadService:
 
     return message
 
+  def update_chat_state(self, user_id, thread_id):
+    """
+    Updates the chat state with the metadata from the most recent message
+
+    :param user_id: the specified user id
+    :type user_id: int
+    :param thread_id: the id of the message thread
+    :type thread_id: int
+    :return: number of message pairs
+    :rtype: int
+    """
+    if user_id is None or thread_id is None:
+      raise RuntimeError()
+
+    thread = self.get_thread(user_id, thread_id)
+    if thread.last_message_from == None:
+      thread.last_message_from = user_id
+      thread.message_pairs = 1
+    elif thread.last_message_from != user_id:
+      thread.last_message_from = user_id
+      thread.message_pairs += 1
+
+    self.db.session.commit()
+
+    return thread.message_pairs
+
   def delete_thread(self, user_id, purge=False):
     """
     Deletes a thread to a specified user_id
