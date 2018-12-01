@@ -438,3 +438,33 @@ def test_find_match_2(app):
     assert len(matches_for_1) == 2
     assert matches_for_1['3']['profile']['interests'] == { '' : '' }
 
+def test_find_match_3(app):
+  with app.app_context():
+    g.user_id = '1'
+    auth_service = AuthService('secret')
+    match_service = MatchService()
+
+    # Check user 1 and user 3 are currently not matched
+    matches_for_1 = match_service.get_current_matches()
+    assert '3' not in matches_for_1.keys()
+    g.user_id = '3'
+    matches_for_3 = match_service.get_current_matches()
+    assert '1' not in matches_for_3.keys()
+    g.user_id = '1'
+
+    # Check that only one match is generated because user 2 is
+    # already in user 1's match history
+    find_match_for_1 = match_service.find_match(1, 2)
+    assert len(find_match_for_1) == 1
+
+    # Check user 3 got added as an active match for user 1
+    matches_for_1 = match_service.get_current_matches()
+    assert len(matches_for_1) == 2
+    assert matches_for_1['3']['profile']['interests'] == { '' : '' }
+
+    # Check user 1 got added as an active match for user 3
+    g.user_id = '3'
+    matches_for_3 = match_service.get_current_matches()
+    assert len(matches_for_3) == 1
+    assert matches_for_3['1']['profile']['interests'] == { '' : '' }
+

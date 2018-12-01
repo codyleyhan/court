@@ -250,26 +250,30 @@ class MatchService:
     preferences = {}
     matches = {}
     user_profile = None
+    user_index = None
 
     # creates a grid of number of common interests between users
     i = 0
     for profile1 in profiles.order_by(Profile.created_at):
-      j = 0
       if profile1.user_id == user_id:
         user_profile = profile1
+        user_index = i
+      j = 0
       user_ids.append(profile1.user_id)
       for profile2 in profiles.order_by(Profile.created_at):
         if pairs[j][i] != None:
           pairs[i][j] = pairs[j][i]
         elif profile1.id != profile2.id and profile1.gender == profile2.preferred_gender and \
           profile1.preferred_gender == profile2.gender:
-          interests1 = set(profile1.interests.keys())
-          interests2 = set(profile2.interests.keys())
-          common_interests = len(interests1 & interests2)
-          random_interest = ''
-          if common_interests != 0:
-            random_interest = (interests1 & interests2).pop()
-          pairs[i][j] = (common_interests, random_interest)
+          if str(profile2.user_id) not in profile1.match_history and \
+            str(profile1.user_id) not in profile2.match_history:
+            interests1 = set(profile1.interests.keys())
+            interests2 = set(profile2.interests.keys())
+            common_interests = len(interests1 & interests2)
+            random_interest = ''
+            if common_interests != 0:
+              random_interest = (interests1 & interests2).pop()
+            pairs[i][j] = (common_interests, random_interest)
         j += 1
       i += 1
 
@@ -282,20 +286,20 @@ class MatchService:
           if pairs[i][j] != None:
             heappush(preferences[i], (-1 * pairs[i][j][0], j))
       # iterates through preference lists to get a match for each user
-      for i in range(N):
-        if user_ids[i] not in matches:
-          matches[user_ids[i]] = []
-        if len(matches[user_ids[i]]) < num_matches:
-          while len(preferences[i]) > 0:
-            match = heappop(preferences[i])
-            if user_ids[match[1]] not in matches:
-              matches[user_ids[match[1]]] = []
-            if pairs[i][match[1]] != None and (len(matches[user_ids[match[1]]]) < num_matches or len(preferences[i]) == 0):
-              matches[user_ids[i]].append((user_ids[match[1]], pairs[i][match[1]][1]))
-              matches[user_ids[match[1]]].append((user_ids[i], pairs[i][match[1]][1]))
-              pairs[i][match[1]] = None
-              pairs[match[1]][i] = None
-              break
+      i = user_index
+      if user_ids[i] not in matches:
+        matches[user_ids[i]] = []
+      if len(matches[user_ids[i]]) < num_matches:
+        while len(preferences[i]) > 0:
+          match = heappop(preferences[i])
+          if user_ids[match[1]] not in matches:
+            matches[user_ids[match[1]]] = []
+          if pairs[i][match[1]] != None and (len(matches[user_ids[match[1]]]) < num_matches or len(preferences[i]) == 0):
+            matches[user_ids[i]].append((user_ids[match[1]], pairs[i][match[1]][1]))
+            matches[user_ids[match[1]]].append((user_ids[i], pairs[i][match[1]][1]))
+            pairs[i][match[1]] = None
+            pairs[match[1]][i] = None
+            break
 
     def _format_matches(user_profile, match_id, common_interest):
       description = ''

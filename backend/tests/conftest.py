@@ -96,7 +96,7 @@ def seed_data(db_conn):
   user4_profile.last_name = 'Bruin'
   user4_profile.gender = 'Male'
   user4_profile.preferred_gender = 'Female'
-  user4_profile.interests = json.dumps({'interest3':'value3'})
+  user4_profile.interests = '{"interest3":"value3"}'
   user4.profile = user4_profile
 
 
