@@ -9,10 +9,11 @@ class ThreadSockets(Namespace):
   providing users realtime messaging between each and notifications.
   """
 
-  def __init__(self, namespace, auth_service, thread_service, logger):
+  def __init__(self, namespace, auth_service, thread_service, match_service, logger):
     super(ThreadSockets, self).__init__(namespace=namespace)
     self.auth_service = auth_service
     self.thread_service = thread_service
+    self.match_service = match_service
     self.logger = logger
 
   def get_user_from_request(self):
@@ -37,6 +38,7 @@ class ThreadSockets(Namespace):
     """
     Occurs when an already joined user sends a message on a thread.  Message will
     be saved and then emitted to the everyone in the room including the sender.
+    Unlocks the next profile feature if enough messages have been sent
 
     Example json:
 
@@ -65,6 +67,11 @@ class ThreadSockets(Namespace):
     self.thread_service.add_message(message)
 
     self.logger.info("%s added a message to the thread %d", user_id, thread_id)
+
+    message_pairs = self.thread_service.update_chat_state(user_id, thread_id)
+    if message_pairs > 0 and message_pairs % 5 == 0:
+      unlocked = self.match_service.unlock_next_profile_feature(user_id)
+      self.logger.info("%s unlocked %d%  of the profile information", user_id, unlocked[0])
 
     emit('new_message', message, room=thread_id, broadcast=True, json=True)
   
