@@ -32,6 +32,8 @@ export default class InboxScreen extends React.Component {
     showDeleteModal: false,
     profileToDelete: null,
     matches: null,
+    threads: {},
+    messages: {},
     refreshing: false,
   };
 
@@ -52,7 +54,31 @@ export default class InboxScreen extends React.Component {
     return matches;
   }
 
-  connectSocket = () => {
+  handleNewMessage = (message, currentUserID) => {
+    const userid = message.user_id;
+    if (this.state.messages[userid] || userid === currentUserID) {
+      // User in our current matches
+      this.state.messages[userid].push({
+        _id: message.id,
+        text: message.body,
+        createdAt: message.created_at,
+        user: {
+          _id: message.user_id,
+        },
+      });
+    }
+  }
+
+  establishChats = () => {
+    Object.keys(this.state.threads).map((userid, index) => {
+      // For each thread, emit a join message for the thread
+      this.socket.emit('join', {
+        thread: this.state.threads[userid]
+      });
+    });
+  }
+
+  connectSocket = (currentUserID) => {
     // Fetch auth token, connect to a socket
     AsyncStorage.getItem(Authentication.AUTH_TOKEN).then((auth_token) => {
       if (auth_token !== null) {
@@ -62,19 +88,23 @@ export default class InboxScreen extends React.Component {
         });
         this.socket.on('connect', () => {
           console.log('Socket connected');
+          // Join each thread
+          this.establishChats();
         });
         this.socket.on('new_message', (message) => {
-          this.handleNewMessage(message);
+          this.handleNewMessage(message, currentUserID);
         });
       }
     });
   }
 
-  fetchMatches = () => {
+  fetchMatches = (userid) => {
     getMatches().then(response => {
       if (response && response.matches) {
         // Got matches object
         matches = this.parseMatches(response.matches);
+        // Now setup chats
+        this.setupThreads(userid);
         this.setState({ matches: matches });
       } else {
         // Error querying API
@@ -98,7 +128,7 @@ export default class InboxScreen extends React.Component {
     return newMessages;
   }
 
-  setupThreads = () => {
+  setupThreads = (currentUserID) => {
     // Fetch a structure a user's threads
     getThreads().then(response => {
       if (response && response.threads && response.threads.length > 0) {
@@ -113,7 +143,6 @@ export default class InboxScreen extends React.Component {
         let messages = {};
         Object.keys(threads).map((userid, index) => {
           getMessages(threads[userid]).then(response => {
-            console.log(response);
             if (response && response.messages) {
               const parsedMessages = this.parseMessages(response.messages);
               messages[userid] = parsedMessages;
@@ -122,9 +151,8 @@ export default class InboxScreen extends React.Component {
             }
           });
         });
-        // Set mapping of userid to threads and messages
-        console.log(threads);
-        console.log(messages);
+        // Now iniaite chat connections for each match
+        this.connectSocket(currentUserID);
         this.setState({ threads: threads, messages: messages });
       } else {
         // Error querying API
@@ -135,12 +163,12 @@ export default class InboxScreen extends React.Component {
 
   constructor() {
     super();
-    // Connect to webSocket for chats
-    this.connectSocket();
-    // Fetch a user's threads and setup connections
-    this.setupThreads();
     // Fetch a users matches
-    this.fetchMatches();
+    AsyncStorage.getItem(Authentication.AUTH_USER, null).then(profile => {
+      if (profile) {
+          this.fetchMatches(profile.user_id);
+      }
+    })
     // setTimeout(() => {
     //   this.setState({ matches: [{user_id: 123, first_name: "Jason", last_name: "Roberts", animal:'deer', color:'blue', interests: {}, percent_unlocked: 14, gender: 'Male', preferred_gender: 'Female'}] });
     // }, 1500);
@@ -187,6 +215,20 @@ export default class InboxScreen extends React.Component {
     });
   }
 
+  // returns most recent message for a userid
+  getMostRecentMessage = (userid) => {
+    const userMessages = this.state.messages[userid];
+    let lastMessage = {text: '', createdAt: ''};
+    let maxID = 0;
+    for (message in userMessages) {
+      if (message._id >= maxID) {
+        maxID = message._id;
+        lastMessage = message;
+      }
+    }
+    return lastMessage;
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -227,7 +269,7 @@ export default class InboxScreen extends React.Component {
             // Show match list
             <FadeWrapper visible={this.state.matches !== null && this.state.matches.length > 0} delay={300}>
               {this.state.matches && this.state.matches.map((val, index) => (
-                <InboxItem key={val} profile={val} onPress={this.onNavigateToChat} onLongPress={() => this.setModalVisible(true, val.user_id)} lastMessage="I'm really into cooking in my free time!" lastTime="4:02 PM"/>
+                <InboxItem key={val} profile={val} onPress={this.onNavigateToChat} onLongPress={() => this.setModalVisible(true, val.user_id)} lastMessage={this.getMostRecentMessage(val.user_id)}/>
               ))}
               // Add a message for new matches
               <Text style={{fontFamily: 'orkney-light', marginTop: 15, textAlign: 'center', color: 'grey'}}>Looking for more chats?</Text>

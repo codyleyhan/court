@@ -27,7 +27,8 @@ export class InboxItem extends React.Component {
   }
 
   render() {
-    const { profile, lastMessage, lastTime} = this.props;
+    const { profile, lastMessage } = this.props;
+    const { text, createdAt } = lastMessage;
     const { animal, color, first_name, last_name, profile_picture, percent_unlocked } = profile;
     const displayName = first_name ? first_name + ' ' + last_name : 'Anonymous ' + animal.charAt(0).toUpperCase() + animal.slice(1);;
     return (
@@ -38,8 +39,14 @@ export class InboxItem extends React.Component {
           </View>
           <View style={styles.inboxTextWrapper}>
             <Text style={styles.nameStyle} numberOfLines={1}>{displayName}</Text>
-            <Text style={styles.messageStyle} numberOfLines={1}>{lastMessage}</Text>
-            <Text style={styles.timeStyle}>{lastTime}</Text>
+            {text === '' ? (
+              <Text style={styles.newMessageStyle}>New Match 🎉</Text>
+            ) : (
+              <View>
+                <Text style={styles.messageStyle} numberOfLines={1}>{text}</Text>
+                <Text style={styles.timeStyle}>{createdAt}</Text>
+              </View>
+            )}
           </View>
           <View >
             <Text style={styles.percentStyle}>{percent_unlocked}%</Text>
@@ -111,6 +118,11 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontFamily: 'orkney-medium',
     color: '#21ACA5',
+  },
+  newMessageStyle: {
+    fontFamily: 'orkney-medium',
+    fontSize: 16,
+    color: 'grey',
   },
   messageStyle: {
     fontFamily: 'orkney-regular',
