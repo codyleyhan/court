@@ -27,10 +27,13 @@ class MatchAPI(MethodView):
     """
     Processes a HTTP GET request for the match REST API.
 
-    :return: a Flask HTTP response with a User's current matches.
+    :return: a Flask HTTP response with a User's current matches and thread status.
     """
     matches = self.match_service.get_current_matches()
-    return jsonify(matches=matches)
+    # Also adds threads for matches that do not yet exist
+    user = self.auth_service.get_current_user()
+    threads = self.thread_service.create_threads(user, matches)
+    return jsonify(matches=matches, thread_status=threads)
 
   def delete(self, user_id, purge=False):
     """
@@ -41,5 +44,8 @@ class MatchAPI(MethodView):
     remove_match = self.match_service.inactivate_match(user_id, purge)
     # Also removes the two user's thread history
     remove_thread = self.thread_service.delete_thread(user_id, purge)
-    # TODO(martin): call find_match function
-    return jsonify(status=remove_match and remove_thread)
+    # Since a match was deleted, we recompute new matches
+    user_id = self.auth_service.get_current_user_id()
+    find_matches = self.match_service.find_matches(user_id, 1)
+    return jsonify(status=remove_match and remove_thread,
+                   new_matches=len(find_matches))

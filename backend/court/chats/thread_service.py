@@ -54,6 +54,26 @@ class ThreadService:
 
     return thread
 
+  def create_threads(self, user, matches):
+    """
+    Creates and persists a new chat thread between the user in the current context
+    and user's they have matched with.
+
+    :param user: the current User object in the context
+    :type user: court.users.models.User
+    :param matches: the active matches for the current user in the context
+    :type matches: dict
+
+    :return: all matches have respective threads
+    :rtype: boolean
+    """
+    active_match_user_ids = map(int, matches.keys())
+    for user_id in active_match_user_ids:
+      matched_user = self.db.session.query(User).filter_by(id=user_id).first()
+      self.create_thread(user, matched_user)
+    return True
+
+
   def get_thread(self, current_user_id, thread_id):
     """
     Queries for a thread with the passed id.  Will also check authorization of
