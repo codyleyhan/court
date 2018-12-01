@@ -286,7 +286,7 @@ export default class InboxScreen extends React.Component {
                   <Text style={{fontFamily: 'orkney-regular', marginTop: 50, fontSize: 20, textAlign: 'center', color: 'grey'}}>{"Don't worry, we'll keep looking.\nCome back later to check again!"}</Text>
                 </FadeWrapper>
                 // Show match list
-                <FadeWrapper visible={this.state.matches !== null && this.state.matches.length > 0 && Object.keys(this.state.messages).length > 0} delay={200}>
+                <FadeWrapper visible={this.state.matches !== null && this.state.matches.length > 0 && Object.keys(this.state.messages).length > 0} delay={300}>
                   {this.state.matches && this.state.matches.map((val, index) => (
                     <InboxItem
                       key={index}
