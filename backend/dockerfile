@@ -1,0 +1,17 @@
+FROM python:3.6.7
+
+RUN mkdir -p /user/src/court
+WORKDIR /usr/src/court
+
+COPY requirements.txt /usr/src/app/
+RUN python -m venv venv
+RUN venv/bin/pip install -r requirements.txt
+
+COPY court court
+COPY wsgi.py wsgi.py
+
+ENV FLASK_APP court.py
+
+EXPOSE 8000
+
+RUN ["gunicorn", "wsgi:app", "--worker-class", "eventlet", "-w", "1", "--bind", "0.0.0.0"]
