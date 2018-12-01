@@ -49,7 +49,6 @@ export default class SettingsScreen extends React.Component {
   parseInterests = (interests) => {
     var recommendations = [];
     if (interests) {
-      interests = JSON.parse(interests);
       Object.keys(interests).map((key, index) => {
         var tempInterests = interests[key];
         tempInterests.id = key;

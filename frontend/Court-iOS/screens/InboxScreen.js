@@ -23,6 +23,7 @@ import Network from '../constants/Network';
 import Colors from '../constants/Colors';
 
 import { getMatches, deleteMatch } from '../utils/api/Matches';
+import { getThreads, getMessages } from '../utils/api/Chats';
 
 const io = require('socket.io-client');
 
@@ -51,6 +52,24 @@ export default class InboxScreen extends React.Component {
     return matches;
   }
 
+  connectSocket = () => {
+    // Fetch auth token, connect to a socket
+    AsyncStorage.getItem(Authentication.AUTH_TOKEN).then((auth_token) => {
+      if (auth_token !== null) {
+        this.socket = io(Network.base_socket_url, {
+          transports: ['websocket'],
+          query: { token: auth_token },
+        });
+        this.socket.on('connect', () => {
+          console.log('Socket connected');
+        });
+        this.socket.on('new_message', (message) => {
+          this.handleNewMessage(message);
+        });
+      }
+    });
+  }
+
   fetchMatches = () => {
     getMatches().then(response => {
       if (response && response.matches) {
@@ -64,45 +83,63 @@ export default class InboxScreen extends React.Component {
     });
   }
 
-  constructor() {
-    super();
-    // TEST SOCKETS
-    AsyncStorage.getItem(Authentication.AUTH_TOKEN).then((auth_token) => {
-      if (auth_token !== null) {
-        this.socket = io(Network.base_socket_url, {
-          transports: ['websocket'],
-          query: { token: auth_token },
+  parseMessages(messages) {
+    let newMessages = [];
+    messages.map((message, index) => {
+      newMessages.push({
+        _id: message.id,
+        text: message.body,
+        createdAt: message.created_at,
+        user: {
+          _id: message.user_id,
+        },
+      });
+    });
+    return newMessages;
+  }
+
+  setupThreads = () => {
+    // Fetch a structure a user's threads
+    getThreads().then(response => {
+      if (response && response.threads && response.threads.length > 0) {
+        // Got threads
+        // Now destructure and format
+        let threads = {};
+        response.threads.map((thread, index) => {
+          // Create mapping from userid to thread_id
+          threads[thread.users[1].id] = thread.id;
         });
-        socket.on('connect', () => {
-          console.log('Socket connected');
-          this.setState({ connected: true });
+        // Now fetch messages for each thread
+        let messages = {};
+        Object.keys(threads).map((userid, index) => {
+          getMessages(threads[userid]).then(response => {
+            console.log(response);
+            if (response && response.messages) {
+              const parsedMessages = this.parseMessages(response.messages);
+              messages[userid] = parsedMessages;
+            } else {
+              alert('Error querying messages');
+            }
+          });
         });
-        socket.on('connect_error', (error) => {
-          console.log('Socket connect error');
-          console.log(error);
-        });
-        socket.on('connect_timeout', (error) => {
-          console.log('Socket timeout error');
-          console.log(error);
-        });
-        socket.on('error', (error) => {
-          console.log('Socket error');
-          console.log(error);
-        });
-        socket.on('disconnect', (reason) => {
-          console.log('Socket disconnected');
-          console.log(reason);
-        });
-        socket.on('new_message', (message) => {
-          console.log(message);
-        });
-        socket.emit('message', {
-          body: 'test message for socket testing',
-          thread: 2,
-        });
+        // Set mapping of userid to threads and messages
+        console.log(threads);
+        console.log(messages);
+        this.setState({ threads: threads, messages: messages });
+      } else {
+        // Error querying API
+        alert('Error querying threads');
       }
     });
+  }
 
+  constructor() {
+    super();
+    // Connect to webSocket for chats
+    this.connectSocket();
+    // Fetch a user's threads and setup connections
+    this.setupThreads();
+    // Fetch a users matches
     this.fetchMatches();
     // setTimeout(() => {
     //   this.setState({ matches: [{user_id: 123, first_name: "Jason", last_name: "Roberts", animal:'deer', color:'blue', interests: {}, percent_unlocked: 14, gender: 'Male', preferred_gender: 'Female'}] });

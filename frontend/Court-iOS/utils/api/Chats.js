@@ -39,7 +39,7 @@ export async function getMessages(thread_id) {
       }
       // Got token
       return fetch(Network.base_api_url + `threads/${thread_id}/messages`, {
-        method: 'DELETE',
+        method: 'GET',
         headers: new Headers({'Authorization': token}),
         })
         .then((response) => response.json())
