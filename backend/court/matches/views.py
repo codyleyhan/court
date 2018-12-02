@@ -45,7 +45,7 @@ class MatchAPI(MethodView):
     # Also removes the two user's thread history
     remove_thread = self.thread_service.delete_thread(user_id, purge)
     # Since a match was deleted, we recompute new matches
-    user_id = self.auth_service.get_current_user_id()
-    find_matches = self.match_service.find_matches(user_id, 1)
+    current_user_id = self.auth_service.get_current_user_id()
+    find_matches = self.match_service.find_matches(current_user_id, 1)
     return jsonify(status=remove_match and remove_thread,
                    new_matches=len(find_matches))

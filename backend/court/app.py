@@ -14,7 +14,6 @@ from court.users.views import ProfileAPI, UserAPI
 from court.matches.match_service import MatchService
 from court.matches.views import MatchAPI
 
-from court.match import Match
 
 def create_app(config=DevelopmentConfig):
   """
@@ -96,13 +95,6 @@ def add_routes(app, socketio):
   def health_check():
     return jsonify({
       'health': 'ok'
-    })
-
-  @app.route('/match')
-  def match_check():
-    m = Match()
-    return jsonify({
-      'results': m.match()
     })
 
   @app.route('/api/force_match/<int:user_id>')
