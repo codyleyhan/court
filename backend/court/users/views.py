@@ -18,41 +18,6 @@ class UserAPI(MethodView):
     """
     self.auth_service = auth_service
 
-  def get(self):
-    """
-    Processes a HTTP GET request for the user REST API.
-
-    .. code-block:: bash
-
-      GET localhost:8000/api/users
-
-    Example response:
-
-    .. code-block:: json
-
-      {
-        "user": {
-          "email": "kfgzlneeuo_1541453454@tfbnw.net",
-          "first_name": "Will",
-          "id": "102773437400251",
-          "last_name": "Occhinoberg",
-          "picture": {
-            "data": {
-              "height": 320,
-              "is_silhouette": true,
-              "url": "https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=102773437400251&height=300&width=300&ext=1544820635&hash=AeQAGANVCW2xEscN",
-              "width": 320
-            }
-          }
-        }
-      }
-
-    :return: a Flask HTTP response containing a user's id and email
-    :raises: AuthorizationError, ValidationError
-    """
-    user = self.auth_service.get_current_user()
-    return jsonify(user=user._asdict())
-
   def post(self):
     """
     Processes a HTTP POST request for the user REST API.
@@ -121,10 +86,36 @@ class ProfileAPI(MethodView):
     """
     Processes a HTTP GET request for the profile REST API.
 
-    :return: a Flask HTTP response with a User's associated Profile.
+    .. code-block:: bash
+
+      GET localhost:8000/api/users
+
+    Example response:
+
+    .. code-block:: json
+
+      {
+        "profile": {
+          "user_id": 1
+          "first_name": "Joe",
+          "last_name": "Bruin",
+          "preferred_gender": "Female",
+          "gender": "Male",
+          "profile_picture": "google.com/images",
+          "animal": "Beaver",
+          "color": "Teal",
+          "interests": {
+            "interest1": "value1"
+          }
+        },
+        "success": true
+      }
+
+    :return: a Flask HTTP response containing a user's id and email
+    :raises: AuthorizationError, ValidationError
     """
     profile = self.auth_service.get_current_user_profile()
-    return jsonify(profile=profile._asdict())
+    return jsonify(profile=profile._asdict(), success=True)
 
   def put(self):
     """
