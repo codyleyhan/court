@@ -121,6 +121,32 @@ class ProfileAPI(MethodView):
     """
     Processes a HTTP GET request for the profile REST API.
 
+    .. code-block:: bash
+
+      GET localhost:8000/api/users
+
+    Example response:
+
+    .. code-block:: json
+
+      {
+        "profile": {
+          "id": 1,
+          "first_name": "Joe",
+          "last_name": "Bruin",
+          "interests": {
+            "interest1": "value1"
+          },
+          "profile_picture": "https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=102773437400251&height=300&width=300&ext=1544820635&hash=AeQAGANVCW2xEscN",
+          "gender": "Male",
+          "preferred_gender": "Female",
+          "animal": "bear",
+          "color": "blue",
+          "created_at": "Sun, 02 Dec 2018 22:09:00 GMT",
+          "updated_at": "Sun, 02 Dec 2018 22:09:00 GMT", "user_id": 1
+        }
+      }
+
     :return: a Flask HTTP response with a User's associated Profile.
     """
     profile = self.auth_service.get_current_user_profile()
@@ -129,6 +155,32 @@ class ProfileAPI(MethodView):
   def put(self):
     """
     Processes a HTTP PUT request for the profile REST API.
+
+    .. code-block:: bash
+
+      PUT localhost:8000/api/users?fields={'first_name' : 'testing'}
+
+    Example response:
+
+    .. code-block:: json
+
+      {
+        "profile": {
+          "id": 1,
+          "first_name": "testing",
+          "last_name": "Bruin",
+          "interests": {
+            "interest1": "value1"
+          },
+          "profile_picture": "https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=102773437400251&height=300&width=300&ext=1544820635&hash=AeQAGANVCW2xEscN",
+          "gender": "Male",
+          "preferred_gender": "Female",
+          "animal": "bear",
+          "color": "blue",
+          "created_at": "Sun, 02 Dec 2018 22:09:00 GMT",
+          "updated_at": "Sun, 02 Dec 2018 22:09:00 GMT", "user_id": 1
+        }
+      }
 
     :return: a Flask HTTP response with a User's associated Profile.
     """
