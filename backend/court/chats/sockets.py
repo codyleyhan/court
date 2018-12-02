@@ -2,6 +2,7 @@ from flask_socketio import Namespace, disconnect, join_room, emit
 from flask import request, g
 
 from court.chats.models import Message
+from court.users.models import SYSTEM_USER
 
 class ThreadSockets(Namespace):
   """
@@ -18,7 +19,7 @@ class ThreadSockets(Namespace):
 
   def get_user_from_request(self):
     self.auth_service.validate_token(request.args.get('token'))
-  
+
   def on_connect(self):
     """
     Occurs when a user first connects to the server and will be authenticated.
@@ -29,11 +30,11 @@ class ThreadSockets(Namespace):
     self.get_user_from_request()
     user_id = self.auth_service.get_current_user_id()
     self.logger.info("%s connected has connected", user_id)
-    
+
     emit('connected', {
       "body": "you are connected"
     }, json=True)
-  
+
   def on_message(self, json):
     """
     Occurs when an already joined user sends a message on a thread.  Message will
@@ -71,10 +72,21 @@ class ThreadSockets(Namespace):
     message_pairs = self.thread_service.update_chat_state(user_id, thread_id)
     if message_pairs > 0 and message_pairs % 5 == 0:
       unlocked = self.match_service.unlock_next_profile_feature(user_id)
-      self.logger.info("%s unlocked %d%  of the profile information", user_id, unlocked[0])
+      self.logger.info("%s unlocked %d%  of the profile information",
+                       user_id, unlocked['matched_user_unlock_percent'])
+      # Inject unlocked interests for each user
+      matched_user_id = thread._asdict()['users'][0]['id'] \
+          if thread._asdict()['users'][0]['id'] != str(user_id) \
+          else thread._asdict()['users'][1]['id']
+      unlocked_features = {
+        str(user_id): unlocked['user_unlocked_feature'],
+        str(matched_user_id): unlocked['matched_user_unlocked_feature']
+      }
+      match_message = Message(SYSTEM_USER, thread_id, json.dumps(unlocked_features))
+      self.thread_service.add_message(match_message)
 
     emit('new_message', message, room=thread_id, broadcast=True, json=True)
-  
+
 
   def on_join(self, json):
     """
@@ -101,4 +113,4 @@ class ThreadSockets(Namespace):
 
     self.logger.info("connecting user %s to thread %d", user_id, thread_id)
     join_room(thread_id)
-    
+

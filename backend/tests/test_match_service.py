@@ -252,9 +252,9 @@ def test_unlock_next_profile_feature_1(app):
     # Each user has 1 interest, so the unlocked percentage should be 25%
     # because they have not yet unlocked each other's first_name, last_name,
     # or profile_picture
-    unlocked_2, unlocked_1 = match_service.unlock_next_profile_feature(2)
-    assert unlocked_2 == 25
-    assert unlocked_1 == 25
+    data = match_service.unlock_next_profile_feature(2)
+    assert data['user_percent_unlocked'] == 25
+    assert data['matched_user_percent_unlocked'] == 25
 
     # Check user 2's interest show in the active match for user 1
     mock_matches_1 = {
@@ -317,12 +317,12 @@ def test_unlock_next_profile_feature_2(app):
     # first unlock because they have not yet unlocked each other's first_name,
     # last_name, or profile_picture; after the second unlock, the unlocked
     # percentages should be 50%.
-    unlocked_2, unlocked_1 = match_service.unlock_next_profile_feature(2)
-    assert unlocked_2 == 25
-    assert unlocked_1 == 25
-    unlocked_2, unlocked_1 = match_service.unlock_next_profile_feature(2)
-    assert unlocked_2 == 50
-    assert unlocked_1 == 50
+    data = match_service.unlock_next_profile_feature(2)
+    assert data['user_percent_unlocked'] == 25
+    assert data['matched_user_percent_unlocked'] == 25
+    data = match_service.unlock_next_profile_feature(2)
+    assert data['user_percent_unlocked'] == 50
+    assert data['matched_user_percent_unlocked'] == 50
 
     # Check user 2's interest and first_name show in the active match for user 1
     mock_matches_1 = {
@@ -419,7 +419,7 @@ def test_find_match_2(app):
 
     # Check users 1 and 4 got added as an active match for user 3
     # User 4 is matched based on the shared interest3
-    # User 1 is matched even without common interests because it is the only 
+    # User 1 is matched even without common interests because it is the only
     # other user in the database satisying user 3's gender preferences
     matches_for_3 = match_service.get_current_matches()
     assert len(matches_for_3) == 2

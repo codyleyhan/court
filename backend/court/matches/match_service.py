@@ -182,7 +182,7 @@ class MatchService:
 
     def _unlock_next_feature(from_history, to_user_id, to_dict):
       # Unlock to_user_id's features for from_{user}'s match_history
-      print(type(to_dict['interests'])); print(to_dict['interests'])
+      unlocked_feature = {}
       if len(from_history[str(to_user_id)]['profile']['interests']) < len(to_dict['interests']):
         # Continue unlocking interests for to_user_id user
         unlocked_interests = from_history[str(to_user_id)]['profile']['interests'].keys()
@@ -191,22 +191,26 @@ class MatchService:
         selected_interest_key = interests_left[0]
         selected_interest_value = to_dict['interests'][selected_interest_key]
         from_history[str(to_user_id)]['profile']['interests'][selected_interest_key] = selected_interest_value
+        unlocked_feature = { selected_interest_key : selected_interest_value }
       else:
         # Start to unlock first_name, last_name, and profile_picture for to_user_id user
         if from_history[str(to_user_id)]['profile']['first_name'] == "":
           first_name = to_dict['first_name']
           from_history[str(to_user_id)]['profile']['first_name'] = first_name
+          unlocked_feature = { 'first_name' : first_name }
         elif from_history[str(to_user_id)]['profile']['last_name'] == "":
           last_name = to_dict['last_name']
           from_history[str(to_user_id)]['profile']['last_name'] = last_name
+          unlocked_feature = { 'last_name' : last_name }
         else: # from_history[str(to_user_id)]['profile']['profile_picture'] == "":
           profile_picture = to_dict['profile_picture']
           user_match_history[str(to_user_id)]['profile']['profile_picture'] = profile_picture
-      return from_history[str(to_user_id)]
+          unlocked_feature = { 'profile_picture' : profile_picture }
+      return (from_history[str(to_user_id)], unlocked_feature)
 
-    user_match_history[str(user_id)] = _unlock_next_feature(
+    user_match_history[str(user_id)], matched_user_unlocked_feature = _unlock_next_feature(
         user_match_history, str(user_id), matched_user_dict)
-    matched_user_match_history[str(g.user_id)] = _unlock_next_feature(
+    matched_user_match_history[str(g.user_id)], user_unlocked_feature = _unlock_next_feature(
         matched_user_match_history, str(g.user_id), user_dict)
 
     def _compute_unlock_percentage(from_history, to_user_id, to_dict):
@@ -228,8 +232,11 @@ class MatchService:
     setattr(matched_user, 'match_history', matched_user_match_history)
     self.db.session.commit()
 
-    return (user_match_history[str(user_id)]['percent_unlocked'],
-            matched_user_match_history[str(g.user_id)]['percent_unlocked'])
+    return { 'user_percent_unlocked': user_match_history[str(user_id)]['percent_unlocked'],
+             'matched_user_percent_unlocked': matched_user_match_history[str(g.user_id)]['percent_unlocked'],
+             'user_unlocked_feature': user_unlocked_feature,
+             'matched_user_unlocked_feature': matched_user_unlocked_feature }
+
 
   def find_match(self, user_id, num_matches):
     """
