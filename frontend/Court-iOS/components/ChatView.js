@@ -3,68 +3,84 @@ import PropTypes from 'prop-types';
 import { Icon, Haptic } from 'expo';
 import { Bubble, Composer, InputToolbar, GiftedChat, MessageText, Send, Time } from 'react-native-gifted-chat'
 
-import { Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { AsyncStorage, Image, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Avatar from './Avatar';
 import Mask from 'react-native-mask';
+import Authentication from '../constants/Authentication';
+import Network from '../constants/Network';
 import Colors from '../constants/Colors';
+
+const io = require('socket.io-client');
 
 export default class ChatView extends React.Component {
   state = {
     messages: [],
   }
 
-  componentWillMount() {
-    this.setState({
-      messages: [
-        {
-          _id: 1,
-          text: "Party Rock 👌😎👌😎👌😎📢is in the house tonight✨🏚️🏠🌙\n\n💯💯hit that MF like button🤜🤜🔴",
-          createdAt: new Date(),
+  constructor(props) {
+    super(props);
+    this.thread_id = props.thread_id;
+    this.currentUserID = props.currentUserID;
+    this.setUpSocket();
+    this.state = { messages: props.messages };
+  }
+
+  handleNewMessage = (message) => {
+    this.setState(previousState => ({
+      messages: GiftedChat.append(previousState.messages, [{
+          _id: message.id,
+          text: message.body,
+          createdAt: message.created_at,
           user: {
-            _id: 2,
-            name: 'Justin Roberts',
-            avatar: 'https://heightline.com/wp-content/uploads/Justin-Roberts-640x427.jpg',
+            _id: message.user_id,
           },
-        },
-      ],
-    })
+        }]),
+    }));
+  }
+
+  setUpSocket = () => {
+    // Fetch auth token, connect to a socket
+    AsyncStorage.getItem(Authentication.AUTH_TOKEN).then((auth_token) => {
+      if (auth_token !== null) {
+        this.socket = io(Network.base_socket_url, {
+          transports: ['websocket'],
+          query: { token: auth_token },
+        });
+        this.socket.on('connect', () => {
+          // Join thread
+          this.socket.emit('join', {
+            thread: this.thread_id,
+          });
+        });
+        this.socket.on('new_message', (message) => {
+          this.handleNewMessage(message);
+        });
+      }
+    });
   }
 
   onSend = (messages = []) => {
     Haptic.impact('light');
-    this.setState(previousState => ({
-      messages: GiftedChat.append(previousState.messages, messages),
-    }));
-
-    // respond after a delay
-    setTimeout(() => {
-      responseMessages = [{
-        _id: 3,
-        text: "Me too, sounds good.",
-        createdAt: new Date(),
-        user: {
-          _id: 2,
-          name: this.props.profileInfo.name,
-          avatar: 'https://heightline.com/wp-content/uploads/Justin-Roberts-640x427.jpg',
-        },
-      }];
-      Haptic.impact('light');
-      this.setState(previousState => ({
-        messages: GiftedChat.append(previousState.messages, responseMessages),
-      }));
-    }, 2000);
+    // Send over socket
+    for (x in messages) {
+      // Emitting message object
+      this.socket.emit('message', {
+        body: messages[x].text,
+        thread: this.thread_id,
+      });
+    }
   }
 
   renderAvatar = () => {
     const { goToProfile, profileInfo } = this.props;
-    const {name, animalName, color, imgUrl} = profileInfo;
+    const { name, animal, color, profile_picture } = profileInfo;
     return (
       <TouchableOpacity onPress={goToProfile} activeOpacity={0.75}>
         <Avatar
           width={37}
-          imgURL={imgUrl}
-          color={color}
-          animalName={animalName}
+          imgURL={profile_picture}
+          color={Colors[color]}
+          animalName={animal}
         />
       </TouchableOpacity>
     );
@@ -122,7 +138,8 @@ export default class ChatView extends React.Component {
 
   renderSend = (props) => {
     const { profileInfo } = this.props;
-    const styleColor = (profileInfo && profileInfo.color) ? profileInfo.color : Colors.peach;
+    const { color } = profileInfo;
+    const styleColor = color ? Colors[color] : Colors.peach;
     const sendButton = (
       <View style={{marginRight: 10, marginBottom: 4}}>
         <Mask shape={'circle'}>
@@ -143,6 +160,17 @@ export default class ChatView extends React.Component {
     );
   }
 
+  renderFooter = (props) => {
+    return (
+      null
+      // <View style={styles.footerContainer}>
+      //   <Text style={styles.footerText}>
+      //     {"You've unlocked a new interest!"}
+      //   </Text>
+      // </View>
+    );
+  }
+
   render() {
     return (
       <GiftedChat
@@ -154,10 +182,11 @@ export default class ChatView extends React.Component {
         renderTime={this.renderTime}
         renderMessageText={this.renderMessageText}
         renderComposer={this.renderComposer}
+        renderFooter={this.renderFooter}
         minInputToolbarHeight={40}
         bottomOffset={76}
         user={{
-          _id: 1,
+          _id: this.props.currentUserID,
         }}
       />
     )
@@ -165,6 +194,18 @@ export default class ChatView extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  footerContainer: {
+    marginTop: 5,
+    marginLeft: 10,
+    marginRight: 10,
+    marginBottom: 10,
+  },
+  footerText: {
+    fontSize: 14,
+    fontFamily: 'orkney-medium',
+    color: '#aaa',
+    textAlign: 'center',
+  },
   sendButton: {
     width: 35,
     height: 35,

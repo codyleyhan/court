@@ -14,7 +14,9 @@ import { Transition } from 'react-navigation-fluid-transitions';
 import { Haptic } from 'expo';
 import Mask from 'react-native-mask';
 
+import Authentication from '../constants/Authentication';
 import Colors from '../constants/Colors';
+import Icons from '../constants/Icons';
 
 import { publishInterests } from '../utils/api/PublishInterests';
 
@@ -46,12 +48,35 @@ export default class InterestsScreen extends React.Component {
     this.setState({ interests });
   }
 
+  async storeItems(profile) {
+    try {
+      await AsyncStorage.setItem(Authentication.AUTH_USER, JSON.stringify(profile));
+    } catch (error) {
+      // Error saving data
+      alert('Error saving intererests', 'Please try again');
+    }
+  }
+
   goNext(user, genderSelection) {
     Haptic.impact('light');
+    // Generate a random color/animal combination
+    var properties = Object.getOwnPropertyNames(Colors);
+    var index = Math.floor(Math.random() * properties.length);
+    const color = properties[index];
+    properties = Object.getOwnPropertyNames(Icons);
+    index = Math.floor(Math.random() * properties.length);
+    const animal = properties[index];
     // Publish interests to API, navigate to next page
-    // publishInterests(genderSelection, this.state.interests);
-    // TODO(rivmist): update the backend with these changes
-    this.props.navigation.navigate('Confirmation', {user: user});
+    publishInterests(genderSelection, this.state.interests, color, animal).then((response) => {
+      if (response !== null) {
+        // Store items for later use
+        this.storeItems(response.profile);
+        this.props.navigation.navigate('Confirmation', {user: user});
+      } else {
+        // Error
+        alert('Error publishing interests to server');
+      }
+    });
   }
 
   render() {
@@ -59,7 +84,7 @@ export default class InterestsScreen extends React.Component {
     const user = this.props.navigation.getParam('user', null);
     const genderSelection = this.props.navigation.getParam('genderSelection', null);
     const user_name = user.first_name;
-    const profile_url = user.picture.data.url;
+    const profile_url = user.profile_picture;
     const remove = this.removeInterest.bind(this);
     return (
       <View style={styles.container}>
@@ -108,7 +133,7 @@ export default class InterestsScreen extends React.Component {
           </View>
         )}
         <InterestsFinder interests={interests} onAddInterest={this.addInterest.bind(this)} onRemoveInterest={this.removeInterest.bind(this)} />
-        {Object.keys(interests).length > 0 && (
+        {Object.keys(interests).length > 2 && (
           <View style={styles.continueButton}>
             <LoginButton text="Continue" onPress={() => this.goNext(user, genderSelection)} />
           </View>

@@ -18,17 +18,30 @@ export default class SettingsScreen extends React.Component {
     header: null,
   };
 
+  // Parses a dict of interests into a list
+  parseInterests = (interests) => {
+    var recommendations = [];
+    if (interests) {
+      Object.keys(interests).map((key, index) => {
+        var tempInterests = interests[key];
+        tempInterests.id = key;
+        recommendations.push(tempInterests);
+      });
+    }
+    return recommendations;
+  }
+
   render() {
     const { navigation } = this.props;
     const chatName = navigation.getParam('name', 'Profile');
-    const profileInfo = navigation.getParam('profileInfo', {});
-
+    const profileInfo = navigation.getParam('profileInfo', {});
+    const { animal, color, first_name, last_name, profile_picture, percent_unlocked, interests, gender, preferred_gender } = profileInfo;
     const profileIcon = (
       <Avatar
         width={175}
-        imgURL={profileInfo.imgUrl}
-        color={profileInfo.color}
-        animalName={profileInfo.animalName}
+        imgURL={profile_picture}
+        color={Colors[color]}
+        animalName={animal}
         showSubIcon={true}
       />
     );
@@ -37,11 +50,11 @@ export default class SettingsScreen extends React.Component {
       <View style={{width: 40, height: 40}} />
     );
 
-    const recommendations = [{id: '1', title:"Suckin' Dick", description:'Pasttime'}, {id: '2', title:'Dogs', description:'Animal'},{id: '3', title:'Marvel', description:'Comic Publisher'},{id: '4', title:'Money', description:'Object'}, {id: '5', title:'React Native', description:'JavaScript Framework'}];
+    const recommendations = this.parseInterests(interests);
 
     return (
       <View style={styles.container}>
-        <Header color={profileInfo.color} text={chatName} showBack={true} rightIcon={rightIcon} navigation={this.props.navigation} />
+        <Header color={Colors[color]} text={chatName} showBack={true} rightIcon={rightIcon} navigation={this.props.navigation} />
         <View style={styles.avatarWrapper}>
           {profileIcon}
         </View>
@@ -50,23 +63,23 @@ export default class SettingsScreen extends React.Component {
 
           <View style={styles.pillWrapper}>
             <View style={styles.pill}>
-              <Text style={[{color: profileInfo.color}, styles.preferenceStyle]}>{'Gender:'}</Text>
-              <Text style={[{color: profileInfo.color}, styles.pillTextStyle]}>{'Female'}</Text>
+              <Text style={[{color: Colors[color]}, styles.preferenceStyle]}>{'Gender:'}</Text>
+              <Text style={[{color: Colors[color]}, styles.pillTextStyle]}>{gender}</Text>
             </View>
           </View>
 
           <View style={styles.pillWrapper}>
             <View style={styles.pill}>
-              <Text style={[{color: profileInfo.color}, styles.preferenceStyle]}>{'Preferred Gender:'}</Text>
-              <Text style={[{color: profileInfo.color}, styles.pillTextStyle]}>{'Male'}</Text>
+              <Text style={[{color: Colors[color]}, styles.preferenceStyle]}>{'Preferred Gender:'}</Text>
+              <Text style={[{color: Colors[color]}, styles.pillTextStyle]}>{preferred_gender}</Text>
             </View>
           </View>
 
           <View style={styles.pillWrapper}>
             <View style={styles.interestsPill}>
-              <Text style={[{color: profileInfo.color, marginRight: 200}, styles.preferenceStyle]}>{'Interests:'}</Text>
+              <Text style={[{color: Colors[color], marginRight: 200}, styles.preferenceStyle]}>{'Interests:'}</Text>
               <View style={{marginBottom:30}}>
-                <InterestsCloud color={profileInfo.color} recommendations={recommendations} />
+                <InterestsCloud color={Colors[color]} recommendations={recommendations} />
               </View>
             </View>
           </View>

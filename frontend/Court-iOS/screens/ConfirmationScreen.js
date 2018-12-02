@@ -33,7 +33,7 @@ export default class ConfirmationScreen extends React.Component {
   render() {
     const user = this.props.navigation.getParam('user', null);
     const user_name = user.first_name;
-    const profile_url = user.picture.data.url;
+    const profile_url = user.profile_picture;
 
     return (
       <View style={styles.container}>

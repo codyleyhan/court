@@ -27,17 +27,19 @@ export default class LoginScreen extends React.Component {
 
   constructor(props) {
     super(props);
+    AsyncStorage.getItem(Authentication.AUTH_TOKEN).then((token) => {
+      if (token !== null) {
+        this.props.navigation.navigate('App');
+      }
+    });
     this.state = { isLoading: false };
   }
 
-  // componentDidMount() {
-  //   this.props.navigation.navigate('Setup', { user: { first_name: 'River', picture: { data: { url: "https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=723005941386300&height=300&width=300&ext=1544324078&hash=AeRlSN4NlLUXmWcm" } }} });
-  // }
-
   async storeItems(response) {
     try {
-      await AsyncStorage.setItem(Authentication.AUTH_USER, JSON.stringify(response.user));
+      await AsyncStorage.setItem(Authentication.AUTH_USER, JSON.stringify(response.profile));
       await AsyncStorage.setItem(Authentication.AUTH_TOKEN, response.token);
+      console.log(response.profile.first_name);
       console.log(response.token);
     } catch (error) {
       // Error saving data
@@ -50,16 +52,23 @@ export default class LoginScreen extends React.Component {
     Haptic.impact('light');
     this.setState({ isLoading: true });
     logInWithFacebook().then((response) => {
-      console.log(response);
-      if (response && response.success) {
+      if (response && response.success && response.exists) {
+        // User successfully logged in, but we should go to app instead of setup
+        this.storeItems(response).then(() => {
+          this.props.navigation.navigate('App');
+          // this.props.navigation.navigate('Setup', { user: response.profile });
+        });
+      } else if (response && response.success) {
         // Store credentials
         this.storeItems(response);
         // Navigate to setup screen
-        this.props.navigation.navigate('Setup', { user: response.user });
+        this.props.navigation.navigate('Setup', { user: response.profile });
+      } else if (response === 'cancelled') {
+        this.setState({ isLoading: false });
       } else {
         alert('Login failed');
+        this.setState({ isLoading: false });
       }
-      this.setState({ isLoading: false });
     });
   }
 
