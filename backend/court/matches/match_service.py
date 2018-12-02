@@ -270,8 +270,9 @@ class MatchService:
       for profile2 in profiles.order_by(Profile.created_at):
         if pairs[j][i] != None:
           pairs[i][j] = pairs[j][i]
-        elif profile1.id != profile2.id and profile1.gender == profile2.preferred_gender and \
-          profile1.preferred_gender == profile2.gender:
+        elif profile1.id != profile2.id and ((profile1.gender == profile2.preferred_gender and \
+          profile1.preferred_gender == profile2.gender) or \
+          (profile1.preferred_gender == 'Both' or profile2.preferred_gender == 'Both')):
           if str(profile2.user_id) not in profile1.match_history and \
             str(profile1.user_id) not in profile2.match_history:
             interests1 = set(profile1.interests.keys())
