@@ -56,18 +56,18 @@ export default class InboxScreen extends React.Component {
 
   handleNewMessage = (message, currentUserID) => {
     const userid = message.user_id;
-    if (this.state.messages && userid !== currentUserID) {
+    if (this.state.messages) {
       // User in our current matches
-      let oldMessages = this.state.messages;
-      oldMessages[userid].push({
+      let messages = Object.assign({}, this.state.messages);
+      messages[userid].unshift({
         _id: message.id,
         text: message.body,
         createdAt: message.created_at,
         user: {
-          _id: message.user_id,
+          _id: userid,
         },
       });
-      this.setState({ messages: oldMessages });
+      this.setState({ messages: messages });
     }
   }
 
