@@ -80,6 +80,13 @@ def test_login_bad_token(app, requests_mock):
 
 def test_get_current_user_profile(app):
   with app.test_client() as client:
+    # test user is not logged in
+    resp = client.get('/api/users')
+    data = json.loads(resp.data)
+    assert resp.status_code == 401
+    assert 'profile' not in data
+
+    # user is logged in
     resp = client.get('/api/users', headers={'Authorization': token_for_user_1})
     data = json.loads(resp.data)
     assert resp.status_code == 200
