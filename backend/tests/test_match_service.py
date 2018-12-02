@@ -40,7 +40,7 @@ def test_get_current_matches(app):
 
     assert matches == mock_matches
 
-def test_inactivate_match(app):
+def test_inactivate_match_1(app):
   with app.app_context():
     g.user_id = '1'
     auth_service = AuthService('secret', None, None)
@@ -89,6 +89,64 @@ def test_inactivate_match(app):
     g.user_id = '1'
 
     match_deleted = match_service.inactivate_match(2)
+    assert match_deleted == True
+
+    # Since both users only have one match each, they should no longer have any
+    matches_for_1 = match_service.get_current_matches()
+    assert matches_for_1 == {}
+    g.user_id = '2'
+    matches_for_2 = match_service.get_current_matches()
+    assert matches_for_2 == {}
+
+def test_inactivate_match_2(app):
+  with app.app_context():
+    g.user_id = '1'
+    auth_service = AuthService('secret', None, None)
+    match_service = MatchService()
+
+    # Check user 2 is as an active match for user 1
+    mock_matches_1 = {
+      '2': {
+        'active': True,
+        'percent_unlocked': 0,
+        'profile': {
+          'animal': '',
+          'color': '',
+          'gender': '',
+          'preferred_gender': '',
+          'first_name': '',
+          'last_name': '',
+          'profile_picture': '',
+          'interests': {}
+        }
+      }
+    }
+    matches_for_1 = match_service.get_current_matches()
+    assert matches_for_1 == mock_matches_1
+
+    # Check user 1 is as an active match for user 2
+    g.user_id = '2'
+    mock_matches_2 = {
+      '1': {
+        'active': True,
+        'percent_unlocked': 0,
+        'profile': {
+          'animal': '',
+          'color': '',
+          'gender': '',
+          'preferred_gender': '',
+          'first_name': '',
+          'last_name': '',
+          'profile_picture': '',
+          'interests': {}
+        }
+      }
+    }
+    matches_for_2 = match_service.get_current_matches()
+    assert matches_for_2 == mock_matches_2
+    g.user_id = '1'
+
+    match_deleted = match_service.inactivate_match(2, purge=True)
     assert match_deleted == True
 
     # Since both users only have one match each, they should no longer have any

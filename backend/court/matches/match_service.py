@@ -261,13 +261,13 @@ class MatchService:
 
     # creates a grid of number of common interests between users
     i = 0
-    for profile1 in profiles.order_by(Profile.created_at):
+    for i, profile1 in enumerate(profiles.order_by(Profile.created_at)):
       if profile1.user_id == user_id:
         user_profile = profile1
         user_index = i
       j = 0
       user_ids.append(profile1.user_id)
-      for profile2 in profiles.order_by(Profile.created_at):
+      for j, profile2 in enumerate(profiles.order_by(Profile.created_at)):
         if pairs[j][i] != None:
           pairs[i][j] = pairs[j][i]
         elif profile1.id != profile2.id and ((profile1.gender == profile2.preferred_gender and \
@@ -282,8 +282,6 @@ class MatchService:
             if common_interests != 0:
               random_interest = (interests1 & interests2).pop()
             pairs[i][j] = (common_interests, random_interest)
-        j += 1
-      i += 1
 
     # gets num_matches for each user
     for k in range(num_matches):

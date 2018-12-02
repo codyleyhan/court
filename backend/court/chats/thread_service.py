@@ -108,7 +108,7 @@ class ThreadService:
     :rtype: bool
     """
     if user_id == SYSTEM_USER:
-      return true
+      return True
     for user in thread.users:
       if user_id == user.id:
         return True

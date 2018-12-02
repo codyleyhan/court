@@ -105,7 +105,7 @@ def add_routes(app, socketio):
     user2_dict = user2.profile._asdict()
     user1_interests = set(user1_dict['interests'].keys())
     user2_interests = set(user2_dict['interests'].keys())
-    shared_interests = user1_interests.intersection(user2_interests)
+    shared_interests = user1_interests & user2_interests
     if len(shared_interests) == 0:
       return jsonify(success=False)
     shared_interest_key = shared_interests.pop()
