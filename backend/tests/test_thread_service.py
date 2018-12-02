@@ -58,9 +58,9 @@ def test_create_threads(app):
 
     user = auth_service.get_current_user()
     matches = { '2': '', '3': '', '4': '' }
-    threads = thread_service.create_threads(user, matches)
 
     # test threads are created for all matches
+    threads = thread_service.create_threads(user, matches)
     assert threads is True
 
 def test_get_thread(app):
@@ -77,6 +77,7 @@ def test_get_thread(app):
     auth_service = AuthService('secret')
     thread_service = ThreadService()
 
+    # test authorization error when requesting thread with users that do not exist
     with pytest.raises(AuthorizationError):
       thread = thread_service.get_thread(100, 1)
 
@@ -85,6 +86,7 @@ def test_get_thread(app):
     auth_service = AuthService('secret')
     thread_service = ThreadService()
 
+    # test not found error when requesting thread with invalid id
     with pytest.raises(NotFoundError):
       thread = thread_service.get_thread(1, 100)
 
@@ -112,6 +114,7 @@ def test_user_is_in_thread(app):
     auth_service = AuthService('secret')
     thread_service = ThreadService()
 
+    # test that SYSTEM_USER is always in thread users
     thread = thread_service.get_thread(1, 1)
     inclusion = thread_service.user_is_in_thread(0, thread)
     assert inclusion == True
@@ -131,6 +134,7 @@ def test_add_message(app):
     auth_service = AuthService('secret')
     thread_service = ThreadService()
 
+    # test that invalid message raises a runtime error
     with pytest.raises(RuntimeError):
       thread_service.add_message(None)
 
@@ -155,6 +159,7 @@ def test_update_chat_state(app):
     auth_service = AuthService('secret')
     thread_service = ThreadService()
 
+    # test runtime error when received invalid user id or thread id
     with pytest.raises(RuntimeError):
       thread_service.update_chat_state(None, None)
 
@@ -179,6 +184,7 @@ def test_update_chat_state(app):
     message_added = thread_service.add_message(message2)
     message_added = thread_service.add_message(message1)
 
+    # test that message pairs gets updated when more messages are added to the thread
     new_update = thread_service.update_chat_state(2, 1)
     assert new_update is not None and old_update != new_update
 
@@ -193,6 +199,7 @@ def test_delete_thread(app):
 
     deleted = thread_service.delete_thread(2)
 
+    # test thread deletion (to be used after match deletion)
     new_thread = thread_service.get_thread(1, 1)
     assert new_thread.is_active == False
 
