@@ -56,6 +56,24 @@ def test_thread_message_events(app):
     assert events[1]['args'][0]['success'] == False
     assert events[1]['args'][0]['message'] == 'Not authorized'
 
+    # check for malformed input on message
+    bad_message = {
+      'body': 'a bad message'
+    }
+    client.emit('message', message)
+    received_events = client.get_received()
+    assert len(received_events) == 1
+    assert events[1]['name'] == 'error'
+    assert events[1]['args'][0]['success'] == False
+
+    # check for malformed input on join
+    client.emit('join', {
+      'stuff': 'bad'
+    })
+    received_events = client.get_received()
+    assert len(received_events) == 1
+    assert events[1]['name'] == 'error'
+    assert events[1]['args'][0]['success'] == False
 
 def test_thread_socket_auth(app):
   """
