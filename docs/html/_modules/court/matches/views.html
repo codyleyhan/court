@@ -1,0 +1,297 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>court.matches.views &mdash; Court  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Court
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Court</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>court.matches.views</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for court.matches.views</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">flask</span> <span class="k">import</span> <span class="n">jsonify</span><span class="p">,</span> <span class="n">request</span>
+<span class="kn">from</span> <span class="nn">flask.views</span> <span class="k">import</span> <span class="n">MethodView</span>
+
+<span class="kn">from</span> <span class="nn">court.errors</span> <span class="k">import</span> <span class="n">AuthorizationError</span><span class="p">,</span> <span class="n">ValidationError</span>
+
+<div class="viewcode-block" id="MatchAPI"><a class="viewcode-back" href="../../../index.html#court.matches.views.MatchAPI">[docs]</a><span class="k">class</span> <span class="nc">MatchAPI</span><span class="p">(</span><span class="n">MethodView</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  Provides the view layer API for Matches.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">match_service</span><span class="p">,</span> <span class="n">auth_service</span><span class="p">,</span> <span class="n">thread_service</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates a new MatchAPI object. Should be called with</span>
+<span class="sd">    MatchAPI.as_view(&#39;match_api&#39;, match_service, auth_service, thread_service) to initialize.</span>
+
+<span class="sd">    :param match_service: a MatchService instance</span>
+<span class="sd">    :type match_service: court.matches.match_service.MatchService</span>
+<span class="sd">    :param auth_service: an AuthService instance</span>
+<span class="sd">    :type auth_service: court.users.auth_service.AuthService</span>
+<span class="sd">    :param thread_service: a ThreadService instance</span>
+<span class="sd">    :type thread_service: court.users.thread_service.ThreadService</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">match_service</span> <span class="o">=</span> <span class="n">match_service</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">auth_service</span> <span class="o">=</span> <span class="n">auth_service</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">thread_service</span> <span class="o">=</span> <span class="n">thread_service</span>
+
+<div class="viewcode-block" id="MatchAPI.get"><a class="viewcode-back" href="../../../index.html#court.matches.views.MatchAPI.get">[docs]</a>  <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Processes a HTTP GET request for the match REST API.</span>
+
+<span class="sd">    Example request:</span>
+
+<span class="sd">    .. code-block:: bash</span>
+
+<span class="sd">      GET localhost:8000/api/matches</span>
+
+<span class="sd">    Example response:</span>
+
+<span class="sd">    .. code-block:: json</span>
+
+<span class="sd">      {</span>
+<span class="sd">        &quot;matches&quot;: {</span>
+<span class="sd">          &quot;2&quot;: {</span>
+<span class="sd">            &quot;active&quot;: true,</span>
+<span class="sd">            &quot;percent_unlocked&quot;: 100,</span>
+<span class="sd">            &quot;profile&quot;: {</span>
+<span class="sd">              &quot;animal&quot;: &quot;Brown&quot;,</span>
+<span class="sd">              &quot;color&quot;: &quot;Donkey&quot;,</span>
+<span class="sd">              &quot;gender&quot;: &quot;Male&quot;,</span>
+<span class="sd">              &quot;preferred_gender&quot;: &quot;Female&quot;,</span>
+<span class="sd">              &quot;first_name&quot;: &quot;Joe&quot;,</span>
+<span class="sd">              &quot;last_name&quot;: &quot;Bruin&quot;,</span>
+<span class="sd">              &quot;profile_picture&quot;: &quot;https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=102773437400251&amp;height=300&amp;width=300&amp;ext=1544820635&amp;hash=AeQAGANVCW2xEscN&quot;,</span>
+<span class="sd">              &quot;interests&quot;: { &quot;interest1&quot;: &quot;value1&quot; }</span>
+<span class="sd">            }</span>
+<span class="sd">          }</span>
+<span class="sd">        },</span>
+<span class="sd">        &quot;thread_status&quot;: true</span>
+<span class="sd">      }</span>
+
+<span class="sd">    :return: a Flask HTTP response with a User&#39;s current matches and thread status.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">matches</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">match_service</span><span class="o">.</span><span class="n">get_current_matches</span><span class="p">()</span>
+    <span class="c1"># Also adds threads for matches that do not yet exist</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">auth_service</span><span class="o">.</span><span class="n">get_current_user</span><span class="p">()</span>
+    <span class="n">threads</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">thread_service</span><span class="o">.</span><span class="n">create_threads</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">matches</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">matches</span><span class="o">=</span><span class="n">matches</span><span class="p">,</span> <span class="n">thread_status</span><span class="o">=</span><span class="n">threads</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MatchAPI.delete"><a class="viewcode-back" href="../../../index.html#court.matches.views.MatchAPI.delete">[docs]</a>  <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="n">purge</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Processes a HTTP DELETE request for the match REST API.</span>
+
+<span class="sd">    Example request:</span>
+
+<span class="sd">    .. code-block:: bash</span>
+
+<span class="sd">      DELETE localhost:8000/api/matches</span>
+
+<span class="sd">    Example response:</span>
+
+<span class="sd">    .. code-block:: json</span>
+
+<span class="sd">      {</span>
+<span class="sd">        &quot;status&quot;: true,</span>
+<span class="sd">        &quot;new_matches&quot;: 2</span>
+<span class="sd">      }</span>
+
+<span class="sd">    :param user_id: user id of the match to the user in the current context</span>
+<span class="sd">    :type user_id: int</span>
+<span class="sd">    :param purge: optional argument to mark match inactive or delete from database</span>
+<span class="sd">    :type purge: boolean</span>
+
+<span class="sd">    :return: a Flask HTTP response with a success or failure status, and number of new matches found.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">remove_match</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">match_service</span><span class="o">.</span><span class="n">inactivate_match</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">purge</span><span class="p">)</span>
+    <span class="c1"># Also removes the two user&#39;s thread history</span>
+    <span class="n">remove_thread</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">thread_service</span><span class="o">.</span><span class="n">delete_thread</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">purge</span><span class="p">)</span>
+    <span class="c1"># Since a match was deleted, we recompute new matches</span>
+    <span class="n">current_user_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">auth_service</span><span class="o">.</span><span class="n">get_current_user_id</span><span class="p">()</span>
+    <span class="n">find_matches</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">match_service</span><span class="o">.</span><span class="n">find_match</span><span class="p">(</span><span class="n">current_user_id</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="c1"># Ensure threads exists for these new matches</span>
+    <span class="n">matches</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">match_service</span><span class="o">.</span><span class="n">get_current_matches</span><span class="p">()</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">auth_service</span><span class="o">.</span><span class="n">get_current_user</span><span class="p">()</span>
+    <span class="n">threads</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">thread_service</span><span class="o">.</span><span class="n">create_threads</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">matches</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">status</span><span class="o">=</span><span class="n">remove_match</span> <span class="ow">and</span> <span class="n">remove_thread</span><span class="p">,</span>
+                   <span class="n">new_matches</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">find_matches</span><span class="p">))</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Anthony Mirand, Cody Ley-Han, Jessica Douma, Martin Kong, River Mist
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

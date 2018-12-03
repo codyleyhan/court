@@ -147,7 +147,9 @@
  | <a href="#C"><strong>C</strong></a>
  | <a href="#D"><strong>D</strong></a>
  | <a href="#E"><strong>E</strong></a>
+ | <a href="#F"><strong>F</strong></a>
  | <a href="#G"><strong>G</strong></a>
+ | <a href="#I"><strong>I</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
  | <a href="#O"><strong>O</strong></a>
@@ -165,6 +167,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="index.html#court.app.add_error_handlers">add_error_handlers() (in module court.app)</a>
 </li>
+      <li><a href="index.html#court.matches.match_service.MatchService.add_match_to_profile">add_match_to_profile() (court.matches.match_service.MatchService method)</a>
+</li>
       <li><a href="index.html#court.chats.thread_service.ThreadService.add_message">add_message() (court.chats.thread_service.ThreadService method)</a>
 </li>
       <li><a href="index.html#court.app.add_routes">add_routes() (in module court.app)</a>
@@ -173,6 +177,8 @@
 
       <ul>
         <li><a href="index.html#court.chats.views.ThreadAPI.as_view">(court.chats.views.ThreadAPI class method)</a>
+</li>
+        <li><a href="index.html#court.matches.views.MatchAPI.as_view">(court.matches.views.MatchAPI class method)</a>
 </li>
         <li><a href="index.html#court.users.views.ProfileAPI.as_view">(court.users.views.ProfileAPI class method)</a>
 </li>
@@ -201,8 +207,12 @@
 </li>
       <li><a href="index.html#module-court.chats.views">court.chats.views (module)</a>
 </li>
+      <li><a href="index.html#module-court.matches.match_service">court.matches.match_service (module)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="index.html#module-court.matches.views">court.matches.views (module)</a>
+</li>
       <li><a href="index.html#module-court.users.auth_service">court.users.auth_service (module)</a>
 </li>
       <li><a href="index.html#module-court.users.models">court.users.models (module)</a>
@@ -222,7 +232,11 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="index.html#court.chats.views.MessageAPI.delete">delete() (court.chats.views.MessageAPI method)</a>
+
+      <ul>
+        <li><a href="index.html#court.matches.views.MatchAPI.delete">(court.matches.views.MatchAPI method)</a>
 </li>
+      </ul></li>
       <li><a href="index.html#court.chats.thread_service.ThreadService.delete_thread">delete_thread() (court.chats.thread_service.ThreadService method)</a>
 </li>
       <li><a href="index.html#court.chats.sockets.ThreadSockets.disconnect">disconnect() (court.chats.sockets.ThreadSockets method)</a>
@@ -233,6 +247,8 @@
 
       <ul>
         <li><a href="index.html#court.chats.views.ThreadAPI.dispatch_request">(court.chats.views.ThreadAPI method)</a>
+</li>
+        <li><a href="index.html#court.matches.views.MatchAPI.dispatch_request">(court.matches.views.MatchAPI method)</a>
 </li>
         <li><a href="index.html#court.users.views.ProfileAPI.dispatch_request">(court.users.views.ProfileAPI method)</a>
 </li>
@@ -254,6 +270,14 @@
   </ul></td>
 </tr></table>
 
+<h2 id="F">F</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="index.html#court.matches.match_service.MatchService.find_match">find_match() (court.matches.match_service.MatchService method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -262,15 +286,19 @@
       <ul>
         <li><a href="index.html#court.chats.views.ThreadAPI.get">(court.chats.views.ThreadAPI method)</a>
 </li>
+        <li><a href="index.html#court.matches.views.MatchAPI.get">(court.matches.views.MatchAPI method)</a>
+</li>
         <li><a href="index.html#court.users.views.ProfileAPI.get">(court.users.views.ProfileAPI method)</a>
 </li>
       </ul></li>
-      <li><a href="index.html#court.users.auth_service.AuthService.get_current_user">get_current_user() (court.users.auth_service.AuthService method)</a>
+      <li><a href="index.html#court.matches.match_service.MatchService.get_current_matches">get_current_matches() (court.matches.match_service.MatchService method)</a>
 </li>
-      <li><a href="index.html#court.users.auth_service.AuthService.get_current_user_id">get_current_user_id() (court.users.auth_service.AuthService method)</a>
+      <li><a href="index.html#court.users.auth_service.AuthService.get_current_user">get_current_user() (court.users.auth_service.AuthService method)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="index.html#court.users.auth_service.AuthService.get_current_user_id">get_current_user_id() (court.users.auth_service.AuthService method)</a>
+</li>
       <li><a href="index.html#court.users.auth_service.AuthService.get_current_user_profile">get_current_user_profile() (court.users.auth_service.AuthService method)</a>
 </li>
       <li><a href="index.html#court.chats.thread_service.ThreadService.get_messages">get_messages() (court.chats.thread_service.ThreadService method)</a>
@@ -280,6 +308,14 @@
       <li><a href="index.html#court.users.auth_service.AuthService.get_user_for_user_id">get_user_for_user_id() (court.users.auth_service.AuthService method)</a>
 </li>
       <li><a href="index.html#court.chats.sockets.ThreadSockets.get_user_from_request">get_user_from_request() (court.chats.sockets.ThreadSockets method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="I">I</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="index.html#court.matches.match_service.MatchService.inactivate_match">inactivate_match() (court.matches.match_service.MatchService method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -301,10 +337,14 @@
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="index.html#court.chats.models.Message">Message (class in court.chats.models)</a>
+      <li><a href="index.html#court.matches.views.MatchAPI">MatchAPI (class in court.matches.views)</a>
+</li>
+      <li><a href="index.html#court.matches.match_service.MatchService">MatchService (class in court.matches.match_service)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="index.html#court.chats.models.Message">Message (class in court.chats.models)</a>
+</li>
       <li><a href="index.html#court.chats.views.MessageAPI">MessageAPI (class in court.chats.views)</a>
 </li>
   </ul></td>
@@ -397,6 +437,8 @@
 <h2 id="U">U</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="index.html#court.matches.match_service.MatchService.unlock_next_profile_feature">unlock_next_profile_feature() (court.matches.match_service.MatchService method)</a>
+</li>
       <li><a href="index.html#court.chats.thread_service.ThreadService.update_chat_state">update_chat_state() (court.chats.thread_service.ThreadService method)</a>
 </li>
       <li><a href="index.html#court.users.auth_service.AuthService.update_current_user_profile">update_current_user_profile() (court.users.auth_service.AuthService method)</a>

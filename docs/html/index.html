@@ -82,6 +82,7 @@
 <li><a class="reference internal" href="#module-court.app">App</a></li>
 <li><a class="reference internal" href="#module-court.chats.models">Chats</a></li>
 <li><a class="reference internal" href="#module-court.users.auth_service">Users</a></li>
+<li><a class="reference internal" href="#module-court.matches.match_service">Matches</a></li>
 <li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
 </ul>
 </div>
@@ -1064,6 +1065,228 @@ the arguments from the URL rule.</p>
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a Flask HTTP response with after a selected user’s login flow.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body">AuthorizationError, ValidationError</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-court.matches.match_service">
+<span id="matches"></span><h1>Matches<a class="headerlink" href="#module-court.matches.match_service" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="court.matches.match_service.MatchService">
+<em class="property">class </em><code class="descclassname">court.matches.match_service.</code><code class="descname">MatchService</code><span class="sig-paren">(</span><em>user_store=&lt;class 'court.users.models.User'&gt;</em>, <em>db_conn=&lt;SQLAlchemy engine=None&gt;</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/matches/match_service.html#MatchService"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.matches.match_service.MatchService" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.7)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Handles all business logic for creating and managing user’s matches.</p>
+<dl class="method">
+<dt id="court.matches.match_service.MatchService.add_match_to_profile">
+<code class="descname">add_match_to_profile</code><span class="sig-paren">(</span><em>user_id</em>, <em>matched_interest</em>, <em>force=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/matches/match_service.html#MatchService.add_match_to_profile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.matches.match_service.MatchService.add_match_to_profile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adds a match for the user in the current context with a specified user.
+If a match has not previously been made then return True, else False.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>user_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – user id of the match to the user in the current context</li>
+<li><strong>matched_interest</strong> (<em>key value of interest in common</em>) – one interest that the matched user and user in the current context have in common</li>
+<li><strong>force</strong> (<em>boolean</em>) – optional argument to override previous match with user</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Whether a new match was successfully made</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)">bool</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="court.matches.match_service.MatchService.find_match">
+<code class="descname">find_match</code><span class="sig-paren">(</span><em>user_id</em>, <em>num_matches</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/matches/match_service.html#MatchService.find_match"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.matches.match_service.MatchService.find_match" title="Permalink to this definition">¶</a></dt>
+<dd><p>Computes and returns matches for a given user</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>user_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – user id of the match to the user in the current context</li>
+<li><strong>num_matches</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – number of matches that should be computed</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">List of tuples containing and int and a key value of a common interest</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.7)">list</a>(<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.7)">tuple</a>(<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)">int</a>, { key : value }))</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="court.matches.match_service.MatchService.get_current_matches">
+<code class="descname">get_current_matches</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/matches/match_service.html#MatchService.get_current_matches"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.matches.match_service.MatchService.get_current_matches" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get matches list of user in the current context.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">Match dictionary of the user in the current context, otherwise return empty</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)">dict</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="court.matches.match_service.MatchService.inactivate_match">
+<code class="descname">inactivate_match</code><span class="sig-paren">(</span><em>user_id</em>, <em>purge=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/matches/match_service.html#MatchService.inactivate_match"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.matches.match_service.MatchService.inactivate_match" title="Permalink to this definition">¶</a></dt>
+<dd><p>Inactivates a match to and from the user in the current context and a specified user.</p>
+<p>Also triggers the message thread to be deleted from thread_service.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>user_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – user id of the match to the user in the current context</li>
+<li><strong>purge</strong> (<em>boolean</em>) – optional argument to mark match inactive or delete from database</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Whether or not a match was successfully deleted</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.7)">bool</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="court.matches.match_service.MatchService.unlock_next_profile_feature">
+<code class="descname">unlock_next_profile_feature</code><span class="sig-paren">(</span><em>user_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/matches/match_service.html#MatchService.unlock_next_profile_feature"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.matches.match_service.MatchService.unlock_next_profile_feature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prompted when user in the current context unlocks information about a specified user
+to unlock the next profile feature.</p>
+<p>Unlock profile progression is defined in the following order:
+Interests, First Name, Last Name, Profile Picture</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>user_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – user id of the match to the user in the current context</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Dictionary of current user’s new unlocked feature and profile unlocked percent, and entry of match users’ new unlocked feature and profile unlocked percent.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)">dict</a></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body">RuntimeError</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<span class="target" id="module-court.matches.views"></span><dl class="class">
+<dt id="court.matches.views.MatchAPI">
+<em class="property">class </em><code class="descclassname">court.matches.views.</code><code class="descname">MatchAPI</code><span class="sig-paren">(</span><em>match_service</em>, <em>auth_service</em>, <em>thread_service</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/matches/views.html#MatchAPI"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.matches.views.MatchAPI" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask.views.MethodView</span></code></p>
+<p>Provides the view layer API for Matches.</p>
+<dl class="classmethod">
+<dt id="court.matches.views.MatchAPI.as_view">
+<em class="property">classmethod </em><code class="descname">as_view</code><span class="sig-paren">(</span><em>name</em>, <em>*class_args</em>, <em>**class_kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#court.matches.views.MatchAPI.as_view" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts the class into an actual view function that can be used
+with the routing system.  Internally this generates a function on the
+fly which will instantiate the <code class="xref py py-class docutils literal notranslate"><span class="pre">View</span></code> on each request and call
+the <a class="reference internal" href="#court.matches.views.MatchAPI.dispatch_request" title="court.matches.views.MatchAPI.dispatch_request"><code class="xref py py-meth docutils literal notranslate"><span class="pre">dispatch_request()</span></code></a> method on it.</p>
+<p>The arguments passed to <a class="reference internal" href="#court.matches.views.MatchAPI.as_view" title="court.matches.views.MatchAPI.as_view"><code class="xref py py-meth docutils literal notranslate"><span class="pre">as_view()</span></code></a> are forwarded to the
+constructor of the class.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="court.matches.views.MatchAPI.delete">
+<code class="descname">delete</code><span class="sig-paren">(</span><em>user_id</em>, <em>purge=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/matches/views.html#MatchAPI.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.matches.views.MatchAPI.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Processes a HTTP DELETE request for the match REST API.</p>
+<p>Example request:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>DELETE localhost:8000/api/matches
+</pre></div>
+</div>
+<p>Example response:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;status&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+  <span class="nt">&quot;new_matches&quot;</span><span class="p">:</span> <span class="mi">2</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>user_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – user id of the match to the user in the current context</li>
+<li><strong>purge</strong> (<em>boolean</em>) – optional argument to mark match inactive or delete from database</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">a Flask HTTP response with a success or failure status, and number of new matches found.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="court.matches.views.MatchAPI.dispatch_request">
+<code class="descname">dispatch_request</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="headerlink" href="#court.matches.views.MatchAPI.dispatch_request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Subclasses have to override this method to implement the
+actual view function code.  This method is called with all
+the arguments from the URL rule.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="court.matches.views.MatchAPI.get">
+<code class="descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/matches/views.html#MatchAPI.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.matches.views.MatchAPI.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Processes a HTTP GET request for the match REST API.</p>
+<p>Example request:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>GET localhost:8000/api/matches
+</pre></div>
+</div>
+<p>Example response:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;matches&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;2&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;active&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
+      <span class="nt">&quot;percent_unlocked&quot;</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+      <span class="nt">&quot;profile&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nt">&quot;animal&quot;</span><span class="p">:</span> <span class="s2">&quot;Brown&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;Donkey&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;gender&quot;</span><span class="p">:</span> <span class="s2">&quot;Male&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;preferred_gender&quot;</span><span class="p">:</span> <span class="s2">&quot;Female&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;first_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Joe&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;last_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Bruin&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;profile_picture&quot;</span><span class="p">:</span> <span class="s2">&quot;https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=102773437400251&amp;height=300&amp;width=300&amp;ext=1544820635&amp;hash=AeQAGANVCW2xEscN&quot;</span><span class="p">,</span>
+        <span class="nt">&quot;interests&quot;</span><span class="p">:</span> <span class="p">{</span> <span class="nt">&quot;interest1&quot;</span><span class="p">:</span> <span class="s2">&quot;value1&quot;</span> <span class="p">}</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+  <span class="p">},</span>
+  <span class="nt">&quot;thread_status&quot;</span><span class="p">:</span> <span class="kc">true</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a Flask HTTP response with a User’s current matches and thread status.</td>
 </tr>
 </tbody>
 </table>

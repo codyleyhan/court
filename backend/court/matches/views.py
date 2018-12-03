@@ -40,8 +40,8 @@ class MatchAPI(MethodView):
       {
         "matches": {
           "2": {
-            "active": True,
-            "percent_unlocked": 0,
+            "active": true,
+            "percent_unlocked": 100,
             "profile": {
               "animal": "Brown",
               "color": "Donkey",
@@ -89,8 +89,7 @@ class MatchAPI(MethodView):
     :param purge: optional argument to mark match inactive or delete from database
     :type purge: boolean
 
-    :return: a Flask HTTP response with a success or failure status, and number of
-    new matches found.
+    :return: a Flask HTTP response with a success or failure status, and number of new matches found.
     """
     remove_match = self.match_service.inactivate_match(user_id, purge)
     # Also removes the two user's thread history
