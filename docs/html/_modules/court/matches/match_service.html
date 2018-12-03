@@ -1,0 +1,511 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>court.matches.match_service &mdash; Court  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+
+  
+  <script src="../../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home"> Court
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <!-- Local TOC -->
+              <div class="local-toc"></div>
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Court</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../index.html">Module code</a> &raquo;</li>
+        
+      <li>court.matches.match_service</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for court.matches.match_service</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">flask</span> <span class="k">import</span> <span class="n">g</span><span class="p">,</span> <span class="n">request</span>
+<span class="kn">from</span> <span class="nn">heapq</span> <span class="k">import</span> <span class="n">heappush</span><span class="p">,</span> <span class="n">heappop</span>
+
+<span class="kn">from</span> <span class="nn">court.users.models</span> <span class="k">import</span> <span class="n">User</span><span class="p">,</span> <span class="n">Profile</span>
+<span class="kn">from</span> <span class="nn">court.database</span> <span class="k">import</span> <span class="n">db</span>
+<span class="kn">from</span> <span class="nn">court.errors</span> <span class="k">import</span> <span class="n">AuthorizationError</span><span class="p">,</span> <span class="n">NotFoundError</span>
+
+<div class="viewcode-block" id="MatchService"><a class="viewcode-back" href="../../../index.html#court.matches.match_service.MatchService">[docs]</a><span class="k">class</span> <span class="nc">MatchService</span><span class="p">:</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  Handles all business logic for creating and managing user&#39;s matches.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+
+
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_store</span><span class="o">=</span><span class="n">User</span><span class="p">,</span> <span class="n">db_conn</span><span class="o">=</span><span class="n">db</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Constructs a new MatchService.</span>
+
+<span class="sd">    :param user_store: ORM object to create/query users</span>
+<span class="sd">    :type user_store: court.users.models.User</span>
+<span class="sd">    :param db_conn: a SQLAlchemy database connection</span>
+<span class="sd">    :type db_conn: flask_sqlalchemy.SQLAlchemy</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">user_store</span> <span class="o">=</span> <span class="n">user_store</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="n">db_conn</span>
+
+<div class="viewcode-block" id="MatchService.get_current_matches"><a class="viewcode-back" href="../../../index.html#court.matches.match_service.MatchService.get_current_matches">[docs]</a>  <span class="k">def</span> <span class="nf">get_current_matches</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get matches list of user in the current context.</span>
+
+<span class="sd">    :return: Match dictionary of the user in the current context, otherwise return empty</span>
+<span class="sd">    :rtype: dict</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s1">&#39;user_id&#39;</span> <span class="ow">in</span> <span class="n">g</span><span class="p">:</span>
+      <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_store</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span>
+      <span class="n">g</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">user</span>
+    <span class="n">matches</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Profile</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="n">g</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span><span class="o">.</span><span class="n">match_history</span>
+    <span class="k">if</span> <span class="n">matches</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+      <span class="n">active_matches</span> <span class="o">=</span> <span class="p">{</span> <span class="n">k</span> <span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="n">matches</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span><span class="p">[</span><span class="s1">&#39;active&#39;</span><span class="p">]</span> <span class="p">}</span>
+      <span class="k">return</span> <span class="n">active_matches</span>
+
+    <span class="k">return</span> <span class="p">{}</span></div>
+
+<div class="viewcode-block" id="MatchService.inactivate_match"><a class="viewcode-back" href="../../../index.html#court.matches.match_service.MatchService.inactivate_match">[docs]</a>  <span class="k">def</span> <span class="nf">inactivate_match</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="n">purge</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Inactivates a match to and from the user in the current context and a specified user.</span>
+
+<span class="sd">    Also triggers the message thread to be deleted from thread_service.</span>
+
+<span class="sd">    :param user_id: user id of the match to the user in the current context</span>
+<span class="sd">    :type user_id: int</span>
+<span class="sd">    :param purge: optional argument to mark match inactive or delete from database</span>
+<span class="sd">    :type purge: boolean</span>
+
+<span class="sd">    :return: Whether or not a match was successfully deleted</span>
+<span class="sd">    :rtype: bool</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s1">&#39;user_id&#39;</span> <span class="ow">in</span> <span class="n">g</span><span class="p">:</span>
+      <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_store</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span>
+      <span class="n">g</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">user</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Profile</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="n">g</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    <span class="n">matched_user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Profile</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+
+    <span class="n">user_match_history</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">match_history</span>
+    <span class="n">matched_user_match_history</span> <span class="o">=</span> <span class="n">matched_user</span><span class="o">.</span><span class="n">match_history</span>
+
+    <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">user_match_history</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">or</span> \
+       <span class="nb">str</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">matched_user_match_history</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+       <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">if</span> <span class="n">purge</span><span class="p">:</span>
+      <span class="k">del</span> <span class="n">user_match_history</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">user_id</span><span class="p">)]</span>
+      <span class="k">del</span> <span class="n">matched_user_match_history</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">user_id</span><span class="p">)]</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="n">user_match_history</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">user_id</span><span class="p">)][</span><span class="s1">&#39;active&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+      <span class="n">matched_user_match_history</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">user_id</span><span class="p">)][</span><span class="s1">&#39;active&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="nb">setattr</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="s1">&#39;match_history&#39;</span><span class="p">,</span> <span class="n">user_match_history</span><span class="p">)</span>
+    <span class="nb">setattr</span><span class="p">(</span><span class="n">matched_user</span><span class="p">,</span> <span class="s1">&#39;match_history&#39;</span><span class="p">,</span> <span class="n">matched_user_match_history</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="MatchService.add_match_to_profile"><a class="viewcode-back" href="../../../index.html#court.matches.match_service.MatchService.add_match_to_profile">[docs]</a>  <span class="k">def</span> <span class="nf">add_match_to_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="n">matched_interest</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Adds a match for the user in the current context with a specified user.</span>
+<span class="sd">    If a match has not previously been made then return True, else False.</span>
+
+<span class="sd">    :param user_id: user id of the match to the user in the current context</span>
+<span class="sd">    :type user_id: int</span>
+<span class="sd">    :param matched_interest:  one interest that the matched user and user in the current context have in common</span>
+<span class="sd">    :type matched_interest: key value of interest in common</span>
+<span class="sd">    :param force: optional argument to override previous match with user</span>
+<span class="sd">    :type force: boolean</span>
+
+<span class="sd">    :return: Whether a new match was successfully made</span>
+<span class="sd">    :rtype: bool</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s1">&#39;user_id&#39;</span> <span class="ow">in</span> <span class="n">g</span><span class="p">:</span>
+      <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_store</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span>
+      <span class="n">g</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">user</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Profile</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="n">g</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    <span class="n">matched_user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Profile</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+
+    <span class="n">user_match_history</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">match_history</span>
+    <span class="n">matched_user_match_history</span> <span class="o">=</span> <span class="n">matched_user</span><span class="o">.</span><span class="n">match_history</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">force</span><span class="p">:</span>
+      <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span> <span class="ow">in</span> <span class="n">user</span><span class="o">.</span><span class="n">match_history</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">or</span> \
+         <span class="nb">str</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span> <span class="ow">in</span> <span class="n">matched_user</span><span class="o">.</span><span class="n">match_history</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="n">user_dict</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">_asdict</span><span class="p">()</span>
+    <span class="n">matched_user_dict</span> <span class="o">=</span> <span class="n">matched_user</span><span class="o">.</span><span class="n">_asdict</span><span class="p">()</span>
+    <span class="n">user_feature_unlock</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">user_dict</span><span class="p">[</span><span class="s1">&#39;interests&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
+    <span class="n">matched_user_feature_unlock</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">matched_user_dict</span><span class="p">[</span><span class="s1">&#39;interests&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
+
+    <span class="n">user_match_history</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">user_id</span><span class="p">)]</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="s1">&#39;active&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+      <span class="s1">&#39;percent_unlocked&#39;</span><span class="p">:</span> <span class="n">matched_user_feature_unlock</span><span class="p">,</span>
+      <span class="s1">&#39;profile&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;animal&#39;</span><span class="p">:</span> <span class="n">matched_user_dict</span><span class="p">[</span><span class="s1">&#39;animal&#39;</span><span class="p">],</span>
+        <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">matched_user_dict</span><span class="p">[</span><span class="s1">&#39;color&#39;</span><span class="p">],</span>
+        <span class="s1">&#39;gender&#39;</span><span class="p">:</span> <span class="n">matched_user_dict</span><span class="p">[</span><span class="s1">&#39;gender&#39;</span><span class="p">],</span>
+        <span class="s1">&#39;preferred_gender&#39;</span><span class="p">:</span> <span class="n">matched_user_dict</span><span class="p">[</span><span class="s1">&#39;preferred_gender&#39;</span><span class="p">],</span>
+        <span class="s1">&#39;first_name&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;last_name&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;profile_picture&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;interests&#39;</span><span class="p">:</span> <span class="n">matched_interest</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="n">matched_user_match_history</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">user_id</span><span class="p">)]</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="s1">&#39;active&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+      <span class="s1">&#39;percent_unlocked&#39;</span><span class="p">:</span> <span class="n">user_feature_unlock</span><span class="p">,</span>
+      <span class="s1">&#39;profile&#39;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s1">&#39;animal&#39;</span><span class="p">:</span> <span class="n">user_dict</span><span class="p">[</span><span class="s1">&#39;animal&#39;</span><span class="p">],</span>
+        <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">user_dict</span><span class="p">[</span><span class="s1">&#39;color&#39;</span><span class="p">],</span>
+        <span class="s1">&#39;gender&#39;</span><span class="p">:</span> <span class="n">user_dict</span><span class="p">[</span><span class="s1">&#39;gender&#39;</span><span class="p">],</span>
+        <span class="s1">&#39;preferred_gender&#39;</span><span class="p">:</span> <span class="n">user_dict</span><span class="p">[</span><span class="s1">&#39;preferred_gender&#39;</span><span class="p">],</span>
+        <span class="s1">&#39;first_name&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;last_name&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;profile_picture&#39;</span><span class="p">:</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;interests&#39;</span><span class="p">:</span> <span class="n">matched_interest</span>
+      <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="nb">setattr</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="s1">&#39;match_history&#39;</span><span class="p">,</span> <span class="n">user_match_history</span><span class="p">)</span>
+    <span class="nb">setattr</span><span class="p">(</span><span class="n">matched_user</span><span class="p">,</span> <span class="s1">&#39;match_history&#39;</span><span class="p">,</span> <span class="n">matched_user_match_history</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+<div class="viewcode-block" id="MatchService.unlock_next_profile_feature"><a class="viewcode-back" href="../../../index.html#court.matches.match_service.MatchService.unlock_next_profile_feature">[docs]</a>  <span class="k">def</span> <span class="nf">unlock_next_profile_feature</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Prompted when user in the current context unlocks information about a specified user</span>
+<span class="sd">    to unlock the next profile feature.</span>
+
+<span class="sd">    Unlock profile progression is defined in the following order:</span>
+<span class="sd">    Interests, First Name, Last Name, Profile Picture</span>
+
+<span class="sd">    :param user_id: user id of the match to the user in the current context</span>
+<span class="sd">    :type user_id: int</span>
+
+<span class="sd">    :return: Dictionary of current user&#39;s new unlocked feature and profile unlocked percent, and entry of match users&#39; new unlocked feature and profile unlocked percent.</span>
+<span class="sd">    :rtype: dict</span>
+<span class="sd">    :raises: RuntimeError</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="s1">&#39;user_id&#39;</span> <span class="ow">in</span> <span class="n">g</span><span class="p">:</span>
+      <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">user_store</span><span class="o">.</span><span class="n">query</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span>
+      <span class="n">g</span><span class="o">.</span><span class="n">user</span> <span class="o">=</span> <span class="n">user</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Profile</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="n">g</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+    <span class="n">matched_user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Profile</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="n">user_id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+
+    <span class="n">user_match_history</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">match_history</span>
+    <span class="n">matched_user_match_history</span> <span class="o">=</span> <span class="n">matched_user</span><span class="o">.</span><span class="n">match_history</span>
+
+    <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">user</span><span class="o">.</span><span class="n">match_history</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="ow">or</span> \
+       <span class="nb">str</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">matched_user</span><span class="o">.</span><span class="n">match_history</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+      <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">()</span>
+
+    <span class="n">user_dict</span> <span class="o">=</span> <span class="n">user</span><span class="o">.</span><span class="n">_asdict</span><span class="p">()</span>
+    <span class="n">matched_user_dict</span> <span class="o">=</span> <span class="n">matched_user</span><span class="o">.</span><span class="n">_asdict</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_unlock_next_feature</span><span class="p">(</span><span class="n">from_history</span><span class="p">,</span> <span class="n">to_user_id</span><span class="p">,</span> <span class="n">to_dict</span><span class="p">):</span>
+      <span class="c1"># Unlock to_user_id&#39;s features for from_{user}&#39;s match_history</span>
+      <span class="n">unlocked_feature</span> <span class="o">=</span> <span class="p">{}</span>
+      <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">from_history</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">to_user_id</span><span class="p">)][</span><span class="s1">&#39;profile&#39;</span><span class="p">][</span><span class="s1">&#39;interests&#39;</span><span class="p">])</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">to_dict</span><span class="p">[</span><span class="s1">&#39;interests&#39;</span><span class="p">]):</span>
+        <span class="c1"># Continue unlocking interests for to_user_id user</span>
+        <span class="n">unlocked_interests</span> <span class="o">=</span> <span class="n">from_history</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">to_user_id</span><span class="p">)][</span><span class="s1">&#39;profile&#39;</span><span class="p">][</span><span class="s1">&#39;interests&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="n">total_interests</span> <span class="o">=</span> <span class="n">to_dict</span><span class="p">[</span><span class="s1">&#39;interests&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="n">interests_left</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">total_interests</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">unlocked_interests</span><span class="p">))</span>
+        <span class="n">selected_interest_key</span> <span class="o">=</span> <span class="n">interests_left</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">selected_interest_value</span> <span class="o">=</span> <span class="n">to_dict</span><span class="p">[</span><span class="s1">&#39;interests&#39;</span><span class="p">][</span><span class="n">selected_interest_key</span><span class="p">]</span>
+        <span class="n">from_history</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">to_user_id</span><span class="p">)][</span><span class="s1">&#39;profile&#39;</span><span class="p">][</span><span class="s1">&#39;interests&#39;</span><span class="p">][</span><span class="n">selected_interest_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">selected_interest_value</span>
+        <span class="n">unlocked_feature</span> <span class="o">=</span> <span class="p">{</span> <span class="n">selected_interest_key</span> <span class="p">:</span> <span class="n">selected_interest_value</span> <span class="p">}</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Start to unlock first_name, last_name, and profile_picture for to_user_id user</span>
+        <span class="k">if</span> <span class="n">from_history</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">to_user_id</span><span class="p">)][</span><span class="s1">&#39;profile&#39;</span><span class="p">][</span><span class="s1">&#39;first_name&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+          <span class="n">first_name</span> <span class="o">=</span> <span class="n">to_dict</span><span class="p">[</span><span class="s1">&#39;first_name&#39;</span><span class="p">]</span>
+          <span class="n">from_history</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">to_user_id</span><span class="p">)][</span><span class="s1">&#39;profile&#39;</span><span class="p">][</span><span class="s1">&#39;first_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">first_name</span>
+          <span class="n">unlocked_feature</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;first_name&#39;</span> <span class="p">:</span> <span class="n">first_name</span> <span class="p">}</span>
+        <span class="k">elif</span> <span class="n">from_history</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">to_user_id</span><span class="p">)][</span><span class="s1">&#39;profile&#39;</span><span class="p">][</span><span class="s1">&#39;last_name&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+          <span class="n">last_name</span> <span class="o">=</span> <span class="n">to_dict</span><span class="p">[</span><span class="s1">&#39;last_name&#39;</span><span class="p">]</span>
+          <span class="n">from_history</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">to_user_id</span><span class="p">)][</span><span class="s1">&#39;profile&#39;</span><span class="p">][</span><span class="s1">&#39;last_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">last_name</span>
+          <span class="n">unlocked_feature</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;last_name&#39;</span> <span class="p">:</span> <span class="n">last_name</span> <span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span> <span class="c1"># from_history[str(to_user_id)][&#39;profile&#39;][&#39;profile_picture&#39;] == &quot;&quot;:</span>
+          <span class="n">profile_picture</span> <span class="o">=</span> <span class="n">to_dict</span><span class="p">[</span><span class="s1">&#39;profile_picture&#39;</span><span class="p">]</span>
+          <span class="n">user_match_history</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">to_user_id</span><span class="p">)][</span><span class="s1">&#39;profile&#39;</span><span class="p">][</span><span class="s1">&#39;profile_picture&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">profile_picture</span>
+          <span class="n">unlocked_feature</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;profile_picture&#39;</span> <span class="p">:</span> <span class="n">profile_picture</span> <span class="p">}</span>
+      <span class="k">return</span> <span class="p">(</span><span class="n">from_history</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">to_user_id</span><span class="p">)],</span> <span class="n">unlocked_feature</span><span class="p">)</span>
+
+    <span class="n">user_match_history</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">user_id</span><span class="p">)],</span> <span class="n">matched_user_unlocked_feature</span> <span class="o">=</span> <span class="n">_unlock_next_feature</span><span class="p">(</span>
+        <span class="n">user_match_history</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">user_id</span><span class="p">),</span> <span class="n">matched_user_dict</span><span class="p">)</span>
+    <span class="n">matched_user_match_history</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">user_id</span><span class="p">)],</span> <span class="n">user_unlocked_feature</span> <span class="o">=</span> <span class="n">_unlock_next_feature</span><span class="p">(</span>
+        <span class="n">matched_user_match_history</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">user_id</span><span class="p">),</span> <span class="n">user_dict</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_compute_unlock_percentage</span><span class="p">(</span><span class="n">from_history</span><span class="p">,</span> <span class="n">to_user_id</span><span class="p">,</span> <span class="n">to_dict</span><span class="p">):</span>
+      <span class="n">to_unlocked</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">from_history</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">to_user_id</span><span class="p">)][</span><span class="s1">&#39;profile&#39;</span><span class="p">][</span><span class="s1">&#39;interests&#39;</span><span class="p">])</span> <span class="o">+</span> \
+          <span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="n">from_history</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">to_user_id</span><span class="p">)][</span><span class="s1">&#39;profile&#39;</span><span class="p">][</span><span class="s1">&#39;first_name&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> \
+          <span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="n">from_history</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">to_user_id</span><span class="p">)][</span><span class="s1">&#39;profile&#39;</span><span class="p">][</span><span class="s1">&#39;last_name&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span> <span class="o">+</span> \
+          <span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="n">from_history</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">to_user_id</span><span class="p">)][</span><span class="s1">&#39;profile&#39;</span><span class="p">][</span><span class="s1">&#39;profile_picture&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+      <span class="c1"># 3 is from first_name + last_name + profile_picture</span>
+      <span class="n">to_total</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">to_dict</span><span class="p">[</span><span class="s1">&#39;interests&#39;</span><span class="p">])</span> <span class="o">+</span> <span class="mi">3</span>
+      <span class="n">to_percent_unlock</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">to_unlocked</span><span class="p">)</span> <span class="o">/</span> <span class="n">to_total</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
+      <span class="k">return</span> <span class="n">to_percent_unlock</span>
+
+    <span class="n">user_match_history</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">user_id</span><span class="p">)][</span><span class="s1">&#39;percent_unlocked&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_compute_unlock_percentage</span><span class="p">(</span>
+        <span class="n">user_match_history</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">user_id</span><span class="p">),</span> <span class="n">matched_user_dict</span><span class="p">)</span>
+    <span class="n">matched_user_match_history</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">user_id</span><span class="p">)][</span><span class="s1">&#39;percent_unlocked&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_compute_unlock_percentage</span><span class="p">(</span>
+        <span class="n">matched_user_match_history</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">user_id</span><span class="p">),</span> <span class="n">user_dict</span><span class="p">)</span>
+
+    <span class="nb">setattr</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="s1">&#39;match_history&#39;</span><span class="p">,</span> <span class="n">user_match_history</span><span class="p">)</span>
+    <span class="nb">setattr</span><span class="p">(</span><span class="n">matched_user</span><span class="p">,</span> <span class="s1">&#39;match_history&#39;</span><span class="p">,</span> <span class="n">matched_user_match_history</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="p">{</span> <span class="s1">&#39;user_percent_unlocked&#39;</span><span class="p">:</span> <span class="n">user_match_history</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">user_id</span><span class="p">)][</span><span class="s1">&#39;percent_unlocked&#39;</span><span class="p">],</span>
+             <span class="s1">&#39;matched_user_percent_unlocked&#39;</span><span class="p">:</span> <span class="n">matched_user_match_history</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">user_id</span><span class="p">)][</span><span class="s1">&#39;percent_unlocked&#39;</span><span class="p">],</span>
+             <span class="s1">&#39;user_unlocked_feature&#39;</span><span class="p">:</span> <span class="n">user_unlocked_feature</span><span class="p">,</span>
+             <span class="s1">&#39;matched_user_unlocked_feature&#39;</span><span class="p">:</span> <span class="n">matched_user_unlocked_feature</span> <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="MatchService.find_match"><a class="viewcode-back" href="../../../index.html#court.matches.match_service.MatchService.find_match">[docs]</a>  <span class="k">def</span> <span class="nf">find_match</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="n">num_matches</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Computes and returns matches for a given user</span>
+
+<span class="sd">    :param user_id: user id of the match to the user in the current context</span>
+<span class="sd">    :type user_id: int</span>
+<span class="sd">    :param num_matches: number of matches that should be computed</span>
+<span class="sd">    :type num_matches: int</span>
+
+<span class="sd">    :return: List of tuples containing and int and a key value of a common interest</span>
+<span class="sd">    :rtype: list(tuple(int, { key : value }))</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">profiles</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Profile</span><span class="p">)</span>
+    <span class="n">N</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">profiles</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
+    <span class="n">pairs</span> <span class="o">=</span> <span class="p">[[</span><span class="kc">None</span> <span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span>
+    <span class="n">user_ids</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">preferences</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">matches</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">user_profile</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">user_index</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># creates a grid of number of common interests between users</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">profile1</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">profiles</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="n">Profile</span><span class="o">.</span><span class="n">created_at</span><span class="p">)):</span>
+      <span class="k">if</span> <span class="n">profile1</span><span class="o">.</span><span class="n">user_id</span> <span class="o">==</span> <span class="n">user_id</span><span class="p">:</span>
+        <span class="n">user_profile</span> <span class="o">=</span> <span class="n">profile1</span>
+        <span class="n">user_index</span> <span class="o">=</span> <span class="n">i</span>
+      <span class="n">user_ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">profile1</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span>
+      <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">profile2</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">profiles</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="n">Profile</span><span class="o">.</span><span class="n">created_at</span><span class="p">)):</span>
+        <span class="k">if</span> <span class="n">pairs</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+          <span class="n">pairs</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">pairs</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">profile1</span><span class="o">.</span><span class="n">id</span> <span class="o">!=</span> <span class="n">profile2</span><span class="o">.</span><span class="n">id</span> <span class="ow">and</span> <span class="p">((</span><span class="n">profile1</span><span class="o">.</span><span class="n">gender</span> <span class="o">==</span> <span class="n">profile2</span><span class="o">.</span><span class="n">preferred_gender</span> <span class="ow">and</span> \
+          <span class="n">profile1</span><span class="o">.</span><span class="n">preferred_gender</span> <span class="o">==</span> <span class="n">profile2</span><span class="o">.</span><span class="n">gender</span><span class="p">)</span> <span class="ow">or</span> \
+          <span class="p">(</span><span class="n">profile1</span><span class="o">.</span><span class="n">preferred_gender</span> <span class="o">==</span> <span class="s1">&#39;Both&#39;</span> <span class="ow">or</span> <span class="n">profile2</span><span class="o">.</span><span class="n">preferred_gender</span> <span class="o">==</span> <span class="s1">&#39;Both&#39;</span><span class="p">)):</span>
+          <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">profile2</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">profile1</span><span class="o">.</span><span class="n">match_history</span> <span class="ow">and</span> \
+            <span class="nb">str</span><span class="p">(</span><span class="n">profile1</span><span class="o">.</span><span class="n">user_id</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">profile2</span><span class="o">.</span><span class="n">match_history</span><span class="p">:</span>
+            <span class="n">interests1</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">profile1</span><span class="o">.</span><span class="n">interests</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            <span class="n">interests2</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">profile2</span><span class="o">.</span><span class="n">interests</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            <span class="n">common_interests</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">interests1</span> <span class="o">&amp;</span> <span class="n">interests2</span><span class="p">)</span>
+            <span class="n">random_interest</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+            <span class="k">if</span> <span class="n">common_interests</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+              <span class="n">random_interest</span> <span class="o">=</span> <span class="p">(</span><span class="n">interests1</span> <span class="o">&amp;</span> <span class="n">interests2</span><span class="p">)</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+            <span class="n">pairs</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">common_interests</span><span class="p">,</span> <span class="n">random_interest</span><span class="p">)</span>
+
+    <span class="c1"># gets num_matches for each user</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_matches</span><span class="p">):</span>
+      <span class="c1"># creates a preference list for each user</span>
+      <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+        <span class="n">preferences</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">):</span>
+          <span class="k">if</span> <span class="n">pairs</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">heappush</span><span class="p">(</span><span class="n">preferences</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">pairs</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">j</span><span class="p">))</span>
+      <span class="c1"># iterates through preference lists to get a match for each user</span>
+      <span class="n">i</span> <span class="o">=</span> <span class="n">user_index</span>
+      <span class="k">if</span> <span class="n">user_ids</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">matches</span><span class="p">:</span>
+        <span class="n">matches</span><span class="p">[</span><span class="n">user_ids</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+      <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">matches</span><span class="p">[</span><span class="n">user_ids</span><span class="p">[</span><span class="n">i</span><span class="p">]])</span> <span class="o">&lt;</span> <span class="n">num_matches</span><span class="p">:</span>
+        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">preferences</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+          <span class="n">match</span> <span class="o">=</span> <span class="n">heappop</span><span class="p">(</span><span class="n">preferences</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+          <span class="k">if</span> <span class="n">user_ids</span><span class="p">[</span><span class="n">match</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">matches</span><span class="p">:</span>
+            <span class="n">matches</span><span class="p">[</span><span class="n">user_ids</span><span class="p">[</span><span class="n">match</span><span class="p">[</span><span class="mi">1</span><span class="p">]]]</span> <span class="o">=</span> <span class="p">[]</span>
+          <span class="k">if</span> <span class="n">pairs</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">match</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">!=</span> <span class="kc">None</span> <span class="ow">and</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">matches</span><span class="p">[</span><span class="n">user_ids</span><span class="p">[</span><span class="n">match</span><span class="p">[</span><span class="mi">1</span><span class="p">]]])</span> <span class="o">&lt;</span> <span class="n">num_matches</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">preferences</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="n">matches</span><span class="p">[</span><span class="n">user_ids</span><span class="p">[</span><span class="n">i</span><span class="p">]]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">user_ids</span><span class="p">[</span><span class="n">match</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="n">pairs</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">match</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="mi">1</span><span class="p">]))</span>
+            <span class="n">matches</span><span class="p">[</span><span class="n">user_ids</span><span class="p">[</span><span class="n">match</span><span class="p">[</span><span class="mi">1</span><span class="p">]]]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">user_ids</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">pairs</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">match</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="mi">1</span><span class="p">]))</span>
+            <span class="n">pairs</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">match</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">pairs</span><span class="p">[</span><span class="n">match</span><span class="p">[</span><span class="mi">1</span><span class="p">]][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">break</span>
+
+    <span class="k">def</span> <span class="nf">_format_matches</span><span class="p">(</span><span class="n">user_profile</span><span class="p">,</span> <span class="n">match_id</span><span class="p">,</span> <span class="n">common_interest</span><span class="p">):</span>
+      <span class="n">description</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+      <span class="k">if</span> <span class="n">common_interest</span> <span class="o">!=</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+        <span class="n">description</span> <span class="o">=</span> <span class="n">user_profile</span><span class="o">.</span><span class="n">interests</span><span class="p">[</span><span class="n">common_interest</span><span class="p">]</span>
+      <span class="k">return</span> <span class="p">(</span><span class="n">match_id</span><span class="p">,</span> <span class="p">{</span> <span class="n">common_interest</span> <span class="p">:</span> <span class="n">description</span> <span class="p">})</span>
+
+    <span class="n">user_matches</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">_format_matches</span><span class="p">(</span><span class="n">user_profile</span><span class="p">,</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">matches</span><span class="p">[</span><span class="n">user_id</span><span class="p">]))</span>
+    <span class="k">for</span> <span class="n">user_match</span> <span class="ow">in</span> <span class="n">user_matches</span><span class="p">:</span>
+      <span class="n">success</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add_match_to_profile</span><span class="p">(</span><span class="n">user_match</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">user_match</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">user_matches</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Anthony Mirand, Cody Ley-Han, Jessica Douma, Martin Kong, River Mist
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

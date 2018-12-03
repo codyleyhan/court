@@ -154,14 +154,14 @@ class MatchService:
     """
     Prompted when user in the current context unlocks information about a specified user
     to unlock the next profile feature.
+
     Unlock profile progression is defined in the following order:
-      Interests, First Name, Last Name, Profile Picture
+    Interests, First Name, Last Name, Profile Picture
 
     :param user_id: user id of the match to the user in the current context
     :type user_id: int
 
-    :return: Dictionary of current user's new unlocked feature and profile unlocked percent,
-    and entry of match users' new unlocked feature and profile unlocked percent
+    :return: Dictionary of current user's new unlocked feature and profile unlocked percent, and entry of match users' new unlocked feature and profile unlocked percent.
     :rtype: dict
     :raises: RuntimeError
     """
