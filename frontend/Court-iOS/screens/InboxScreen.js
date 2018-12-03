@@ -1,7 +1,9 @@
 import React from 'react';
 import {
+  AsyncStorage,
   Image,
   Platform,
+  RefreshControl,
   ScrollView,
   StyleSheet,
   Text,
@@ -9,33 +11,238 @@ import {
   View,
 } from 'react-native';
 import AwesomeAlert from 'react-native-awesome-alerts';
+import LottieView from 'lottie-react-native';
 
 import { MonoText } from '../components/StyledText';
 import { InboxItem } from '../components/InboxComponents';
+import FadeWrapper from '../components/FadeWrapper';
 import Header from '../components/Header';
 
+import Authentication from '../constants/Authentication';
+import Network from '../constants/Network';
 import Colors from '../constants/Colors';
+
+import { getMatches, deleteMatch } from '../utils/api/Matches';
+import { getThreads, getMessages } from '../utils/api/Chats';
+
+const io = require('socket.io-client');
 
 export default class InboxScreen extends React.Component {
   state = {
     showDeleteModal: false,
+    profileToDelete: null,
+    matches: null,
+    threads: {},
+    messages: {},
+    refreshing: false,
   };
 
   static navigationOptions = {
     header: null,
   };
 
-  setModalVisible = (visible) => {
-    this.setState({ showDeleteModal: visible });
+  parseMatches = (matchObject) => {
+    matches = [];
+    if (matchObject) {
+      Object.keys(matchObject).map((value, index) => {
+        var tempMatch = matchObject[value].profile;
+        tempMatch.user_id = value;
+        tempMatch.percent_unlocked = matchObject[value].percent_unlocked;
+        matches.push(tempMatch);
+      });
+    }
+    return matches;
+  }
+
+  handleNewMessage = (message, currentUserID) => {
+    const userid = message.user_id;
+    if (this.state.messages) {
+      // User in our current matches
+      let messages = Object.assign({}, this.state.messages);
+      messages[userid].unshift({
+        _id: message.id,
+        text: message.body,
+        createdAt: message.created_at,
+        user: {
+          _id: userid,
+        },
+      });
+      this.setState({ messages: messages });
+    }
+  }
+
+  establishChats = () => {
+    Object.keys(this.state.threads).map((userid, index) => {
+      // For each thread, emit a join message for the thread
+      this.socket.emit('join', {
+        thread: this.state.threads[userid]
+      });
+    });
+  }
+
+  connectSocket = (currentUserID) => {
+    // Fetch auth token, connect to a socket
+    AsyncStorage.getItem(Authentication.AUTH_TOKEN).then((auth_token) => {
+      if (auth_token !== null) {
+        this.socket = io(Network.base_socket_url, {
+          transports: ['websocket'],
+          query: { token: auth_token },
+        });
+        this.socket.on('connect', () => {
+          console.log('Socket connected');
+          // Join each thread
+          this.establishChats();
+        });
+        this.socket.on('new_message', (message) => {
+          this.handleNewMessage(message, currentUserID);
+        });
+      }
+    });
+  }
+
+  fetchMatches = (userid) => {
+    getMatches().then(response => {
+      if (response && response.matches) {
+        // Got matches object
+        matches = this.parseMatches(response.matches);
+        // Now setup chats
+        this.setupThreads(userid, matches);
+      } else {
+        // Error querying API
+        alert('Error querying matches');
+      }
+    });
+  }
+
+  parseMessages(messages) {
+    let newMessages = [];
+    messages.map((message, index) => {
+      newMessages.push({
+        _id: message.id,
+        text: message.body,
+        createdAt: message.created_at,
+        user: {
+          _id: message.user_id,
+        },
+      });
+    });
+    return newMessages;
+  }
+
+  setupThreads = (currentUserID, matches) => {
+    // Fetch a structure a user's threads
+    getThreads().then(response => {
+      if (response && response.threads) {
+        // Got threads
+        // Now destructure and format
+        let threads = {};
+        response.threads.map((thread, index) => {
+          // Create mapping from userid to thread_id
+          if (thread.users[0].id !== currentUserID) {
+            threads[thread.users[0].id] = thread.id;
+          } else {
+            threads[thread.users[1].id] = thread.id;
+          }
+        });
+        // Now fetch messages for each thread
+        let messages = this.state.messages;
+        Object.keys(threads).map((userid, index) => {
+          getMessages(threads[userid]).then(response => {
+            if (response && response.messages) {
+              const parsedMessages = this.parseMessages(response.messages);
+              messages[userid] = parsedMessages;
+              this.setState({ messages: messages });
+            } else {
+              alert('Error querying messages');
+            }
+          });
+        });
+        // Now iniaite chat connections for each match
+        this.connectSocket(currentUserID);
+        this.setState({ threads: threads, matches: matches });
+      } else {
+        // Error querying API
+        alert('Error querying threads');
+      }
+    });
+  }
+
+  componentDidMount() {
+    this._sub = this.props.navigation.addListener(
+      'willFocus',
+      this._componentFocused
+    );
+    this._componentFocused();
+  }
+
+  componentWillUnmount() {
+    this._sub.remove();
+  }
+
+  _componentFocused = () => {
+    if (this.currentUserID) {
+      this.fetchMatches(this.currentUserID);
+    } else {
+      AsyncStorage.getItem(Authentication.AUTH_USER, null).then(profile => {
+        if (profile) {
+          profile = JSON.parse(profile);
+          this.currentUserID = profile.user_id;
+          this.fetchMatches(profile.user_id);
+        }
+      });
+    }
+  }
+
+  _onRefresh = () => {
+    this.setState({refreshing: true});
+    getMatches().then(response => {
+      if (response && response.matches) {
+        // Got matches object
+        matches = this.parseMatches(response.matches);
+        this.setState({ matches: matches, refreshing: false });
+      } else {
+        // Error querying API
+        alert('Error querying matches');
+        this.setState({refreshing: false});
+      }
+    });
+  }
+
+  setModalVisible = (visible, user_id) => {
+    this.setState({ showDeleteModal: visible, profileToDelete: user_id });
   }
 
   onNavigateToChat = (name, profileInfo) => {
-    this.props.navigation.navigate('Chats', {chatName: name, profileInfo: profileInfo});
+    this.socket.disconnect();
+    this.props.navigation.navigate('Chats', { chatName: name, profileInfo: profileInfo, messages: this.state.messages[profileInfo.user_id], currentUserID: this.currentUserID, thread_id: this.state.threads[profileInfo.user_id] });
   }
 
   removeMatch = () => {
-    // TODO: actually remove match here
-    this.setModalVisible(false);
+    deleteMatch(this.state.profileToDelete).then(response => {
+      if (response && response.status) {
+        // Successful, remove from local matches
+        var oldMatches = this.state.matches;
+        const index = oldMatches.map((x) => {return x.user_id}).indexOf(this.state.profileToDelete);
+        if (index >= 0) {
+          oldMatches.splice(index, 1);
+          this.setState({showDeleteModal: false, showmatches: oldMatches, profileToDelete: null});
+        }
+      } else {
+        // error deleting
+        alert('Error removing match from server');
+        this.setModalVisible(false);
+      }
+    });
+  }
+
+  // returns most recent message for a userid
+  getMostRecentMessage = (userid) => {
+    const userMessages = this.state.messages[userid];
+    let lastMessage = {text: '', createdAt: ''};
+    if (userMessages && userMessages.length > 0) {
+      lastMessage = userMessages[0];
+    }
+    return lastMessage;
   }
 
   render() {
@@ -45,16 +252,56 @@ export default class InboxScreen extends React.Component {
         <Header text="Chats" />
 
         // List of messages
-        <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-          // Temp list for example messages
-          // TODO(river): populate from an API call
-          <InboxItem onPress={this.onNavigateToChat} onLongPress={() => this.setModalVisible(true)} animalName="jellyfish" color={Colors.nightSky} imgUrl="https://heightline.com/wp-content/uploads/Justin-Roberts-640x427.jpg" name="Justin Roberts" lastMessage="I'm really into cooking in my free time!" lastTime="4:02 PM" percent="67"/>
-          <InboxItem onPress={this.onNavigateToChat} onLongPress={() => this.setModalVisible(true)} animalName="panda" color={Colors.peach} name="Anonymous Panda" lastMessage="I Love to office so much it's so cool" lastTime="2:15 PM" percent="40"/>
-          <InboxItem onPress={this.onNavigateToChat} onLongPress={() => this.setModalVisible(true)} animalName="sloth" color={Colors.mustard} name="Anonymous Sloth" lastMessage="This app is amazing, what are you doing?" lastTime="10:07 AM" percent="15"/>
+        <ScrollView
+          style={styles.container}
+          contentContainerStyle={styles.contentContainer}
+          // Handles refreshing a list of matches
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this._onRefresh}
+              tintColor={Colors.teal}
+              title={'Getting your matches...'}
+            />
+          }
+          >
+            // Display loading for finding matches
 
-          // Add a message for new matches
-          <Text style={{fontFamily: 'orkney-light', marginTop: 15, textAlign: 'center', color: 'grey'}}>Looking for more chats?</Text>
-          <Text style={{fontFamily: 'orkney-light', textAlign: 'center', color: 'grey'}}>{"They'll show up here when you have a match."}</Text>
+              <FadeWrapper visible={this.state.matches === null || Object.keys(this.state.messages).length !== this.state.matches.length} >
+                <LottieView
+                  source={require('../assets/animations/preloader.json')}
+                  autoPlay
+                  speed={0.75}
+                  loop={true}
+                  style={styles.animation}
+                />
+                <Text style={{fontFamily: 'orkney-light', fontSize: 25, textAlign: 'center', color: 'grey'}}>Looking for matches...</Text>
+              </FadeWrapper>
+
+              // No matches
+              <View>
+                <FadeWrapper visible={this.state.matches !== null && this.state.matches.length == 0 } delay={300}>
+                  <Text style={{fontFamily: 'orkney-medium', marginTop: 100, fontSize: 35, textAlign: 'center', color: 'grey'}}>No matches...</Text>
+                  <Text style={{marginTop: 50, fontSize: 100, textAlign: 'center'}}>😢</Text>
+                  <Text style={{fontFamily: 'orkney-regular', marginTop: 50, fontSize: 20, textAlign: 'center', color: 'grey'}}>{"Don't worry, we'll keep looking.\nCome back later to check again!"}</Text>
+                </FadeWrapper>
+                // Show match list
+                <FadeWrapper visible={this.state.matches !== null && this.state.matches.length > 0 && Object.keys(this.state.messages).length > 0} delay={300}>
+                  {this.state.matches && this.state.matches.map((val, index) => (
+                    <InboxItem
+                      key={index}
+                      profile={val}
+                      onPress={this.onNavigateToChat}
+                      onLongPress={() => this.setModalVisible(true, val.user_id)}
+                      lastMessage={this.getMostRecentMessage(val.user_id)}
+                    />
+                  ))}
+                  // Add a message for new matches
+                  <Text style={{fontFamily: 'orkney-light', marginTop: 15, textAlign: 'center', color: 'grey'}}>Looking for more chats?</Text>
+                  <Text style={{fontFamily: 'orkney-light', textAlign: 'center', color: 'grey'}}>{"They'll show up here when you have a match."}</Text>
+                </FadeWrapper>
+              </View>
+
         </ScrollView>
         <AwesomeAlert
           show={this.state.showDeleteModal}
@@ -95,73 +342,10 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingTop: 20,
   },
-  welcomeContainer: {
-    alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 20,
-  },
-  welcomeImage: {
-    width: 100,
-    height: 80,
-    resizeMode: 'contain',
-    marginTop: 3,
-    marginLeft: -10,
-  },
-  InboxScreenFilename: {
-    marginVertical: 7,
-  },
-  codeHighlightText: {
-    color: 'rgba(96,100,109, 0.8)',
-  },
-  codeHighlightContainer: {
-    backgroundColor: 'rgba(0,0,0,0.05)',
-    borderRadius: 3,
-    paddingHorizontal: 4,
-  },
-  getStartedText: {
-    fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    lineHeight: 24,
-    textAlign: 'center',
-  },
-  tabBarInfoContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    ...Platform.select({
-      ios: {
-        shadowColor: 'black',
-        shadowOffset: { height: -3 },
-        shadowOpacity: 0.1,
-        shadowRadius: 3,
-      },
-      android: {
-        elevation: 20,
-      },
-    }),
-    alignItems: 'center',
-    backgroundColor: '#fbfbfb',
-    paddingVertical: 20,
-  },
-  tabBarInfoText: {
-    fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    textAlign: 'center',
-  },
-  navigationFilename: {
-    marginTop: 5,
-  },
-  helpContainer: {
-    marginTop: 15,
-    alignItems: 'center',
-  },
-  helpLink: {
-    paddingVertical: 15,
-  },
-  helpLinkText: {
-    fontSize: 14,
-    color: '#2e78b7',
+  animation: {
+    width: 310,
+    height: 310,
+    marginTop: 40,
   },
   removeContainer: {
     borderRadius: 15,

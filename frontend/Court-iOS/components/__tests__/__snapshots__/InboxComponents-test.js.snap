@@ -80,19 +80,31 @@ exports[`Renders Default InboxCard 1`] = `
             ]
           }
         >
-          <Image
-            source={
-              Object {
-                "uri": "https://test.com/img.png",
-              }
-            }
+          <View
             style={
-              Object {
-                "height": 65,
-                "width": 65,
-              }
+              Array [
+                Object {
+                  "alignItems": "center",
+                  "backgroundColor": "#21BFAE",
+                  "height": 65,
+                  "justifyContent": "center",
+                  "width": 65,
+                },
+                Object {},
+              ]
             }
-          />
+          >
+            <Image
+              source={1}
+              style={
+                Object {
+                  "height": 39,
+                  "tintColor": "white",
+                  "width": 39,
+                }
+              }
+            />
+          </View>
           <View
             style={
               Object {
@@ -131,36 +143,39 @@ exports[`Renders Default InboxCard 1`] = `
           }
         }
       >
-        River
+        John undefined
       </Text>
-      <Text
-        accessible={true}
-        allowFontScaling={true}
-        ellipsizeMode="tail"
-        numberOfLines={1}
-        style={
-          Object {
-            "fontFamily": "orkney-regular",
-            "fontSize": 15,
+      <View>
+        <Text
+          accessible={true}
+          allowFontScaling={true}
+          ellipsizeMode="tail"
+          numberOfLines={1}
+          style={
+            Object {
+              "fontFamily": "orkney-regular",
+              "fontSize": 15,
+              "paddingTop": 3,
+            }
           }
-        }
-      >
-        Test Message
-      </Text>
-      <Text
-        accessible={true}
-        allowFontScaling={true}
-        ellipsizeMode="tail"
-        style={
-          Object {
-            "color": "grey",
-            "fontFamily": "orkney-light",
-            "paddingTop": 8,
+        >
+          I like the office
+        </Text>
+        <Text
+          accessible={true}
+          allowFontScaling={true}
+          ellipsizeMode="tail"
+          style={
+            Object {
+              "color": "grey",
+              "fontFamily": "orkney-light",
+              "paddingTop": 6,
+            }
           }
-        }
-      >
-        10:00 AM
-      </Text>
+        >
+          Invalid date
+        </Text>
+      </View>
     </View>
     <View>
       <Text
@@ -175,7 +190,7 @@ exports[`Renders Default InboxCard 1`] = `
           }
         }
       >
-        60%
+        12
         %
       </Text>
     </View>

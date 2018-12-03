@@ -45,14 +45,12 @@ export default class Avatar extends React.Component {
     return (
       <View style={{height: size, width: size}}>
         <Mask shape={'circle'} wash>
-        { mainAvatar }
+          { mainAvatar }
         </Mask>
 
         {subAvatar && (
-            <View style={[ styles.subAvatarWrapper, {height: .3 * size, width: .3 * size}]}>
-            <Mask shape={'circle'} wash>
+          <View style={[ styles.subAvatarWrapper, {height: .3 * size, width: .3 * size}]}>
               { subAvatar }
-            </Mask>
           </View>
         )}
       </View>

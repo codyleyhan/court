@@ -3,6 +3,7 @@ from flask import request, g
 
 from court.chats.models import Message
 from court.users.models import SYSTEM_USER
+from court.errors import ValidationError
 
 class ThreadSockets(Namespace):
   """
@@ -61,7 +62,7 @@ class ThreadSockets(Namespace):
     user_id = self.auth_service.get_current_user_id()
     if 'thread' not in json or 'body' not in json:
       self.logger.error("%s sent a message without the right data", user_id)
-      raise Exception()
+      raise ValidationError("No thread or body passed")
     thread_id = json['thread']
     thread = self.thread_service.get_thread(user_id, thread_id)
 
@@ -112,7 +113,7 @@ class ThreadSockets(Namespace):
     user_id = self.auth_service.get_current_user_id()
     if 'thread' not in json:
       self.logger.error("%s did not pass a thread to join", user_id)
-      raise Exception()
+      raise ValidationError("No thread passed")
     thread_id = json['thread']
     thread = self.thread_service.get_thread(user_id, thread_id)
 

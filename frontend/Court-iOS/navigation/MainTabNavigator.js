@@ -20,6 +20,9 @@ const HomeStack = createStackNavigator({
 HomeStack.navigationOptions = {
   tabBarOptions: {
     activeTintColor: Colors.teal,
+    labelStyle: {
+      fontFamily: 'orkney-bold',
+    },
   },
   tabBarLabel: 'Chats',
   tabBarIcon: ({ focused }) => (
@@ -37,6 +40,9 @@ const ProfileStack = createStackNavigator({
 ProfileStack.navigationOptions = {
   tabBarOptions: {
     activeTintColor: Colors.teal,
+    labelStyle: {
+      fontFamily: 'orkney-bold',
+    },
   },
   tabBarLabel: 'Profile',
   tabBarIcon: ({ focused }) => (

@@ -1,18 +1,5 @@
-const tintColor = '#21ACA5';
-
 export default {
   teal: '#21BFAE',
-  tintColor,
-  tabIconDefault: '#ccc',
-  tabIconSelected: tintColor,
-  tabBar: '#fefefe',
-  errorBackground: 'red',
-  errorText: '#fff',
-  warningBackground: '#EAEB5E',
-  warningText: '#666804',
-  noticeBackground: tintColor,
-  noticeText: '#fff',
-  // To Do: remove above colors and dependencies
   lightPurple: '#9E90A2',
   coral: '#E3655B',
   mustard: '#E3B23C',
