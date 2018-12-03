@@ -3,17 +3,21 @@
 exports[`Renders Default Header 1`] = `
 <View
   style={
-    Object {
-      "alignItems": "center",
-      "backgroundColor": "#fff",
-      "borderBottomColor": "#21ACA5",
-      "borderBottomWidth": 2,
-      "flexDirection": "row",
-      "justifyContent": "center",
-      "paddingBottom": 10,
-      "paddingHorizontal": 20,
-      "paddingTop": 40,
-    }
+    Array [
+      Object {
+        "alignItems": "center",
+        "backgroundColor": "#fff",
+        "borderBottomWidth": 2,
+        "flexDirection": "row",
+        "justifyContent": "center",
+        "paddingBottom": 10,
+        "paddingHorizontal": 20,
+        "paddingTop": 40,
+      },
+      Object {
+        "borderBottomColor": "#21BFAE",
+      },
+    ]
   }
 >
   <Text
@@ -21,14 +25,18 @@ exports[`Renders Default Header 1`] = `
     allowFontScaling={true}
     ellipsizeMode="tail"
     style={
-      Object {
-        "color": "#21ACA5",
-        "flex": 1,
-        "fontFamily": "orkney-medium",
-        "fontSize": 30,
-        "paddingTop": 10,
-        "textAlign": "center",
-      }
+      Array [
+        Object {
+          "flex": 1,
+          "fontFamily": "orkney-medium",
+          "fontSize": 30,
+          "paddingTop": 10,
+          "textAlign": "center",
+        },
+        Object {
+          "color": "#21BFAE",
+        },
+      ]
     }
   >
     Test Header
