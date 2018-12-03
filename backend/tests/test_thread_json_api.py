@@ -30,7 +30,7 @@ def test_get_threads(app):
     resp = client.get('/api/threads', headers={'Authorization': token_for_user_3})
     data = json.loads(resp.data)
     assert resp.status_code == 200
-    assert len(data['threads']) == 0 
+    assert len(data['threads']) == 0
 
 def test_get_thread_messages(app):
   with app.test_client() as client:
@@ -74,4 +74,24 @@ def test_get_thread_messages_pagination(app):
     data = json.loads(resp.data)
     assert resp.status_code == 200
     assert len(data['messages']) == 1
+
+def test_delete_thread(app):
+  with app.test_client() as client:
+    resp = client.get('/api/threads', headers={'Authorization': token_for_user_1})
+    data = json.loads(resp.data)
+    assert resp.status_code == 200
+    assert len(data['threads']) == 1
+    assert data['threads'][0]['is_active']
+    assert len(data['threads'][0]['users']) == 2
+
+    resp = client.delete('/api/threads/1', headers={'Authorization': token_for_user_1})
+    data = json.loads(resp.data)
+    assert resp.status_code == 200
+    assert data['status'] == True
+
+    # test that thread 1 gets deleted from user 1's thread list
+    resp = client.get('/api/threads', headers={'Authorization': token_for_user_1})
+    data = json.loads(resp.data)
+    assert resp.status_code == 200
+    assert len(data['threads']) == 0
 

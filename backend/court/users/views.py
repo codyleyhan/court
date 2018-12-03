@@ -28,7 +28,6 @@ class UserAPI(MethodView):
 
       POST localhost:8000/api/users?access_token={facebook access token for user}
 
-
     Example response:
 
     .. code-block:: json
@@ -96,22 +95,24 @@ class ProfileAPI(MethodView):
 
       {
         "profile": {
-          "user_id": 1
+          "id": 1,
+          "user_id": 1,
           "first_name": "Joe",
           "last_name": "Bruin",
-          "preferred_gender": "Female",
-          "gender": "Male",
-          "profile_picture": "google.com/images",
-          "animal": "Beaver",
-          "color": "Teal",
           "interests": {
             "interest1": "value1"
-          }
-        },
-        "success": true
+          },
+          "profile_picture": "https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=102773437400251&height=300&width=300&ext=1544820635&hash=AeQAGANVCW2xEscN",
+          "gender": "Male",
+          "preferred_gender": "Female",
+          "animal": "bear",
+          "color": "blue",
+          "created_at": "Sun, 02 Dec 2018 22:09:00 GMT",
+          "updated_at": "Sun, 02 Dec 2018 22:09:00 GMT"
+        }
       }
 
-    :return: a Flask HTTP response containing a user's id and email
+    :return: a Flask HTTP response with a User's associated Profile.
     :raises: AuthorizationError, ValidationError
     """
     profile = self.auth_service.get_current_user_profile()
@@ -120,6 +121,32 @@ class ProfileAPI(MethodView):
   def put(self):
     """
     Processes a HTTP PUT request for the profile REST API.
+
+    .. code-block:: bash
+
+      PUT localhost:8000/api/users?fields={'first_name' : 'testing'}
+
+    Example response:
+
+    .. code-block:: json
+
+      {
+        "profile": {
+          "id": 1,
+          "first_name": "testing",
+          "last_name": "Bruin",
+          "interests": {
+            "interest1": "value1"
+          },
+          "profile_picture": "https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=102773437400251&height=300&width=300&ext=1544820635&hash=AeQAGANVCW2xEscN",
+          "gender": "Male",
+          "preferred_gender": "Female",
+          "animal": "bear",
+          "color": "blue",
+          "created_at": "Sun, 02 Dec 2018 22:09:00 GMT",
+          "updated_at": "Sun, 02 Dec 2018 22:09:00 GMT", "user_id": 1
+        }
+      }
 
     :return: a Flask HTTP response with a User's associated Profile.
     """

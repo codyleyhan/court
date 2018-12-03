@@ -50,6 +50,19 @@ def test_get_current_user(app):
     user = service.get_current_user()
     assert user is None
 
+def test_get_user_for_user_id(app):
+  with app.app_context():
+    g.user_id = 'test'
+    service = AuthService('secret')
+    user = service.get_user_for_user_id(1)
+    assert user.id == 1
+
+  with app.app_context():
+    g.user_id = 'test'
+    service = AuthService('secret')
+    user = service.get_user_for_user_id(100)
+    assert user is None
+
 def test_get_current_user_profile(app):
   with app.app_context():
     g.user_id = '1'

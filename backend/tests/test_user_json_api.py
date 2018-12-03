@@ -78,6 +78,64 @@ def test_login_bad_token(app, requests_mock):
     assert not data['success']
     assert data['error'] == 'Not authorized'
 
+def test_user_get_and_update(app, requests_mock):
+  facebook_token = 'mocksodoesntmatter'
+  facebook_url = 'https://graph.facebook.com/me?fields=id,first_name,last_name,email,picture.height(300).width(300)&access_token=' + facebook_token
+  mocked_fb_resp = {
+    "id": "102773437400251",
+    "first_name": "Will",
+    "last_name": "Occhinoberg",
+    "email": "kfgzlneeuo_1541453454@fbnw.net",
+    "picture": {
+      "data": {
+        "height": 320,
+        "is_silhouette": True,
+        "url": "https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=102773437400251&height=300&width=300&ext=1544820162&hash=AeQxhrUl0nPxIQDA",
+        "width": 320
+      }
+    }
+  }
+  court_jwt = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MTAyNzczNDM3NDAwMjUxLCJpc19hZG1pbiI6ZmFsc2V9.qVJ99o4cG1xsHAac2ztrBsyExST76pDlzhnJx9Nxt0s'
+  requests_mock.get(facebook_url, json=mocked_fb_resp)
+
+  with app.app_context():
+    # ensure the user is not in the db
+    user = User.query.filter(User.id == '102773437400251').one_or_none()
+    assert user is None
+
+  with app.test_client() as client:
+    params = { 'access_token': facebook_token }
+    resp = client.post('/api/users', query_string=params)
+    data = json.loads(resp.data)
+    assert resp.status_code == 200
+    assert data['success']
+    assert data['token'] == court_jwt
+    # assert data['profile']['email'] == 'kfgzlneeuo_1541453454@fbnw.net'
+    assert data['profile']['user_id'] == 102773437400251
+    assert not data['exists']
+
+    with app.app_context():
+      # user should now be in db
+      user = User.query.filter(User.id == '102773437400251').one_or_none()
+      assert user is not None
+
+    # ensure an already created user can request profile information
+    resp = client.get('/api/users', query_string=params)
+    data = json.loads(resp.data)
+    assert resp.status_code == 200
+    assert data['profile']['user_id'] == 102773437400251
+    assert data['profile']['first_name'] == 'Will'
+    assert data['profile']['last_name'] == 'Occhinoberg'
+
+    # check that user can update profile information
+    fields = { 'first_name': 'Joe', 'last_name': 'Bruin' }
+    resp = client.put('/api/users', query_string={**params, **fields})
+    data = json.loads(resp.data)
+    assert resp.status_code == 200
+    assert data['profile']['user_id'] == 102773437400251
+    assert data['profile']['first_name'] == 'Joe'
+    assert data['profile']['last_name'] == 'Bruin'
+
 def test_get_current_user_profile(app):
   with app.test_client() as client:
     # test user is not logged in
@@ -97,5 +155,4 @@ def test_get_current_user_profile(app):
     assert data['profile']['user_id'] == 1
     assert data['profile']['interests'] is not None
     assert data['profile']['interests']['interest1'] == 'value1'
-    
-    
+

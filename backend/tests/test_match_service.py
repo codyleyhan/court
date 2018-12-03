@@ -40,7 +40,7 @@ def test_get_current_matches(app):
 
     assert matches == mock_matches
 
-def test_inactivate_match(app):
+def test_inactivate_match_1(app):
   with app.app_context():
     g.user_id = '1'
     auth_service = AuthService('secret', None, None)
@@ -89,6 +89,64 @@ def test_inactivate_match(app):
     g.user_id = '1'
 
     match_deleted = match_service.inactivate_match(2)
+    assert match_deleted == True
+
+    # Since both users only have one match each, they should no longer have any
+    matches_for_1 = match_service.get_current_matches()
+    assert matches_for_1 == {}
+    g.user_id = '2'
+    matches_for_2 = match_service.get_current_matches()
+    assert matches_for_2 == {}
+
+def test_inactivate_match_2(app):
+  with app.app_context():
+    g.user_id = '1'
+    auth_service = AuthService('secret', None, None)
+    match_service = MatchService()
+
+    # Check user 2 is as an active match for user 1
+    mock_matches_1 = {
+      '2': {
+        'active': True,
+        'percent_unlocked': 0,
+        'profile': {
+          'animal': '',
+          'color': '',
+          'gender': '',
+          'preferred_gender': '',
+          'first_name': '',
+          'last_name': '',
+          'profile_picture': '',
+          'interests': {}
+        }
+      }
+    }
+    matches_for_1 = match_service.get_current_matches()
+    assert matches_for_1 == mock_matches_1
+
+    # Check user 1 is as an active match for user 2
+    g.user_id = '2'
+    mock_matches_2 = {
+      '1': {
+        'active': True,
+        'percent_unlocked': 0,
+        'profile': {
+          'animal': '',
+          'color': '',
+          'gender': '',
+          'preferred_gender': '',
+          'first_name': '',
+          'last_name': '',
+          'profile_picture': '',
+          'interests': {}
+        }
+      }
+    }
+    matches_for_2 = match_service.get_current_matches()
+    assert matches_for_2 == mock_matches_2
+    g.user_id = '1'
+
+    match_deleted = match_service.inactivate_match(2, purge=True)
     assert match_deleted == True
 
     # Since both users only have one match each, they should no longer have any
@@ -252,9 +310,9 @@ def test_unlock_next_profile_feature_1(app):
     # Each user has 1 interest, so the unlocked percentage should be 25%
     # because they have not yet unlocked each other's first_name, last_name,
     # or profile_picture
-    unlocked_2, unlocked_1 = match_service.unlock_next_profile_feature(2)
-    assert unlocked_2 == 25
-    assert unlocked_1 == 25
+    data = match_service.unlock_next_profile_feature(2)
+    assert data['user_percent_unlocked'] == 25
+    assert data['matched_user_percent_unlocked'] == 25
 
     # Check user 2's interest show in the active match for user 1
     mock_matches_1 = {
@@ -317,12 +375,12 @@ def test_unlock_next_profile_feature_2(app):
     # first unlock because they have not yet unlocked each other's first_name,
     # last_name, or profile_picture; after the second unlock, the unlocked
     # percentages should be 50%.
-    unlocked_2, unlocked_1 = match_service.unlock_next_profile_feature(2)
-    assert unlocked_2 == 25
-    assert unlocked_1 == 25
-    unlocked_2, unlocked_1 = match_service.unlock_next_profile_feature(2)
-    assert unlocked_2 == 50
-    assert unlocked_1 == 50
+    data = match_service.unlock_next_profile_feature(2)
+    assert data['user_percent_unlocked'] == 25
+    assert data['matched_user_percent_unlocked'] == 25
+    data = match_service.unlock_next_profile_feature(2)
+    assert data['user_percent_unlocked'] == 50
+    assert data['matched_user_percent_unlocked'] == 50
 
     # Check user 2's interest and first_name show in the active match for user 1
     mock_matches_1 = {
@@ -419,7 +477,7 @@ def test_find_match_2(app):
 
     # Check users 1 and 4 got added as an active match for user 3
     # User 4 is matched based on the shared interest3
-    # User 1 is matched even without common interests because it is the only 
+    # User 1 is matched even without common interests because it is the only
     # other user in the database satisying user 3's gender preferences
     matches_for_3 = match_service.get_current_matches()
     assert len(matches_for_3) == 2

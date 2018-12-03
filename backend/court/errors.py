@@ -9,8 +9,10 @@ class APIError(Exception):
 
   def __init__(self, message, status_code=None):
     """
-    :param message(string): the error message
-    :param status_code(int): the associated HTTP status code
+    :param message: the error message
+    :type message: str
+    :param status_code: the associated HTTP status code
+    :type status_code: int
     """
     Exception.__init__(self)
     self.message = message
@@ -27,7 +29,8 @@ class ValidationError(APIError):
   """
   Occurs when a user provides invalid data
 
-  :param message(string): the error message
+  :param message: the error message
+  :type message: string
   """
   def __init__(self, message='Not a valid request'):
     APIError.__init__(self, message, HTTPStatus.BAD_REQUEST)
@@ -36,7 +39,8 @@ class AuthorizationError(APIError):
   """
   Occurs when a user tries to access a resource they are not allowed to.
 
-  :param message(string): the error message
+  :param message: the error message
+  :type message: string
   """
   def __init__(self, message='Not authorized'):
     APIError.__init__(self, message, HTTPStatus.UNAUTHORIZED)
@@ -45,7 +49,8 @@ class NotFoundError(APIError):
   """
   Occurs when a resource is requested that does not exists.
 
-  :param message(string): the error message
+  :param message: the error message
+  :type message: string
   """
   def __init__(self, message='Not found'):
     APIError.__init__(self, message, HTTPStatus.NOT_FOUND)
@@ -59,7 +64,8 @@ class ErrorHandler:
   @staticmethod
   def handle_error_with_message(e):
     """
-    :param e(court.errors.APIError): the error message
+    :param e: the error message
+    :type e: court.errors.APIError
     """
     status_code = getattr(e, 'status_code', HTTPStatus.INTERNAL_SERVER_ERROR)
 
@@ -67,21 +73,23 @@ class ErrorHandler:
       'success': False,
       'error': e.message
     }), status_code
-  
+
   @staticmethod
   def handle_not_found(e):
     """
-    :param e(court.errors.NotFoundError): the error message
+    :param e: the error message
+    :type e: court.errors.NotFoundError
     """
     return jsonify({
       'success': False,
       'error': "Page not found"
     }), HTTPStatus.NOT_FOUND
-  
+
   @staticmethod
   def handle_internal_server(e):
     """
-    :param e(Exception): the error message
+    :param e: the error message
+    :type e: Exception
     """
     return jsonify({
       'success': False,

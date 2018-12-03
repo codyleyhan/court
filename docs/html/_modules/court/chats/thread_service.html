@@ -155,15 +155,18 @@
 <span class="sd">    Constructs a new ThreadService.</span>
 
 <span class="sd">    :param db_conn: a SQLAlchemy database connection</span>
+<span class="sd">    :type db_conn: flask_sqlalchemy.SQLAlchemy</span>
 <span class="sd">    :param message_store: ORM object to create/query messages</span>
+<span class="sd">    :type message_store: court.chats.models.Message</span>
 <span class="sd">    :param thread_store: ORM object to create/query chat threads</span>
+<span class="sd">    :type thread_store: court.chats.models.Thread</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">message_store</span> <span class="o">=</span> <span class="n">message_store</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">thread_store</span> <span class="o">=</span> <span class="n">thread_store</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="n">db_conn</span>
 
 
-<div class="viewcode-block" id="ThreadService.create_thread"><a class="viewcode-back" href="../../../index.html#court.chats.thread_service.ThreadService.create_thread">[docs]</a>  <span class="k">def</span> <span class="nf">create_thread</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_1</span><span class="p">,</span> <span class="n">user_2</span><span class="p">):</span>
+<div class="viewcode-block" id="ThreadService.create_thread"><a class="viewcode-back" href="../../../index.html#court.chats.thread_service.ThreadService.create_thread">[docs]</a>  <span class="k">def</span> <span class="nf">create_thread</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_1</span><span class="p">,</span> <span class="n">user_2</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Creates and persists a new chat thread between the users passed.</span>
 
@@ -171,12 +174,20 @@
 <span class="sd">    :type user_1: court.users.models.User</span>
 <span class="sd">    :param user_2: is a User object</span>
 <span class="sd">    :type user_2: court.users.models.User</span>
+<span class="sd">    :param force: optional argument to override previous thread with user</span>
+<span class="sd">    :type force: boolean</span>
 
 <span class="sd">    :return: returns a Thread object with the two users associated</span>
 <span class="sd">    :rtype: court.chats.models.Thread</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">user_1</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">user_2</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
       <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">force</span><span class="p">:</span>
+      <span class="n">threads</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Thread</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Thread</span><span class="o">.</span><span class="n">users</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user_1</span><span class="o">.</span><span class="n">id</span><span class="p">))</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+      <span class="k">if</span> <span class="n">threads</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">any</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">user_is_in_thread</span><span class="p">(</span><span class="n">user_2</span><span class="o">.</span><span class="n">id</span><span class="p">,</span> <span class="n">thread</span><span class="p">)</span>
+                                     <span class="k">for</span> <span class="n">thread</span> <span class="ow">in</span> <span class="n">threads</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span>
 
     <span class="n">thread</span> <span class="o">=</span> <span class="n">Thread</span><span class="p">()</span>
 
@@ -187,6 +198,26 @@
     <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
 
     <span class="k">return</span> <span class="n">thread</span></div>
+
+<div class="viewcode-block" id="ThreadService.create_threads"><a class="viewcode-back" href="../../../index.html#court.chats.thread_service.ThreadService.create_threads">[docs]</a>  <span class="k">def</span> <span class="nf">create_threads</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">matches</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Creates and persists a new chat thread between the user in the current context</span>
+<span class="sd">    and user&#39;s they have matched with.</span>
+
+<span class="sd">    :param user: the current User object in the context</span>
+<span class="sd">    :type user: court.users.models.User</span>
+<span class="sd">    :param matches: the active matches for the current user in the context</span>
+<span class="sd">    :type matches: dict</span>
+
+<span class="sd">    :return: all matches have respective threads</span>
+<span class="sd">    :rtype: boolean</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">active_match_user_ids</span> <span class="o">=</span> <span class="nb">map</span><span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="n">matches</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="k">for</span> <span class="n">user_id</span> <span class="ow">in</span> <span class="n">active_match_user_ids</span><span class="p">:</span>
+      <span class="n">matched_user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">User</span><span class="p">)</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user_id</span><span class="p">)</span><span class="o">.</span><span class="n">first</span><span class="p">()</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">create_thread</span><span class="p">(</span><span class="n">user</span><span class="p">,</span> <span class="n">matched_user</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">True</span></div>
+
 
 <div class="viewcode-block" id="ThreadService.get_thread"><a class="viewcode-back" href="../../../index.html#court.chats.thread_service.ThreadService.get_thread">[docs]</a>  <span class="k">def</span> <span class="nf">get_thread</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">current_user_id</span><span class="p">,</span> <span class="n">thread_id</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -210,7 +241,7 @@
 
 <div class="viewcode-block" id="ThreadService.user_is_in_thread"><a class="viewcode-back" href="../../../index.html#court.chats.thread_service.ThreadService.user_is_in_thread">[docs]</a>  <span class="k">def</span> <span class="nf">user_is_in_thread</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="n">thread</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Checks if a user is authorized to be in a thread. If the user id is the </span>
+<span class="sd">    Checks if a user is authorized to be in a thread. If the user id is the</span>
 <span class="sd">    system user id, then it will return true.</span>
 
 <span class="sd">    :param user_id: the user id being checked</span>
@@ -222,7 +253,7 @@
 <span class="sd">    :rtype: bool</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">user_id</span> <span class="o">==</span> <span class="n">SYSTEM_USER</span><span class="p">:</span>
-      <span class="k">return</span> <span class="n">true</span>
+      <span class="k">return</span> <span class="kc">True</span>
     <span class="k">for</span> <span class="n">user</span> <span class="ow">in</span> <span class="n">thread</span><span class="o">.</span><span class="n">users</span><span class="p">:</span>
       <span class="k">if</span> <span class="n">user_id</span> <span class="o">==</span> <span class="n">user</span><span class="o">.</span><span class="n">id</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">True</span>
@@ -245,6 +276,7 @@
 <span class="sd">    :type before_id: int</span>
 
 <span class="sd">    :return: list of thread messages</span>
+<span class="sd">    :rtype: list of court.chats.models.Message</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">thread</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_thread</span><span class="p">(</span><span class="n">current_user_id</span><span class="p">,</span> <span class="n">thread_id</span><span class="p">)</span>
 
@@ -279,7 +311,57 @@
     <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
 
-    <span class="k">return</span> <span class="n">message</span></div></div>
+    <span class="k">return</span> <span class="n">message</span></div>
+
+<div class="viewcode-block" id="ThreadService.update_chat_state"><a class="viewcode-back" href="../../../index.html#court.chats.thread_service.ThreadService.update_chat_state">[docs]</a>  <span class="k">def</span> <span class="nf">update_chat_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="n">thread_id</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Updates the chat state with the metadata from the most recent message</span>
+
+<span class="sd">    :param user_id: the specified user id</span>
+<span class="sd">    :type user_id: int</span>
+<span class="sd">    :param thread_id: the id of the message thread</span>
+<span class="sd">    :type thread_id: int</span>
+<span class="sd">    :return: number of message pairs</span>
+<span class="sd">    :rtype: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">user_id</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">thread_id</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+      <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">()</span>
+
+    <span class="n">thread</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_thread</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">thread_id</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">thread</span><span class="o">.</span><span class="n">last_message_from</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+      <span class="n">thread</span><span class="o">.</span><span class="n">last_message_from</span> <span class="o">=</span> <span class="n">user_id</span>
+      <span class="n">thread</span><span class="o">.</span><span class="n">message_pairs</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">elif</span> <span class="n">thread</span><span class="o">.</span><span class="n">last_message_from</span> <span class="o">!=</span> <span class="n">user_id</span><span class="p">:</span>
+      <span class="n">thread</span><span class="o">.</span><span class="n">last_message_from</span> <span class="o">=</span> <span class="n">user_id</span>
+      <span class="n">thread</span><span class="o">.</span><span class="n">message_pairs</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">thread</span><span class="o">.</span><span class="n">message_pairs</span></div>
+
+<div class="viewcode-block" id="ThreadService.delete_thread"><a class="viewcode-back" href="../../../index.html#court.chats.thread_service.ThreadService.delete_thread">[docs]</a>  <span class="k">def</span> <span class="nf">delete_thread</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">,</span> <span class="n">purge</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Deletes a thread to a specified user_id</span>
+
+<span class="sd">    :param user_id: the specified user id</span>
+<span class="sd">    :type user_id: int</span>
+<span class="sd">    :param purge: optional argument to mark thread inactive or delete from database</span>
+<span class="sd">    :type purge: boolean</span>
+<span class="sd">    :return: whether the thread was successfully deleted or not</span>
+<span class="sd">    :rtype: boolean</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">threads</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">Thread</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">Thread</span><span class="o">.</span><span class="n">users</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="n">user_id</span><span class="p">))</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">threads</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">threads</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+      <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="k">for</span> <span class="n">thread</span> <span class="ow">in</span> <span class="n">threads</span><span class="p">:</span>
+      <span class="k">if</span> <span class="n">purge</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">delete</span><span class="p">(</span><span class="n">thread</span><span class="p">)</span>
+      <span class="k">else</span><span class="p">:</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">thread</span><span class="p">,</span> <span class="s1">&#39;is_active&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="kc">True</span></div></div>
 </pre></div>
 
            </div>

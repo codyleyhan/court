@@ -153,7 +153,7 @@
 <span class="sd">  &quot;&quot;&quot;</span>
   <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thread_service</span><span class="p">,</span> <span class="n">auth_service</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Creates a new MessageAPI object.  Should be called with </span>
+<span class="sd">    Creates a new MessageAPI object.  Should be called with</span>
 <span class="sd">    MessageAPI.as_view(url, thread_service, auth_service) to initialize.</span>
 
 <span class="sd">    :param thread_service: a ThreadService instance</span>
@@ -189,8 +189,8 @@
 <span class="sd">      }</span>
 
 <span class="sd">    :param thread_id: the id of the thread requested</span>
-
 <span class="sd">    :type thread_id: int</span>
+
 <span class="sd">    :return: a Flask HTTP response with a list of thread messages</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">auth_service</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">auth_service</span>
@@ -209,15 +209,27 @@
 
     <span class="n">messages</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">thread_service</span><span class="o">.</span><span class="n">get_messages</span><span class="p">(</span><span class="n">user_id</span><span class="p">,</span> <span class="n">thread_id</span><span class="p">,</span> <span class="n">first</span><span class="p">,</span> <span class="n">after_id</span><span class="p">,</span> <span class="n">before_id</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">messages</span><span class="o">=</span><span class="n">messages</span><span class="p">)</span></div></div>
-  
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">messages</span><span class="o">=</span><span class="n">messages</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="MessageAPI.delete"><a class="viewcode-back" href="../../../index.html#court.chats.views.MessageAPI.delete">[docs]</a>  <span class="k">def</span> <span class="nf">delete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_id</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Processes a HTTP DELETE request for the thread REST API.</span>
+
+<span class="sd">    :param user_id: the id of the user to delete the thread with</span>
+<span class="sd">    :type user_id: int</span>
+
+<span class="sd">    :return: a Flask HTTP response if the user&#39;s thread was deleted</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">status</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">thread_service</span><span class="o">.</span><span class="n">delete_thread</span><span class="p">(</span><span class="n">user_id</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">status</span><span class="o">=</span><span class="n">status</span><span class="p">)</span></div></div>
+
 <div class="viewcode-block" id="ThreadAPI"><a class="viewcode-back" href="../../../index.html#court.chats.views.ThreadAPI">[docs]</a><span class="k">class</span> <span class="nc">ThreadAPI</span><span class="p">(</span><span class="n">MethodView</span><span class="p">):</span>
   <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">  Provides the view layer API for threads</span>
 <span class="sd">  &quot;&quot;&quot;</span>
   <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">auth_service</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Creates a new ThreadAPI object.  Should be called with </span>
+<span class="sd">    Creates a new ThreadAPI object.  Should be called with</span>
 <span class="sd">    ThreadAPI.as_view(url, auth_service) to initialize.</span>
 
 <span class="sd">    :param auth_service: an AuthService instance</span>
@@ -236,7 +248,7 @@
 <span class="sd">      GET localhost:8000/api/threads</span>
 
 <span class="sd">    Example response:</span>
-<span class="sd">    </span>
+
 <span class="sd">    .. code-block:: json</span>
 
 <span class="sd">      {</span>
@@ -261,9 +273,8 @@
 <span class="sd">    :return: a Flask HTTP response of all users threads</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">user</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">auth_service</span><span class="o">.</span><span class="n">get_current_user</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">threads</span><span class="o">=</span><span class="p">[</span><span class="n">thread</span> <span class="k">for</span> <span class="n">thread</span> <span class="ow">in</span> <span class="n">user</span><span class="o">.</span><span class="n">threads</span> <span class="k">if</span> <span class="n">thread</span><span class="o">.</span><span class="n">is_active</span><span class="p">])</span></div></div>
 
-    <span class="k">return</span> <span class="n">jsonify</span><span class="p">(</span><span class="n">threads</span><span class="o">=</span><span class="n">user</span><span class="o">.</span><span class="n">threads</span><span class="p">)</span></div></div>
-    
 </pre></div>
 
            </div>
