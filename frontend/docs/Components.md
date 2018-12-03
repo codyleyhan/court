@@ -8,6 +8,13 @@ Displays a Circular image of specified height
 Props
 -----
 
+### `animalName`
+
+The string uri to fetch corresponding to a local uri
+
+type: `string`
+
+
 ### `color`
 
 Background color of resulting image, if PNG
@@ -15,18 +22,18 @@ Background color of resulting image, if PNG
 type: `string`
 
 
-### `isLocal`
+### `imgURL`
 
-Flag to specify loading local image
-
-type: `bool`
-
-
-### `src` (required)
-
-The string uri to fetch, either a web url, or local uri
+The string uri to fetch that corrosponds to a web url
 
 type: `string`
+
+
+### `showSubIcon`
+
+Displays the nested subicon
+
+type: `bool`
 
 
 ### `width` (required)
@@ -49,7 +56,54 @@ Props
 
 Stack of previously viewed screens
 
-type: `instanceOfStackNavigator`
+type: `object`
+
+
+
+`ChatView` (component)
+======================
+
+
+
+Props
+-----
+
+### `color`
+
+Background color of received messages
+
+type: `string`
+
+
+### `goToProfile` (required)
+
+Callback function back to navigation to route user to the selected user's profile page
+
+type: `func`
+
+
+### `messages`
+
+Text to be rendered in chat bubble
+
+type: `arrayOf[object Object]`
+
+
+### `profileInfo` (required)
+
+Object containing all of the user's profile fields
+
+type: `object`
+
+
+
+`FadeWrapper` (component)
+=========================
+
+
+
+Props
+-----
 
 
 
@@ -84,6 +138,13 @@ Creates header with centered text, and optional left and right components
 Props
 -----
 
+### `color`
+
+Specifies header color
+
+type: `string`
+
+
 ### `leftIcon`
 
 Component to be rendered on right side of header
@@ -91,11 +152,25 @@ Component to be rendered on right side of header
 type: `node`
 
 
+### `navigation`
+
+Stack of previously viewed screens - required when showBack == True
+
+type: `object`
+
+
 ### `rightIcon`
 
 Component to be rendered on left side of header
 
 type: `node`
+
+
+### `showBack`
+
+Displays the back icon on the left side of the component
+
+type: `bool`
 
 
 ### `text` (required)
@@ -128,6 +203,13 @@ Background color of avatar
 type: `string`
 
 
+### `showBorder`
+
+Displays a border around the icon image
+
+type: `bool`
+
+
 ### `size` (required)
 
 Specifies width and height of avatar image
@@ -144,9 +226,16 @@ Card in the user's inbox for each of their current chats
 Props
 -----
 
-### `imgUrl` (required)
+### `animalName`
 
-URL for the given user's profile picture
+The string uri to fetch corresponding to a local uri
+
+type: `string`
+
+
+### `color`
+
+Background color of icon image
 
 type: `string`
 
@@ -155,28 +244,7 @@ type: `string`
 
 The text of the last message sent in the chat
 
-type: `string`
-
-
-### `lastTime` (required)
-
-The time that the last message was sent
-
-type: `string`
-
-
-### `name` (required)
-
-Name of the other user in the chat
-
-type: `string`
-
-
-### `percent` (required)
-
-Percent of profile unlocked for the given user
-
-type: `string`
+type: `object`
 
 
 
@@ -188,21 +256,28 @@ Displays a 'cloud' of interests in a flex box
 Props
 -----
 
-### `interests` (required)
+### `color`
+
+Fill color for interest pill
+
+type: `string`
+
+
+### `interests`
 
 Object containing the user's current selected interests
 
 type: `object`
 
 
-### `onAddInterest` (required)
+### `onAddInterest`
 
 Callback function for when a user selects a new interest
 
 type: `func`
 
 
-### `onRemoveInterest` (required)
+### `onRemoveInterest`
 
 Callback function for when a user removes an interest
 
@@ -283,6 +358,13 @@ URL for the interest's image preview
 type: `string`
 
 
+### `onAddInterest`
+
+Callback for adding a given interest (used in onPress handler for the addIcon)
+
+type: `func`
+
+
 ### `onRemoveInterest`
 
 Callback for removing a given interest (used in onPress handler for the removeIcon)
@@ -292,7 +374,7 @@ type: `func`
 
 ### `showRemoveIcon`
 
-Displays an dismiss icon on the right of the component
+Displays a dismiss icon on the right of the component
 
 type: `bool`
 
@@ -320,7 +402,7 @@ Function that handles touch event
 type: `func`
 
 
-### `showLogo` (required)
+### `showLogo`
 
 Boolean indicating whether or not to show the facebook logo
 
@@ -332,16 +414,6 @@ type: `bool`
 Text to be rendered in button
 
 type: `string`
-
-
-
-`StyledText` (component)
-========================
-
-
-
-Props
------
 
 
 
