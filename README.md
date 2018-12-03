@@ -58,10 +58,3 @@
 ```bash
 /frontend/Court-iOS/assets
 ```
-## Generating a directory tree
-
-You can automatically generate a text tree of the directory structure by running the following:
-```bash
-brew install tree
-tree -v --charset utf-8 -I 'venv|\*.pyc|\_\_pycache\_\_|\_static|\_modules|fonts'
-```
