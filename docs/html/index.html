@@ -238,7 +238,7 @@
 
 <span class="target" id="module-court.chats.sockets"></span><dl class="class">
 <dt id="court.chats.sockets.ThreadSockets">
-<em class="property">class </em><code class="descclassname">court.chats.sockets.</code><code class="descname">ThreadSockets</code><span class="sig-paren">(</span><em>namespace</em>, <em>auth_service</em>, <em>thread_service</em>, <em>logger</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/chats/sockets.html#ThreadSockets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.chats.sockets.ThreadSockets" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">court.chats.sockets.</code><code class="descname">ThreadSockets</code><span class="sig-paren">(</span><em>namespace</em>, <em>auth_service</em>, <em>thread_service</em>, <em>match_service</em>, <em>logger</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/chats/sockets.html#ThreadSockets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.chats.sockets.ThreadSockets" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">flask_socketio.namespace.Namespace</span></code></p>
 <p>ThreadSockets is the object that handles the realtime chat aspect of court
 providing users realtime messaging between each and notifications.</p>
@@ -270,6 +270,20 @@ associated with the class is used.</p>
 <p>The only difference with the <code class="xref py py-func docutils literal notranslate"><span class="pre">socketio.Server.enter_room()</span></code> method
 is that when the <code class="docutils literal notranslate"><span class="pre">namespace</span></code> argument is not given the namespace
 associated with the class is used.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="court.chats.sockets.ThreadSockets.get_user_from_request">
+<code class="descname">get_user_from_request</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/chats/sockets.html#ThreadSockets.get_user_from_request"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.chats.sockets.ThreadSockets.get_user_from_request" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate that user making the request has a valid authorization token</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Raises:</th><td class="field-body">AuthorizationError</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -320,7 +334,8 @@ to pass authorization checks in order to subscribe to the realtime messages.</p>
 <dt id="court.chats.sockets.ThreadSockets.on_message">
 <code class="descname">on_message</code><span class="sig-paren">(</span><em>json</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/chats/sockets.html#ThreadSockets.on_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.chats.sockets.ThreadSockets.on_message" title="Permalink to this definition">¶</a></dt>
 <dd><p>Occurs when an already joined user sends a message on a thread.  Message will
-be saved and then emitted to the everyone in the room including the sender.</p>
+be saved and then emitted to the everyone in the room including the sender.
+Unlocks the next profile feature if enough messages have been sent</p>
 <p>Example json:</p>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
   <span class="nt">&quot;thread&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
@@ -390,7 +405,7 @@ having a single method that catches all events is desired.</p>
 
 <dl class="method">
 <dt id="court.chats.thread_service.ThreadService.create_thread">
-<code class="descname">create_thread</code><span class="sig-paren">(</span><em>user_1</em>, <em>user_2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/chats/thread_service.html#ThreadService.create_thread"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.chats.thread_service.ThreadService.create_thread" title="Permalink to this definition">¶</a></dt>
+<code class="descname">create_thread</code><span class="sig-paren">(</span><em>user_1</em>, <em>user_2</em>, <em>force=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/chats/thread_service.html#ThreadService.create_thread"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.chats.thread_service.ThreadService.create_thread" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates and persists a new chat thread between the users passed.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -399,6 +414,7 @@ having a single method that catches all events is desired.</p>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>user_1</strong> (<a class="reference internal" href="#court.users.models.User" title="court.users.models.User"><em>court.users.models.User</em></a>) – is a User object</li>
 <li><strong>user_2</strong> (<a class="reference internal" href="#court.users.models.User" title="court.users.models.User"><em>court.users.models.User</em></a>) – is a User object</li>
+<li><strong>force</strong> (<em>boolean</em>) – optional argument to override previous thread with user</li>
 </ul>
 </td>
 </tr>
@@ -406,6 +422,55 @@ having a single method that catches all events is desired.</p>
 </td>
 </tr>
 <tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference internal" href="#court.chats.models.Thread" title="court.chats.models.Thread">court.chats.models.Thread</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="court.chats.thread_service.ThreadService.create_threads">
+<code class="descname">create_threads</code><span class="sig-paren">(</span><em>user</em>, <em>matches</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/chats/thread_service.html#ThreadService.create_threads"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.chats.thread_service.ThreadService.create_threads" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates and persists a new chat thread between the user in the current context
+and user’s they have matched with.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>user</strong> (<a class="reference internal" href="#court.users.models.User" title="court.users.models.User"><em>court.users.models.User</em></a>) – the current User object in the context</li>
+<li><strong>matches</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.7)"><em>dict</em></a>) – the active matches for the current user in the context</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">all matches have respective threads</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">boolean</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="court.chats.thread_service.ThreadService.delete_thread">
+<code class="descname">delete_thread</code><span class="sig-paren">(</span><em>user_id</em>, <em>purge=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/chats/thread_service.html#ThreadService.delete_thread"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.chats.thread_service.ThreadService.delete_thread" title="Permalink to this definition">¶</a></dt>
+<dd><p>Deletes a thread to a specified user_id</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>user_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – the specified user id</li>
+<li><strong>purge</strong> (<em>boolean</em>) – optional argument to mark thread inactive or delete from database</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">whether the thread was successfully deleted or not</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">boolean</p>
 </td>
 </tr>
 </tbody>
@@ -430,7 +495,10 @@ before_id are passed then only after_id will be used.</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">list of thread messages</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">list of thread messages</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">list of court.chats.models.Message</p>
 </td>
 </tr>
 </tbody>
@@ -463,9 +531,33 @@ user.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="court.chats.thread_service.ThreadService.update_chat_state">
+<code class="descname">update_chat_state</code><span class="sig-paren">(</span><em>user_id</em>, <em>thread_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/chats/thread_service.html#ThreadService.update_chat_state"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.chats.thread_service.ThreadService.update_chat_state" title="Permalink to this definition">¶</a></dt>
+<dd><p>Updates the chat state with the metadata from the most recent message</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>user_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – the specified user id</li>
+<li><strong>thread_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – the id of the message thread</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">number of message pairs</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)">int</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="court.chats.thread_service.ThreadService.user_is_in_thread">
 <code class="descname">user_is_in_thread</code><span class="sig-paren">(</span><em>user_id</em>, <em>thread</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/chats/thread_service.html#ThreadService.user_is_in_thread"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.chats.thread_service.ThreadService.user_is_in_thread" title="Permalink to this definition">¶</a></dt>
-<dd><p>Checks if a user is authorized to be in a thread. If the user id is the 
+<dd><p>Checks if a user is authorized to be in a thread. If the user id is the
 system user id, then it will return true.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -503,6 +595,22 @@ fly which will instantiate the <code class="xref py py-class docutils literal no
 the <a class="reference internal" href="#court.chats.views.MessageAPI.dispatch_request" title="court.chats.views.MessageAPI.dispatch_request"><code class="xref py py-meth docutils literal notranslate"><span class="pre">dispatch_request()</span></code></a> method on it.</p>
 <p>The arguments passed to <a class="reference internal" href="#court.chats.views.MessageAPI.as_view" title="court.chats.views.MessageAPI.as_view"><code class="xref py py-meth docutils literal notranslate"><span class="pre">as_view()</span></code></a> are forwarded to the
 constructor of the class.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="court.chats.views.MessageAPI.delete">
+<code class="descname">delete</code><span class="sig-paren">(</span><em>user_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/chats/views.html#MessageAPI.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.chats.views.MessageAPI.delete" title="Permalink to this definition">¶</a></dt>
+<dd><p>Processes a HTTP DELETE request for the thread REST API.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>user_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – the id of the user to delete the thread with</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">a Flask HTTP response if the user’s thread was deleted</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -648,6 +756,8 @@ the arguments from the URL rule.</p>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a></td>
 </tr>
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None</td>
+</tr>
 </tbody>
 </table>
 </dd></dl>
@@ -669,6 +779,25 @@ the arguments from the URL rule.</p>
 </dd></dl>
 
 <dl class="method">
+<dt id="court.users.auth_service.AuthService.get_user_for_user_id">
+<code class="descname">get_user_for_user_id</code><span class="sig-paren">(</span><em>user_id</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/users/auth_service.html#AuthService.get_user_for_user_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.users.auth_service.AuthService.get_user_for_user_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get user object of a user with a specified user_id.
+Used for testing and debugging.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>user_id</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.7)"><em>int</em></a>) – the user_id of the requested User object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">User object of the user with a specified user_id, otherwise return None</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">court.users.model.User</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="court.users.auth_service.AuthService.login">
 <code class="descname">login</code><span class="sig-paren">(</span><em>access_token</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/users/auth_service.html#AuthService.login"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.users.auth_service.AuthService.login" title="Permalink to this definition">¶</a></dt>
 <dd><p>Performs Facebook login and information retrieval to create an initial User entry.</p>
@@ -678,7 +807,9 @@ the arguments from the URL rule.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>access_token</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><em>str</em></a>) – Facebook access token after client-side user authentication</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">encrypted user authentication token, and created user object</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">encrypted user authentication token, created user profile, and previously exists boolean</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.7)">tuple</a>(<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)">str</a>, <a class="reference internal" href="#court.users.models.Profile" title="court.users.models.Profile">court.users.models.Profile</a>, boolean)</td>
 </tr>
 </tbody>
 </table>
@@ -739,7 +870,7 @@ must be run in an flask application context to work.</p>
 
 <span class="target" id="module-court.users.models"></span><dl class="class">
 <dt id="court.users.models.Profile">
-<em class="property">class </em><code class="descclassname">court.users.models.</code><code class="descname">Profile</code><span class="sig-paren">(</span><em>id=None</em>, <em>first_name=None</em>, <em>last_name=None</em>, <em>profile_picture=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/users/models.html#Profile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.users.models.Profile" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">court.users.models.</code><code class="descname">Profile</code><span class="sig-paren">(</span><em>user_id=0</em>, <em>first_name=''</em>, <em>last_name=''</em>, <em>profile_picture=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/users/models.html#Profile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.users.models.Profile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Model</span></code></p>
 <p>Profile maps a db User row to an Object.</p>
 <dl class="attribute">
@@ -758,7 +889,7 @@ must be run in an flask application context to work.</p>
 
 <dl class="class">
 <dt id="court.users.models.User">
-<em class="property">class </em><code class="descclassname">court.users.models.</code><code class="descname">User</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/users/models.html#User"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.users.models.User" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">court.users.models.</code><code class="descname">User</code><span class="sig-paren">(</span><em>id=None</em>, <em>email=''</em>, <em>profile=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/users/models.html#User"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.users.models.User" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">sqlalchemy.ext.declarative.api.Model</span></code></p>
 <p>User is the model to map the database to an Object.</p>
 <dl class="attribute">
@@ -797,11 +928,37 @@ the arguments from the URL rule.</p>
 <dt id="court.users.views.ProfileAPI.get">
 <code class="descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/users/views.html#ProfileAPI.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.users.views.ProfileAPI.get" title="Permalink to this definition">¶</a></dt>
 <dd><p>Processes a HTTP GET request for the profile REST API.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>GET localhost:8000/api/users
+</pre></div>
+</div>
+<p>Example response:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;profile&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nt">&quot;user_id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nt">&quot;first_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Joe&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;last_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Bruin&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;interests&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;interest1&quot;</span><span class="p">:</span> <span class="s2">&quot;value1&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;profile_picture&quot;</span><span class="p">:</span> <span class="s2">&quot;https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=102773437400251&amp;height=300&amp;width=300&amp;ext=1544820635&amp;hash=AeQAGANVCW2xEscN&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;gender&quot;</span><span class="p">:</span> <span class="s2">&quot;Male&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;preferred_gender&quot;</span><span class="p">:</span> <span class="s2">&quot;Female&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;animal&quot;</span><span class="p">:</span> <span class="s2">&quot;bear&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;created_at&quot;</span><span class="p">:</span> <span class="s2">&quot;Sun, 02 Dec 2018 22:09:00 GMT&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;updated_at&quot;</span><span class="p">:</span> <span class="s2">&quot;Sun, 02 Dec 2018 22:09:00 GMT&quot;</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a Flask HTTP response with a User’s associated Profile.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body">AuthorizationError, ValidationError</td>
 </tr>
 </tbody>
 </table>
@@ -811,6 +968,29 @@ the arguments from the URL rule.</p>
 <dt id="court.users.views.ProfileAPI.put">
 <code class="descname">put</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/users/views.html#ProfileAPI.put"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.users.views.ProfileAPI.put" title="Permalink to this definition">¶</a></dt>
 <dd><p>Processes a HTTP PUT request for the profile REST API.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>PUT localhost:8000/api/users?fields<span class="o">={</span><span class="s1">&#39;first_name&#39;</span> : <span class="s1">&#39;testing&#39;</span><span class="o">}</span>
+</pre></div>
+</div>
+<p>Example response:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="nt">&quot;profile&quot;</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nt">&quot;first_name&quot;</span><span class="p">:</span> <span class="s2">&quot;testing&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;last_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Bruin&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;interests&quot;</span><span class="p">:</span> <span class="p">{</span>
+      <span class="nt">&quot;interest1&quot;</span><span class="p">:</span> <span class="s2">&quot;value1&quot;</span>
+    <span class="p">},</span>
+    <span class="nt">&quot;profile_picture&quot;</span><span class="p">:</span> <span class="s2">&quot;https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=102773437400251&amp;height=300&amp;width=300&amp;ext=1544820635&amp;hash=AeQAGANVCW2xEscN&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;gender&quot;</span><span class="p">:</span> <span class="s2">&quot;Male&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;preferred_gender&quot;</span><span class="p">:</span> <span class="s2">&quot;Female&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;animal&quot;</span><span class="p">:</span> <span class="s2">&quot;bear&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;created_at&quot;</span><span class="p">:</span> <span class="s2">&quot;Sun, 02 Dec 2018 22:09:00 GMT&quot;</span><span class="p">,</span>
+    <span class="nt">&quot;updated_at&quot;</span><span class="p">:</span> <span class="s2">&quot;Sun, 02 Dec 2018 22:09:00 GMT&quot;</span><span class="p">,</span> <span class="nt">&quot;user_id&quot;</span><span class="p">:</span> <span class="mi">1</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -845,44 +1025,6 @@ constructor of the class.</p>
 <dd><p>Subclasses have to override this method to implement the
 actual view function code.  This method is called with all
 the arguments from the URL rule.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="court.users.views.UserAPI.get">
-<code class="descname">get</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/court/users/views.html#UserAPI.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#court.users.views.UserAPI.get" title="Permalink to this definition">¶</a></dt>
-<dd><p>Processes a HTTP GET request for the user REST API.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>GET localhost:8000/api/users
-</pre></div>
-</div>
-<p>Example response:</p>
-<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-  <span class="nt">&quot;user&quot;</span><span class="p">:</span> <span class="p">{</span>
-    <span class="nt">&quot;email&quot;</span><span class="p">:</span> <span class="s2">&quot;kfgzlneeuo_1541453454@tfbnw.net&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;first_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Will&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;id&quot;</span><span class="p">:</span> <span class="s2">&quot;102773437400251&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;last_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Occhinoberg&quot;</span><span class="p">,</span>
-    <span class="nt">&quot;picture&quot;</span><span class="p">:</span> <span class="p">{</span>
-      <span class="nt">&quot;data&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="nt">&quot;height&quot;</span><span class="p">:</span> <span class="mi">320</span><span class="p">,</span>
-        <span class="nt">&quot;is_silhouette&quot;</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span>
-        <span class="nt">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=102773437400251&amp;height=300&amp;width=300&amp;ext=1544820635&amp;hash=AeQAGANVCW2xEscN&quot;</span><span class="p">,</span>
-        <span class="nt">&quot;width&quot;</span><span class="p">:</span> <span class="mi">320</span>
-      <span class="p">}</span>
-    <span class="p">}</span>
-  <span class="p">}</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<table class="docutils field-list" frame="void" rules="none">
-<col class="field-name" />
-<col class="field-body" />
-<tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">a Flask HTTP response containing a user’s id and email</td>
-</tr>
-<tr class="field-even field"><th class="field-name">Raises:</th><td class="field-body">AuthorizationError, ValidationError</td>
-</tr>
-</tbody>
-</table>
 </dd></dl>
 
 <dl class="method">

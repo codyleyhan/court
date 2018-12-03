@@ -38,7 +38,7 @@ class AuthService:
     :type access_token: str
 
     :return: encrypted user authentication token, created user profile, and previously exists boolean
-    :rtype" tuple(str, court.users.models.Profile, boolean)
+    :rtype: tuple(str, court.users.models.Profile, boolean)
     """
     if access_token.strip() == '':
       raise ValidationError()

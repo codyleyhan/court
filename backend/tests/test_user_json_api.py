@@ -78,8 +78,6 @@ def test_login_bad_token(app, requests_mock):
     assert not data['success']
     assert data['error'] == 'Not authorized'
 
-<<<<<<< HEAD
-
 def test_user_get_and_update(app, requests_mock):
   facebook_token = 'mocksodoesntmatter'
   facebook_url = 'https://graph.facebook.com/me?fields=id,first_name,last_name,email,picture.height(300).width(300)&access_token=' + facebook_token
