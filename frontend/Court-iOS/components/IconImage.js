@@ -38,4 +38,9 @@ IconImage.propTypes = {
 	* Background color of avatar
 	*/
 	color: PropTypes.string.isRequired,
+	/**
+	* Displays a border around the icon image
+	*/
+	showBorder: PropTypes.bool,
 }
+

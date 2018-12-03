@@ -22,12 +22,14 @@ class Thread(db.Model):
   users = db.relationship('User', secondary=thread_users, lazy='subquery',
         back_populates='threads')
   messages = db.relationship('Message', backref='thread', lazy=True)
+  last_message_from = db.Column(db.BigInteger, db.ForeignKey('users.id'), nullable=True)
+  message_pairs = db.Column(db.Integer)
 
   created_at = db.Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
   updated_at = db.Column(db.DateTime, nullable=False, default=dt.datetime.utcnow)
 
   def __repr__(self):
-    return '<Thread %d %r %d>' % (self.id, self.is_active, self.updated_at)
+    return '<Thread %d %r %r>' % (self.id, self.is_active, self.updated_at)
 
   def _asdict(self):
     return {

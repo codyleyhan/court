@@ -74,15 +74,20 @@ Avatar.propTypes = {
   */
   width: PropTypes.number.isRequired,
   /**
-  * Flag to specify loading local image
+  * The string uri to fetch that corrosponds to a web url
   */
-  isLocal: PropTypes.bool,
-  /**
-  * The string uri to fetch, either a web url, or local uri
-  */
-  src: PropTypes.string,
+  imgURL: PropTypes.string,
   /**
   * Background color of resulting image, if PNG
   */
   color: PropTypes.string,
+  /**
+  * The string uri to fetch corresponding to a local uri
+  */
+  animalName: PropTypes.string,
+  /**
+  * Displays the nested subicon 
+  */
+  showSubIcon: PropTypes.bool,
+  
 };

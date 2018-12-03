@@ -293,15 +293,19 @@ const styles = StyleSheet.create({
 
 ChatView.propTypes = {
   /**
-  * Text to be rendered in center of header
+  * Background color of received messages
   */
-  // messages: PropTypes.arrayOf(messages),
-  // /**
-  // * Component to be rendered on left side of header
-  // */
-  // rightIcon: PropTypes.node,
-  // /**
-  // * Component to be rendered on right side of header
-  // */
-  // leftIcon: PropTypes.node,
+  color: PropTypes.string,
+  /**
+  * Text to be rendered in chat bubble
+  */
+  messages: PropTypes.arrayOf(Object),
+  /**
+  * Callback function back to navigation to route user to the selected user's profile page
+  */
+  goToProfile: PropTypes.func.isRequired,
+  /**
+  * Object containing all of the user's profile fields
+  */
+  profileInfo: PropTypes.object.isRequired,
 }

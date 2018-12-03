@@ -41,6 +41,10 @@ export default class InterestsCloud extends React.Component {
 
 InterestsCloud.propTypes = {
   /**
+  * Fill color for interest pill
+  */
+  color: PropTypes.string,
+  /**
   * Object containing the user's current selected interests
   */
   interests: PropTypes.object,
