@@ -59,6 +59,18 @@ Users
     :inherited-members:
     :show-inheritance:
 
+Matches
+=================================
+
+.. automodule:: court.matches.match_service
+    :members:
+    :inherited-members:
+    :show-inheritance:
+
+.. automodule:: court.matches.views
+    :members:
+    :inherited-members:
+    :show-inheritance:
 
 Indices and tables
 ==================
