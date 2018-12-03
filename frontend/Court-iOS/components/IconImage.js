@@ -11,11 +11,13 @@ import Icons from '../constants/Icons';
 export default class IconImage extends React.Component {
   render() {
     const { size, avatar, color, showBorder } = this.props;
-    const borderStyle = showBorder ? {borderRadius: .5 * size, borderWidth: 3, borderColor: 'white'} : {};
+    const borderRadius = .5 * size;
+    const dimension = .6 * size;
+    const borderStyle = showBorder ? {borderRadius: borderRadius, borderWidth: 3, borderColor: 'white'} : {};
     return (
       <View style={[{height: size, width: size, backgroundColor: color, justifyContent: 'center', alignItems: 'center'}, borderStyle]}>
         <Image
-          style={{ width: .6 * size, height: .6 * size, tintColor: 'white' }}
+          style={{ width: dimension, height: dimension, tintColor: 'white' }}
           source={ Icons[avatar] }
         />
       </View>
@@ -41,3 +43,4 @@ IconImage.propTypes = {
 	*/
 	showBorder: PropTypes.bool,
 }
+
