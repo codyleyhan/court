@@ -27,6 +27,36 @@ class MatchAPI(MethodView):
     """
     Processes a HTTP GET request for the match REST API.
 
+    Example request:
+
+    .. code-block:: bash
+
+      GET localhost:8000/api/matches
+
+    Example response:
+
+    .. code-block:: json
+
+      {
+        "matches": {
+          "2": {
+            "active": True,
+            "percent_unlocked": 0,
+            "profile": {
+              "animal": "Brown",
+              "color": "Donkey",
+              "gender": "Male",
+              "preferred_gender": "Female",
+              "first_name": "Joe",
+              "last_name": "Bruin",
+              "profile_picture": "https://platform-lookaside.fbsbx.com/platform/profilepic/?asid=102773437400251&height=300&width=300&ext=1544820635&hash=AeQAGANVCW2xEscN",
+              "interests": { "interest1": "value1" }
+            }
+          }
+        },
+        "thread_status": true
+      }
+
     :return: a Flask HTTP response with a User's current matches and thread status.
     """
     matches = self.match_service.get_current_matches()
@@ -39,13 +69,38 @@ class MatchAPI(MethodView):
     """
     Processes a HTTP DELETE request for the match REST API.
 
-    :return: a Flask HTTP response with a success or failure status.
+    Example request:
+
+    .. code-block:: bash
+
+      DELETE localhost:8000/api/matches
+
+    Example response:
+
+    .. code-block:: json
+
+      {
+        "status": true,
+        "new_matches": 2
+      }
+
+    :param user_id: user id of the match to the user in the current context
+    :type user_id: int
+    :param purge: optional argument to mark match inactive or delete from database
+    :type purge: boolean
+
+    :return: a Flask HTTP response with a success or failure status, and number of
+    new matches found.
     """
     remove_match = self.match_service.inactivate_match(user_id, purge)
     # Also removes the two user's thread history
     remove_thread = self.thread_service.delete_thread(user_id, purge)
     # Since a match was deleted, we recompute new matches
     current_user_id = self.auth_service.get_current_user_id()
-    find_matches = self.match_service.find_matches(current_user_id, 1)
+    find_matches = self.match_service.find_match(current_user_id, 1)
+    # Ensure threads exists for these new matches
+    matches = self.match_service.get_current_matches()
+    user = self.auth_service.get_current_user()
+    threads = self.thread_service.create_threads(user, matches)
     return jsonify(status=remove_match and remove_thread,
                    new_matches=len(find_matches))

@@ -48,8 +48,8 @@ class MessageAPI(MethodView):
       }
 
     :param thread_id: the id of the thread requested
-
     :type thread_id: int
+
     :return: a Flask HTTP response with a list of thread messages
     """
     auth_service = self.auth_service
@@ -73,6 +73,9 @@ class MessageAPI(MethodView):
   def delete(self, user_id):
     """
     Processes a HTTP DELETE request for the thread REST API.
+
+    :param user_id: the id of the user to delete the thread with
+    :type user_id: int
 
     :return: a Flask HTTP response if the user's thread was deleted
     """

@@ -99,6 +99,23 @@ def add_routes(app, socketio):
 
   @app.route('/api/force_match/<int:user_id>')
   def force_match(user_id):
+    """
+    Processes a HTTP GET request for the force match debugging REST API endpoint.
+
+    .. code-block:: bash
+
+      GET localhost:8000/api/force_match/2
+
+    Example response:
+
+    .. code-block:: json
+
+      {
+        "success": true
+      }
+
+    :return: a Flask HTTP response with a forced match success boolean.
+    """
     user1 = auth_service.get_current_user()
     user2 = auth_service.get_user_for_user_id(user_id)
     user1_dict = user1.profile._asdict()
@@ -117,11 +134,51 @@ def add_routes(app, socketio):
 
   @app.route('/api/force_match_delete/<int:user_id>')
   def force_match_delete(user_id):
+    """
+    Processes a HTTP GET request for the force delete debugging REST API endpoint.
+
+    .. code-block:: bash
+
+      GET localhost:8000/api/force_match_delete/2
+
+    Example response:
+
+    .. code-block:: json
+
+      {
+        "success": true
+      }
+
+    :return: a Flask HTTP response with a forced delete success boolean.
+    """
     delete_match = match_service.inactivate_match(user_id, purge=True)
     delete_thread = thread_service.delete_thread(user_id, purge=True)
     return jsonify(status=delete_match and delete_thread)
 
   @app.route('/api/force_unlock/<int:user_id>')
   def force_unlock(user_id):
-    match, user = match_service.unlock_next_profile_feature(user_id)
-    return jsonify(matched_user_unlock=match, current_user_unlock=user)
+    """
+    Processes a HTTP GET request for the force profile unlock debugging REST API endpoint.
+
+    .. code-block:: bash
+
+      GET localhost:8000/api/force_match_delete/2
+
+    Example response:
+
+    .. code-block:: json
+
+      {
+        "progress": {
+            "user_percent_unlocked": 25,
+            "matched_user_percent_unlocked": 14,
+            "user_unlocked_feature": {"interest5": "value5"}
+            "matched_user_unlocked_feature": {"interest2": "value2"}
+        }
+      }
+
+    :return: a Flask HTTP response with the next unlocked feature for the matched user and
+    current user.
+    """
+    data = match_service.unlock_next_profile_feature(user_id)
+    return jsonify(progress=data)

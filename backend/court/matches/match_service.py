@@ -160,8 +160,9 @@ class MatchService:
     :param user_id: user id of the match to the user in the current context
     :type user_id: int
 
-    :return: Tuple of percents of specified user's profile unlocked and current context user's profile unlocked respectively.
-    :rtype: tuple(int, int)
+    :return: Dictionary of current user's new unlocked feature and profile unlocked percent,
+    and entry of match users' new unlocked feature and profile unlocked percent
+    :rtype: dict
     :raises: RuntimeError
     """
     if 'user_id' in g:
@@ -260,12 +261,10 @@ class MatchService:
     user_index = None
 
     # creates a grid of number of common interests between users
-    i = 0
     for i, profile1 in enumerate(profiles.order_by(Profile.created_at)):
       if profile1.user_id == user_id:
         user_profile = profile1
         user_index = i
-      j = 0
       user_ids.append(profile1.user_id)
       for j, profile2 in enumerate(profiles.order_by(Profile.created_at)):
         if pairs[j][i] != None:

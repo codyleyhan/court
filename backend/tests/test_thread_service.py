@@ -47,7 +47,7 @@ def test_create_thread(app):
     user4 = auth_service.get_user_for_user_id(4)
 
     # test new thread creation
-    thread = thread_service.create_thread(user3, user4)
+    thread = thread_service.create_thread(user3, user4, force=True)
     assert thread
 
 def test_create_threads(app):

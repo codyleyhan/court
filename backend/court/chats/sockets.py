@@ -18,6 +18,11 @@ class ThreadSockets(Namespace):
     self.logger = logger
 
   def get_user_from_request(self):
+    """
+    Validate that user making the request has a valid authorization token
+
+    :raises: AuthorizationError
+    """
     self.auth_service.validate_token(request.args.get('token'))
 
   def on_connect(self):

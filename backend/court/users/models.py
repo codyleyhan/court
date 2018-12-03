@@ -56,7 +56,6 @@ class Profile(db.Model):
   preferred_gender = db.Column(db.String(128), nullable=False, default='') # Male/Female/Both
   color = db.Column(db.String(128), nullable=False, default='')
   animal = db.Column(db.String(128), nullable=False, default='')
-  # TODO(anthonymirand): add age/age range/location
 
   _interests = db.Column(db.String, default='{}')
   @property

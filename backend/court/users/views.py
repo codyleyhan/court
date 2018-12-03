@@ -63,7 +63,6 @@ class UserAPI(MethodView):
 
       POST localhost:8000/api/users?access_token={facebook access token for user}
 
-
     Example response:
 
     .. code-block:: json
@@ -132,6 +131,7 @@ class ProfileAPI(MethodView):
       {
         "profile": {
           "id": 1,
+          "user_id": 1,
           "first_name": "Joe",
           "last_name": "Bruin",
           "interests": {
@@ -143,7 +143,7 @@ class ProfileAPI(MethodView):
           "animal": "bear",
           "color": "blue",
           "created_at": "Sun, 02 Dec 2018 22:09:00 GMT",
-          "updated_at": "Sun, 02 Dec 2018 22:09:00 GMT", "user_id": 1
+          "updated_at": "Sun, 02 Dec 2018 22:09:00 GMT"
         }
       }
 

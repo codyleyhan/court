@@ -37,7 +37,8 @@ class AuthService:
     :param access_token: Facebook access token after client-side user authentication
     :type access_token: str
 
-    :return: encrypted user authentication token, and created user object
+    :return: encrypted user authentication token, created user profile, and previously exists boolean
+    :rtype" tuple(str, court.users.models.Profile, boolean)
     """
     if access_token.strip() == '':
       raise ValidationError()
@@ -100,6 +101,8 @@ class AuthService:
 
     :return: User object of the user in the current context, otherwise return None
     :rtype: str
+
+    :return: None
     """
     if 'user_id' in g:
       return g.user_id
@@ -128,6 +131,9 @@ class AuthService:
     """
     Get user object of a user with a specified user_id.
     Used for testing and debugging.
+
+    :param user_id: the user_id of the requested User object
+    :type user_id: int
 
     :return: User object of the user with a specified user_id, otherwise return None
     :rtype: court.users.model.User

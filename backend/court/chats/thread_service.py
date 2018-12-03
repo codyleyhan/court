@@ -14,8 +14,11 @@ class ThreadService:
     Constructs a new ThreadService.
 
     :param db_conn: a SQLAlchemy database connection
+    :type db_conn: flask_sqlalchemy.SQLAlchemy
     :param message_store: ORM object to create/query messages
+    :type message_store: court.chats.models.Message
     :param thread_store: ORM object to create/query chat threads
+    :type thread_store: court.chats.models.Thread
     """
     self.message_store = message_store
     self.thread_store = thread_store
@@ -41,7 +44,8 @@ class ThreadService:
 
     if not force:
       threads = self.db.session.query(Thread).filter(Thread.users.any(id=user_1.id)).all()
-      if threads is not None and len(threads) != 0:
+      if threads is not None and any(self.user_is_in_thread(user_2.id, thread)
+                                     for thread in threads):
         return None
 
     thread = Thread()
@@ -131,6 +135,7 @@ class ThreadService:
     :type before_id: int
 
     :return: list of thread messages
+    :rtype: list of court.chats.models.Message
     """
     thread = self.get_thread(current_user_id, thread_id)
 
@@ -213,6 +218,6 @@ class ThreadService:
         self.db.session.delete(thread)
       else:
         setattr(thread, 'is_active', False)
-    self.db.session.commit()
+        self.db.session.commit()
 
     return True
